@@ -7,7 +7,6 @@ import {
   Plus, 
   Minus, 
   Trash2, 
-  Eye, 
   Truck, 
   Leaf, 
   CreditCard, 
