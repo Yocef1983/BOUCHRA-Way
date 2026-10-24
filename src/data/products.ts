@@ -50,7 +50,7 @@ export const PRODUCTS: Product[] = [
     category: 'maison',
     categoryLabel: 'منظفات منزلية',
     subCategory: 'Entretien',
-    image: '/image/Spray_bottle_cleaning_greasy_stains.jpg',
+    image: '/image/spray_bottle_cleaning_greasy_stains.jpg',
     price: 85,
     discountPrice: 59,
     description: 'Formule puissante pour éliminer la graisse et les taches difficiles.'
