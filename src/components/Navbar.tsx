@@ -37,7 +37,7 @@ export default function Navbar({ selectedCategory, setSelectedCategory, cartCoun
         {/* أيقونات الإجراءات */}
         <div className="flex items-center gap-3">
           <a
-            href="https://wa.me/212600000000"
+            href="https://wa.me/212634486494"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-full font-semibold transition"
