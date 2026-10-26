@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import HeroBanner from './components/HeroBanner';
 import RegistrationForm from './components/RegistrationForm';
-import ProductCatalog from './components/ProductCatalog';
+import { ProductCatalog } from './components/ProductCatalog';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -14,13 +14,13 @@ export default function App() {
         selectedCategory={selectedCategory} 
         setSelectedCategory={setSelectedCategory} 
       />
-
+      
       <main className="max-w-7xl mx-auto px-4 py-6">
         <HeroBanner />
+        <ProductCatalog />
         <RegistrationForm />
-        <ProductCatalog selectedCategory={selectedCategory} />
       </main>
-
+      
       <Footer />
     </div>
   );
