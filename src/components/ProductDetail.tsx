@@ -10,7 +10,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack })
   const [quantity, setQuantity] = useState<number>(1);
 
   const handleWhatsAppOrder = () => {
-    const phoneNumber = '212600000000'; // Remplacez par votre numéro WhatsApp
+    const phoneNumber = '212634486474'; // Remplacez par votre numéro WhatsApp
     const message = encodeURIComponent(
       `مرحباً بوشرى واي، أود طلب هذا المنتج:\n\n` +
       `📦 *المنتج:* ${product.name}\n` +

@@ -23,7 +23,7 @@ export default function RegistrationForm() {
       `🏙️ المدينة / المنطقة: ${formData.city}\n` +
       `📍 العنوان بالتفصيل: ${formData.address}`;
     
-    window.open(`https://wa.me/212600000000?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/212634486494?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (

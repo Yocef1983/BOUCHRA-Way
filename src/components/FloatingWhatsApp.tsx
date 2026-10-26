@@ -2,7 +2,7 @@ import React from 'react';
 
 export const FloatingWhatsApp: React.FC = () => {
   const handleClick = () => {
-    const phoneNumber = '212600000000'; // Remplacez par votre numéro WhatsApp
+    const phoneNumber = '212634486494'; // Remplacez par votre numéro WhatsApp
     const message = encodeURIComponent('مرحباً بوشرى واي، أود الاستفسار عن المنتجات.');
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
