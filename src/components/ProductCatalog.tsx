@@ -1,12 +1,26 @@
 import React, { useState } from 'react';
 import { PRODUCTS, Product } from '../data/products';
+import { Eye, Search, X, RotateCcw } from 'lucide-react';
 
 interface ProductCatalogProps {
   onSelectProduct: (product: Product) => void;
+  selectedCategory?: string;
+  setSelectedCategory?: (category: string) => void;
+  searchQuery?: string;
+  setSearchQuery?: (query: string) => void;
 }
 
-export const ProductCatalog: React.FC<ProductCatalogProps> = ({ onSelectProduct }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+export const ProductCatalog: React.FC<ProductCatalogProps> = ({ 
+  onSelectProduct,
+  selectedCategory: controlledCategory,
+  setSelectedCategory: setControlledCategory,
+  searchQuery = '',
+  setSearchQuery
+}) => {
+  const [internalCategory, setInternalCategory] = useState<string>('all');
+
+  const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
+  const setSelectedCategory = setControlledCategory || setInternalCategory;
 
   const categories = [
     { id: 'all', label: 'الكل' },
@@ -18,75 +32,189 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({ onSelectProduct 
     { id: 'menage', label: 'المنظفات المنزلية' },
   ];
 
-  const filteredProducts = selectedCategory === 'all'
+  // 1. Filtrage par catégorie
+  let filteredProducts = selectedCategory === 'all'
     ? PRODUCTS
     : PRODUCTS.filter(p => p.category === selectedCategory);
 
+  // 2. Filtrage en temps réel par mot-clé de recherche
+  const trimmedSearch = searchQuery.trim().toLowerCase();
+  if (trimmedSearch !== '') {
+    filteredProducts = filteredProducts.filter((product) => {
+      const matchName = product.name.toLowerCase().includes(trimmedSearch);
+      const matchDesc = product.description.toLowerCase().includes(trimmedSearch);
+      const matchAlt = product.altText ? product.altText.toLowerCase().includes(trimmedSearch) : false;
+      const matchCat = product.category.toLowerCase().includes(trimmedSearch);
+      return matchName || matchDesc || matchAlt || matchCat;
+    });
+  }
+
+  // Gestion anti-images brisées pour la grille du catalogue
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, productName: string) => {
+    const target = e.currentTarget;
+    if (target.src.startsWith('data:image')) return;
+
+    const currentSrc = target.src;
+    const attempts = target.dataset.attempt ? parseInt(target.dataset.attempt, 10) : 0;
+    target.dataset.attempt = (attempts + 1).toString();
+
+    if (attempts === 0 && currentSrc.includes('produit-')) {
+      target.src = currentSrc.replace('produit-', 'produits-');
+      return;
+    }
+    if (attempts <= 1 && currentSrc.includes('_')) {
+      target.src = currentSrc.replace(/_/g, '-');
+      return;
+    }
+    if (attempts <= 2 && currentSrc.includes('-pearly-creme-fondation')) {
+      target.src = currentSrc.replace('-pearly-creme-fondation', '_pearly-creme-fondation');
+      return;
+    }
+    if (attempts <= 3 && currentSrc.endsWith('.jpg')) {
+      target.src = currentSrc.replace(/\.jpg$/i, '.png');
+      return;
+    }
+
+    target.src = `data:image/svg+xml;utf8,${encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300" fill="none">
+        <rect width="300" height="300" fill="#FAF7F5"/>
+        <circle cx="150" cy="125" r="45" fill="#E8C5B8" opacity="0.45"/>
+        <text x="150" y="195" font-family="system-ui, sans-serif" font-size="12" fill="#6B5A54" text-anchor="middle" font-weight="500">${productName.slice(0, 22)}</text>
+        <text x="150" y="215" font-family="system-ui, sans-serif" font-size="10" fill="#A8948D" text-anchor="middle" letter-spacing="1">BOUCHRA WAY</text>
+      </svg>
+    `)}`;
+  };
+
+  const handleResetSearch = () => {
+    if (setSearchQuery) {
+      setSearchQuery('');
+    }
+  };
+
+  const handleResetAll = () => {
+    if (setSearchQuery) setSearchQuery('');
+    setSelectedCategory('all');
+  };
+
   return (
-    <section className="py-12 bg-white dir-rtl relative" id="products">
+    <section className="py-12 bg-[#FDFCFB] dir-rtl relative scroll-mt-20" id="catalogue" dir="rtl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* En-tête minimaliste */}
-        <div className="text-center mb-10">
-          <h2 className="text-2xl font-light text-gray-800 tracking-wider">
+        {/* En-tête épuré moderne (Inspiré beautyforyou.ma) */}
+        <div className="text-center mb-8">
+          <span className="text-xs uppercase tracking-widest text-[#A8948D] font-normal block mb-1">
+            NOTRE COLLECTION • MY WAY MAROC
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">
             تشكيلة المنتجات المميزة
           </h2>
-          <div className="w-16 h-0.5 bg-amber-200 mx-auto mt-2"></div>
+          <div className="w-12 h-0.5 bg-[#E8C5B8] mx-auto mt-3 rounded-full"></div>
         </div>
 
-        {/* Filtres par catégories (Design épuré) */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {categories.map((cat) => (
+        {/* Filtres par catégories (Style pills minimaliste) */}
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8">
+          {categories.map((cat) => {
+            const isActive = selectedCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm transition-all duration-200 cursor-pointer ${
+                  isActive
+                    ? 'bg-[#E8C5B8] text-gray-900 font-medium shadow-xs'
+                    : 'bg-white text-gray-600 hover:bg-[#F7F2EF] border border-gray-100 font-normal'
+                }`}
+              >
+                {cat.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Bandeau d'état de recherche en temps réel */}
+        {trimmedSearch !== '' && (
+          <div className="mb-6 max-w-2xl mx-auto flex items-center justify-between p-3.5 bg-pink-50/70 border border-pink-100 rounded-2xl text-xs sm:text-sm text-pink-900">
+            <div className="flex items-center gap-2 truncate">
+              <Search size={16} className="text-pink-600 shrink-0" />
+              <span>
+                نتائج البحث عن: <strong className="font-semibold text-pink-950">«{searchQuery}»</strong>
+                <span className="text-pink-700 mr-2">({filteredProducts.length} منتج)</span>
+              </span>
+            </div>
             <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`px-5 py-2 rounded-full text-sm font-normal transition-all duration-200 ${
-                selectedCategory === cat.id
-                  ? 'bg-amber-100 text-amber-900 border border-amber-200 shadow-sm'
-                  : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-transparent'
-              }`}
+              onClick={handleResetSearch}
+              className="inline-flex items-center gap-1 text-xs text-pink-700 hover:text-pink-950 bg-white hover:bg-pink-100/50 px-2.5 py-1 rounded-full border border-pink-200 transition cursor-pointer shrink-0"
             >
-              {cat.label}
+              <X size={12} />
+              <span>إلغاء البحث</span>
             </button>
-          ))}
-        </div>
+          </div>
+        )}
 
-        {/* Grille des produits (Inspirée beautyforyou.ma) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {/* Grille des produits cliquables sans bouton d'achat direct */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {filteredProducts.map((product) => (
             <div 
               key={product.id} 
               onClick={() => onSelectProduct(product)}
-              className="group cursor-pointer flex flex-col bg-white p-4 rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-300"
+              className="group cursor-pointer flex flex-col bg-white p-3 sm:p-4 rounded-2xl border border-[#F2ECE8] hover:border-[#E8C5B8] hover:shadow-md transition-all duration-300 relative"
             >
-              {/* Cadre Image propre */}
-              <div className="w-full h-56 bg-gray-50 rounded-lg flex items-center justify-center p-3 overflow-hidden relative mb-4">
+              {/* Cadre Image épuré */}
+              <div className="w-full h-48 sm:h-56 bg-[#FAF7F5] rounded-xl flex items-center justify-center p-4 overflow-hidden relative mb-3">
                 <img
                   src={product.image}
-                  alt={product.altText}
+                  alt={product.altText || product.name}
                   loading="lazy"
+                  onError={(e) => handleImageError(e, product.name)}
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    if (!target.src.endsWith('.png')) {
-                      target.src = product.image.replace(/\.(jpg|jpeg|webp)$/i, '.png');
-                    }
-                  }}
                 />
+
+                {/* Badge visuel discret au survol */}
+                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="bg-white/90 backdrop-blur-xs text-gray-800 text-xs px-3 py-1.5 rounded-full shadow-xs flex items-center gap-1 font-normal transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                    <Eye size={12} />
+                    عرض التفاصيل
+                  </span>
+                </div>
               </div>
 
-              {/* Informations Produit (Typographie non grasse et élégante) */}
-              <div className="flex flex-col flex-1 justify-between text-center">
-                <h3 className="text-sm font-normal text-gray-800 line-clamp-2 mb-2 group-hover:text-amber-700 transition-colors">
+              {/* Informations Produit (Nom et Prix en GRAS dans la couleur rose/bordeaux de la marque) */}
+              <div className="flex flex-col flex-1 justify-between text-center mt-1">
+                <h3 className="text-xs sm:text-sm font-normal text-gray-800 line-clamp-2 min-h-[2.5rem] mb-2 group-hover:text-[#9A6B5B] transition-colors">
                   {product.name}
                 </h3>
-                <div className="text-sm font-semibold text-gray-900 mt-auto">
-                  {product.price}.00 <span className="text-xs font-normal text-gray-500">DH</span>
+                {/* Prix en GRAS et dans la couleur rose/bordeaux de la marque */}
+                <div className="text-base sm:text-lg font-bold text-[#BE185D] mt-auto pt-2 border-t border-gray-50 flex items-center justify-center gap-1">
+                  <span>{product.price}.00</span>
+                  <span className="text-xs font-bold text-[#BE185D]">DH</span>
                 </div>
               </div>
             </div>
           ))}
         </div>
+
+        {/* État vide en cas d'absence de résultat */}
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-gray-200 p-8 max-w-lg mx-auto">
+            <Search size={40} className="text-gray-300 mx-auto mb-4" />
+            <h4 className="text-base font-semibold text-gray-800 mb-2">
+              لم يتم العثور على أي منتج
+            </h4>
+            <p className="text-xs text-gray-500 mb-6 leading-relaxed">
+              {trimmedSearch !== '' 
+                ? `لا توجد نتائج مطابقة لبحثك «${searchQuery}» في هذا القسم.`
+                : 'لا توجد منتجات متوفرة حالياً في هذا القسم.'}
+            </p>
+            <button
+              onClick={handleResetAll}
+              className="inline-flex items-center gap-2 bg-[#E8C5B8] hover:bg-[#dfb5a6] text-gray-900 text-xs font-normal px-5 py-2.5 rounded-full transition cursor-pointer shadow-xs"
+            >
+              <RotateCcw size={14} />
+              <span>عرض جميع المنتجات</span>
+            </button>
+          </div>
+        )}
 
       </div>
     </section>

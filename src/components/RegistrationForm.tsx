@@ -27,12 +27,12 @@ export default function RegistrationForm() {
   };
 
   return (
-    <section id="register" className="py-10 bg-gradient-to-b from-pink-50/50 to-white dir-rtl" dir="rtl">
+    <section id="register" className="py-10 bg-gradient-to-b from-pink-50/50 to-white dir-rtl scroll-mt-20" dir="rtl">
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* قسم الفرصة والمميزات */}
-          <div className="lg:col-span-5 space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-pink-100">
+          {/* قسم الفرصة والمميزات (زود دخلك) */}
+          <div id="opportunity" className="lg:col-span-5 space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-pink-100 scroll-mt-24">
             <div className="inline-flex items-center gap-2 bg-pink-100 text-pink-800 text-xs font-bold px-3 py-1 rounded-full">
               <UserCheck className="w-4 h-4" />
               فرصة فريدة لزيادة الدخل
@@ -182,28 +182,28 @@ export default function RegistrationForm() {
 
               <button
                 type="submit"
-                className="w-full bg-pink-700 hover:bg-pink-800 text-white font-bold py-3 rounded-xl shadow-md transition duration-200 text-sm mt-2"
+                className="w-full bg-pink-700 hover:bg-pink-800 text-white font-bold py-3 rounded-xl shadow-md transition duration-200 text-sm mt-2 cursor-pointer"
               >
                 إرسال استمارة التسجيل عبر واتساب 🚀
               </button>
             </form>
 
-            {/* أزرار الكتالوج */}
-            <div id="catalog" className="mt-6 pt-6 border-t border-gray-100 space-y-3">
+            {/* أزرار الكتالوج الترويجي */}
+            <div id="catalog-downloads" className="mt-6 pt-6 border-t border-gray-100 space-y-3">
               <a
-                href="#"
+                href="#catalogue"
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs transition shadow-sm"
               >
                 <Download className="w-4 h-4" />
-                تحميل الكتالوج الشهر الحالي (PDF)
+                تصفح تشكيلة كتالوج الشهر الحالي
               </a>
 
               <a
-                href="#"
+                href="#catalogue"
                 className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs transition shadow-sm"
               >
                 <Eye className="w-4 h-4" />
-                عرض الكتالوج والتصفح المباشر
+                عرض المنتجات والأسعار بالتفصيل
               </a>
             </div>
           </div>
