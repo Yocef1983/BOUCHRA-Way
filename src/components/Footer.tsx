@@ -161,11 +161,90 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* السياسات والشفافية */}
+        <div className="mb-6 pt-6 border-t border-gray-800">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs text-gray-400">
+            <button
+              type="button"
+              onClick={() => setActivePolicy('privacy')}
+              className="hover:text-rose-400 transition-colors flex items-center gap-1.5"
+            >
+              <FileText size={14} />
+              <span>سياسة الخصوصية</span>
+            </button>
+            <span className="hidden sm:inline text-gray-700">|</span>
+            <button
+              type="button"
+              onClick={() => setActivePolicy('terms')}
+              className="hover:text-rose-400 transition-colors flex items-center gap-1.5"
+            >
+              <FileText size={14} />
+              <span>الشروط والأحكام</span>
+            </button>
+            <span className="hidden sm:inline text-gray-700">|</span>
+            <button
+              type="button"
+              onClick={() => setActivePolicy('legal')}
+              className="hover:text-rose-400 transition-colors flex items-center gap-1.5"
+            >
+              <FileText size={14} />
+              <span>إشعار قانوني</span>
+            </button>
+          </div>
+        </div>
+
         {/* Droits & Copyright */}
         <div className="border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
           <p>© 2026 Bouchra Way Maroc - جميع الحقوق محفوظة. تجربة تسوق آمنة مع الدفع عند الاستلام وضمان الجودة.</p>
         </div>
       </div>
+
+      {/* Modals للسياسات */}
+      {activePolicy && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={closeModal}></div>
+          <div className="relative w-full max-w-2xl bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto text-right" dir="rtl">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
+              <h5 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                <FileText size={18} className="text-rose-400" />
+                {activePolicy === 'privacy' && 'سياسة الخصوصية'}
+                {activePolicy === 'terms' && 'الشروط والأحكام'}
+                {activePolicy === 'legal' && 'إشعار قانوني'}
+              </h5>
+              <button onClick={closeModal} className="p-2 rounded-full hover:bg-gray-800 text-gray-400 hover:text-white transition">
+                <X size={18} />
+              </button>
+            </div>
+            <div className="px-5 py-4 space-y-3 text-xs text-gray-300 leading-relaxed">
+              {activePolicy === 'privacy' && (
+                <>
+                  <p className="font-bold text-white">سياسة الخصوصية</p>
+                  <p>نحن في Bouchra Way نحترم خصوصيتك ونلتزم بحماية بياناتك الشخصية. عند التواصل عبر واتساب أو ملء استمارة التسجيل، يتم استخدام البيانات فقط للرد على استفسارك، متابعة الطلب أو تسجيل العضوية حسب ما تقتضيه الخدمة.</p>
+                  <p>لا نقوم ببيع أو مشاركة بياناتك مع أطراف ثالثة لأغراض تجارية غير متعلقة بخدمة My Way.</p>
+                </>
+              )}
+              {activePolicy === 'terms' && (
+                <>
+                  <p className="font-bold text-white">الشروط والأحكام</p>
+                  <p>يخضع استخدام هذا الموقع للشروط والأحكام التالية. باختيارك للتواصل وطلب المنتجات أو الانضمام، فإنك توافق على هذه الشروط.</p>
+                  <p>الأسعار بالدراهم المغربية (DH)، الدفع عند الاستلام، التوصيل حسب المناطق المذكورة، وحق الإرجاع خلال 7 أيام وفق الشروط المعلنة.</p>
+                  <p>هذا الموقع مخصص لعرض منتجات My Way بالمغرب في إطار البيع المباشر وفق النظام المعمول به.</p>
+                </>
+              )}
+              {activePolicy === 'legal' && (
+                <>
+                  <p className="font-bold text-white">إشعار قانوني</p>
+                  <p>جميع العلامات التجارية، الأسماء، الصور والمنتجات المذكورة تعود لأصحابها. Bouchra Way هو اسم تجاري لعرض وتوزيع منتجات My Way بالمغرب.</p>
+                  <p>المعلومات الواردة لأغراض التوجيه العام ولا تشكل عرضاً ملزماً إلا بعد التأكيد عبر قنوات التواصل الرسمية.</p>
+                </>
+              )}
+            </div>
+            <div className="px-5 py-3 border-t border-gray-800 text-center">
+              <button onClick={closeModal} className="text-xs px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-white transition">إغلاق</button>
+            </div>
+          </div>
+        </div>
+      )}
     </footer>
   );
 }

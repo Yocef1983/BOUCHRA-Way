@@ -188,6 +188,37 @@ export default function RegistrationForm() {
               </button>
             </form>
 
+            {/* خطوات الانضمام */}
+            <div className="mt-6 pt-6 border-t border-gray-100">
+              <div className="text-center mb-4">
+                <h4 className="text-sm font-bold text-gray-800">كيف تنضمين إلى عائلة بوشرى واي؟</h4>
+                <p className="text-[11px] text-gray-500 mt-1">3 خطوات بسيطة للانضمام والاستفادة من التخفيضات</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="flex items-start gap-2 p-3 rounded-xl bg-pink-50/60 border border-pink-100">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-pink-600 text-white text-xs font-bold">1</span>
+                  <div>
+                    <p className="text-xs font-bold text-gray-800">ملء الاستمارة</p>
+                    <p className="text-[11px] text-gray-600">أدخلي بياناتك بدقة</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2 p-3 rounded-xl bg-pink-50/60 border border-pink-100">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-pink-600 text-white text-xs font-bold">2</span>
+                  <div>
+                    <p className="text-xs font-bold text-gray-800">تأكيد عبر الواتساب</p>
+                    <p className="text-[11px] text-gray-600">سيتم التواصل لتأكيد البيانات</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2 p-3 rounded-xl bg-pink-50/60 border border-pink-100">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-pink-600 text-white text-xs font-bold">3</span>
+                  <div>
+                    <p className="text-xs font-bold text-gray-800">تفعيل العضوية والاستفادة</p>
+                    <p className="text-[11px] text-gray-600">احصلي على التخفيضات وفرصة الدخل</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* أزرار الكتالوج الترويجي */}
             <div id="catalog-downloads" className="mt-6 pt-6 border-t border-gray-100 space-y-3">
               <a
@@ -195,7 +226,7 @@ export default function RegistrationForm() {
                 className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs transition shadow-sm"
               >
                 <Download className="w-4 h-4" />
-                تصفح تشكيلة كتالوج الشهر الحالي
+                تصفح المنتجات مباشرة
               </a>
 
               <a
@@ -203,7 +234,7 @@ export default function RegistrationForm() {
                 className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs transition shadow-sm"
               >
                 <Eye className="w-4 h-4" />
-                عرض المنتجات والأسعار بالتفصيل
+                تصفح المنتجات والأسعار
               </a>
             </div>
           </div>

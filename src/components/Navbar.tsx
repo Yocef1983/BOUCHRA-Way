@@ -401,6 +401,9 @@ export default function Navbar({
                         ? 'text-pink-700 font-bold bg-pink-100/70'
                         : 'text-gray-700 hover:text-pink-700 hover:bg-pink-100/60'
                     }`}
+                    aria-haspopup="menu"
+                    aria-expanded={isHovered}
+                    aria-controls={`dropdown-${category.id}`}
                   >
                     <span>{category.label}</span>
                     <ChevronDown 
@@ -413,11 +416,14 @@ export default function Navbar({
 
                   {/* القائمة المنسدلة المنبثقة (Dropdown Desktop) */}
                   <div 
+                    id={`dropdown-${category.id}`}
                     className={`absolute top-full right-0 pt-1.5 min-w-[210px] z-50 transition-all duration-200 ease-out origin-top-right ${
                       isHovered 
                         ? 'opacity-100 visible translate-y-0 pointer-events-auto' 
                         : 'opacity-0 invisible -translate-y-1 pointer-events-none'
                     }`}
+                    role="menu"
+                    aria-label={category.label}
                   >
                     <div className="bg-white rounded-2xl shadow-xl shadow-pink-950/10 border border-pink-100 p-2 text-right overflow-hidden">
                       {/* رأس القائمة */}

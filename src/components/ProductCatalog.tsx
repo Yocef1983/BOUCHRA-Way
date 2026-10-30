@@ -304,10 +304,11 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         {/* Grille des produits cliquables sans bouton d'achat direct */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {filteredProducts.map((product) => (
-            <div 
+            <button 
               key={product.id} 
               onClick={() => onSelectProduct(product)}
-              className="group cursor-pointer flex flex-col bg-white p-3 sm:p-4 rounded-2xl border border-[#F2ECE8] hover:border-[#E8C5B8] hover:shadow-md transition-all duration-300 relative"
+              type="button"
+              className="group cursor-pointer flex flex-col bg-white p-4 rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-rose-400"
             >
               {/* Cadre Image épuré */}
               <div className="w-full h-48 sm:h-56 bg-[#FAF7F5] rounded-xl flex items-center justify-center p-4 overflow-hidden relative mb-3">
@@ -339,7 +340,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   <span className="text-xs font-bold text-[#BE185D]">DH</span>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
 
