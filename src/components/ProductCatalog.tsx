@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { PRODUCTS, Product } from '../data/products';
-import { Eye, Search, X, RotateCcw } from 'lucide-react';
+import { Eye, Search, X, RotateCcw, Filter, ChevronLeft } from 'lucide-react';
 
 interface ProductCatalogProps {
   onSelectProduct: (product: Product) => void;
   selectedCategory?: string;
   setSelectedCategory?: (category: string) => void;
+  selectedSubCategory?: string | null;
+  setSelectedSubCategory?: (subCategory: string | null) => void;
   searchQuery?: string;
   setSearchQuery?: (query: string) => void;
 }
@@ -14,6 +16,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   onSelectProduct,
   selectedCategory: controlledCategory,
   setSelectedCategory: setControlledCategory,
+  selectedSubCategory = null,
+  setSelectedSubCategory,
   searchQuery = '',
   setSearchQuery
 }) => {
@@ -22,22 +26,131 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
   const setSelectedCategory = setControlledCategory || setInternalCategory;
 
+  // Catégories alignées avec le tableau Excel
   const categories = [
     { id: 'all', label: 'الكل' },
-    { id: 'parfum', label: 'العطور' },
+    { id: 'parfum', label: 'عطور' },
+    { id: 'maquillage', label: 'ماكياج' },
     { id: 'soin-visage', label: 'العناية بالوجه' },
-    { id: 'soin-capillaire', label: 'العناية بالشعر' },
     { id: 'soin-corps', label: 'العناية بالجسم' },
-    { id: 'maquillage', label: 'المكياج' },
-    { id: 'menage', label: 'المنظفات المنزلية' },
+    { id: 'soin-capillaire', label: 'العناية بالشعر' },
+    { id: 'hommes', label: 'مستحضرات رجالية' },
+    { id: 'accessoires', label: 'مجوهرات و أكسيسوارات' },
+    { id: 'enfants', label: 'أطفال' },
+    { id: 'menage', label: 'منظفات المنزل' },
   ];
 
-  // 1. Filtrage par catégorie
-  let filteredProducts = selectedCategory === 'all'
-    ? PRODUCTS
-    : PRODUCTS.filter(p => p.category === selectedCategory);
+  const getCategoryLabel = (catId: string) => {
+    const found = categories.find(c => c.id === catId);
+    return found ? found.label : catId;
+  };
 
-  // 2. Filtrage en temps réel par mot-clé de recherche
+  // Fonction de filtrage précis par sous-catégorie
+  const matchSubCategory = (product: Product, subCat: string): boolean => {
+    const text = (product.name + ' ' + product.description + ' ' + (product.altText || '') + ' ' + product.category).toLowerCase();
+
+    switch (subCat) {
+      // عطور
+      case 'عطر رجالي':
+        return product.category === 'parfum' && (text.includes('رجالي') || text.includes('homme'));
+      case 'عطر نسائي':
+        return product.category === 'parfum' && (text.includes('نسائي') || text.includes('femme'));
+      case 'مزيلات العرق':
+        return text.includes('مزيل') || text.includes('déodorant') || text.includes('deodorant') || text.includes('عرق');
+
+      // ماكياج
+      case 'البشرة':
+        return product.category === 'maquillage' && (text.includes('أساس') || text.includes('بشرة') || text.includes('تصحيح') || text.includes('bb'));
+      case 'الشفايف':
+        return product.category === 'maquillage' && (text.includes('شفاه') || text.includes('شفايف') || text.includes('ملمع') || text.includes('rouge') || text.includes('gloss'));
+      case 'الأظافر':
+        return product.category === 'maquillage' && (text.includes('أظافر') || text.includes('اظافر') || text.includes('vernis'));
+      case 'العيون و الحواجب':
+        return product.category === 'maquillage' && (text.includes('ماسكارا') || text.includes('mascara') || text.includes('رموش') || text.includes('عيون') || text.includes('حواجب'));
+
+      // العناية بالوجه
+      case 'كريمات':
+        return product.category === 'soin-visage' && (text.includes('كريم') || text.includes('مرطب'));
+      case 'منظفات الوجه':
+        return product.category === 'soin-visage' && (text.includes('لوشن') || text.includes('منظف') || text.includes('غسول') || text.includes('nettoyant'));
+      case 'ماسكات':
+        return (product.category === 'soin-visage' || product.category === 'soin-capillaire') && (text.includes('ماسك') || text.includes('غاسول') || text.includes('كريمة'));
+      case 'حماية الوجه':
+        return product.category === 'soin-visage' && (text.includes('حماية') || text.includes('حساسة') || text.includes('شمس') || text.includes('delicate'));
+
+      // العناية بالجسم
+      case 'كريمات مرطبة':
+        return product.category === 'soin-corps' && (text.includes('مرطب') || text.includes('كريم') || text.includes('ترطيب'));
+      case 'زيوت مغذية':
+        return product.category === 'soin-corps' && (text.includes('زيت') || text.includes('مغذي') || text.includes('huile'));
+      case 'العناية باليدين':
+        return product.category === 'soin-corps' && (text.includes('يدين') || text.includes('يد') || text.includes('mains') || text.includes('refine'));
+      case 'العناية بالقدمين':
+        return product.category === 'soin-corps' && (text.includes('قدم') || text.includes('أقدام') || text.includes('تشققات') || text.includes('ibnosina'));
+      case 'مستحضرات الحمام':
+        return product.category === 'soin-corps' && (text.includes('حمام') || text.includes('صابون') || text.includes('bain') || text.includes('مزيل'));
+
+      // العناية بالشعر
+      case 'شامبو':
+        return product.category === 'soin-capillaire' && (text.includes('شامبو') || text.includes('shampoing'));
+      case 'ماسكات':
+        return product.category === 'soin-capillaire' && (text.includes('ماسك') || text.includes('كريمة') || text.includes('حمام'));
+      case 'زيوت و سيرومات':
+        return product.category === 'soin-capillaire' && (text.includes('زيت') || text.includes('سيروم') || text.includes('serum') || text.includes('huile'));
+      case 'مستلزمات الشعر':
+        return product.category === 'soin-capillaire';
+
+      // مستحضرات رجالية
+      case 'العناية بالوجه':
+        return text.includes('رجالي') || text.includes('homme') || (text.includes('وجه') && text.includes('رجالي'));
+      case 'العناية بالجسم':
+        return text.includes('رجالي') || text.includes('homme') || text.includes('sporty');
+      case 'الحلاقة':
+        return text.includes('حلاقة') || text.includes('rasage') || text.includes('barbe');
+
+      // أطفال
+      case 'العناية ببشرة الطفل':
+        return text.includes('طفل') || text.includes('أطفال') || text.includes('رقيقة');
+      case 'العناية بشعر الطفل':
+        return text.includes('طفل') || text.includes('أطفال') || (text.includes('شعر') && text.includes('طفل'));
+      case 'عطر الأطفال':
+        return text.includes('طفل') || text.includes('أطفال') || (text.includes('عطر') && text.includes('طفل'));
+
+      default:
+        return text.includes(subCat.toLowerCase());
+    }
+  };
+
+  // 1. Filtrage principal par catégorie
+  let filteredProducts = PRODUCTS;
+
+  if (selectedCategory !== 'all') {
+    if (selectedCategory === 'hommes') {
+      filteredProducts = PRODUCTS.filter(p => {
+        const text = (p.name + ' ' + p.description + ' ' + (p.altText || '')).toLowerCase();
+        return text.includes('رجالي') || text.includes('homme');
+      });
+    } else if (selectedCategory === 'enfants') {
+      filteredProducts = PRODUCTS.filter(p => {
+        const text = (p.name + ' ' + p.description + ' ' + (p.altText || '')).toLowerCase();
+        return text.includes('طفل') || text.includes('أطفال');
+      });
+    } else if (selectedCategory === 'accessoires') {
+      filteredProducts = PRODUCTS.filter(p => {
+        const text = (p.name + ' ' + p.description + ' ' + (p.altText || '')).toLowerCase();
+        return text.includes('مجوهرات') || text.includes('أكسسوار') || p.category === 'accessoires';
+      });
+    } else {
+      filteredProducts = PRODUCTS.filter(p => p.category === selectedCategory);
+    }
+  }
+
+  // 2. Filtrage par sous-catégorie sélectionnée
+  if (selectedSubCategory) {
+    filteredProducts = filteredProducts.filter(p => matchSubCategory(p, selectedSubCategory));
+  }
+
+  // 3. Filtrage en temps réel par mot-clé de recherche
   const trimmedSearch = searchQuery.trim().toLowerCase();
   if (trimmedSearch !== '') {
     filteredProducts = filteredProducts.filter((product) => {
@@ -93,7 +206,13 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
   const handleResetAll = () => {
     if (setSearchQuery) setSearchQuery('');
+    if (setSelectedSubCategory) setSelectedSubCategory(null);
     setSelectedCategory('all');
+  };
+
+  const handleCategoryPillClick = (catId: string) => {
+    setSelectedCategory(catId);
+    if (setSelectedSubCategory) setSelectedSubCategory(null);
   };
 
   return (
@@ -112,18 +231,18 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         </div>
 
         {/* Filtres par catégories (Style pills minimaliste) */}
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8">
+        <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-8">
           {categories.map((cat) => {
-            const isActive = selectedCategory === cat.id;
+            const isActive = selectedCategory === cat.id && !selectedSubCategory;
             return (
               <button
                 key={cat.id}
                 type="button"
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm transition-all duration-200 cursor-pointer ${
+                onClick={() => handleCategoryPillClick(cat.id)}
+                className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm transition-all duration-200 cursor-pointer ${
                   isActive
-                    ? 'bg-[#E8C5B8] text-gray-900 font-medium shadow-xs'
-                    : 'bg-white text-gray-600 hover:bg-[#F7F2EF] border border-gray-100 font-normal'
+                    ? 'bg-[#BE185D] text-white font-bold shadow-xs'
+                    : 'bg-white text-gray-600 hover:bg-[#F7F2EF] border border-gray-200 font-normal'
                 }`}
               >
                 {cat.label}
@@ -131,6 +250,36 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             );
           })}
         </div>
+
+        {/* Indicateur de filtre actif (Sous-catégorie ou Recherche) */}
+        {(selectedSubCategory || (selectedCategory !== 'all' && selectedCategory)) && (
+          <div className="mb-6 max-w-3xl mx-auto flex flex-wrap items-center justify-between gap-3 p-3 sm:p-3.5 bg-pink-50/80 border border-pink-200 rounded-2xl text-xs sm:text-sm text-pink-950">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Filter size={15} className="text-pink-600 shrink-0" />
+              <span className="text-gray-500 font-normal">القسم المختار:</span>
+              <span className="font-bold text-[#BE185D]">
+                {getCategoryLabel(selectedCategory)}
+              </span>
+              {selectedSubCategory && (
+                <>
+                  <ChevronLeft size={13} className="text-gray-400" />
+                  <span className="font-bold text-pink-900 bg-white px-2.5 py-0.5 rounded-full border border-pink-200">
+                    {selectedSubCategory}
+                  </span>
+                </>
+              )}
+              <span className="text-pink-700 text-xs">({filteredProducts.length} منتج متوفر)</span>
+            </div>
+
+            <button
+              onClick={handleResetAll}
+              className="inline-flex items-center gap-1 text-xs text-pink-700 hover:text-pink-950 bg-white hover:bg-pink-100/60 px-3 py-1 rounded-full border border-pink-200 transition cursor-pointer shrink-0"
+            >
+              <X size={12} />
+              <span>إلغاء التصفية</span>
+            </button>
+          </div>
+        )}
 
         {/* Bandeau d'état de recherche en temps réel */}
         {trimmedSearch !== '' && (
@@ -181,7 +330,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
               {/* Informations Produit (Nom et Prix en GRAS dans la couleur rose/bordeaux de la marque) */}
               <div className="flex flex-col flex-1 justify-between text-center mt-1">
-                <h3 className="text-xs sm:text-sm font-normal text-gray-800 line-clamp-2 min-h-[2.5rem] mb-2 group-hover:text-[#9A6B5B] transition-colors">
+                <h3 className="text-xs sm:text-sm font-normal text-gray-800 line-clamp-2 min-h-[2.5rem] mb-2 group-hover:text-[#BE185D] transition-colors">
                   {product.name}
                 </h3>
                 {/* Prix en GRAS et dans la couleur rose/bordeaux de la marque */}
@@ -202,13 +351,15 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               لم يتم العثور على أي منتج
             </h4>
             <p className="text-xs text-gray-500 mb-6 leading-relaxed">
-              {trimmedSearch !== '' 
-                ? `لا توجد نتائج مطابقة لبحثك «${searchQuery}» في هذا القسم.`
-                : 'لا توجد منتجات متوفرة حالياً في هذا القسم.'}
+              {selectedSubCategory
+                ? `لا توجد منتجات مسجلة حالياً في قسم «${selectedSubCategory}». سيتم توفيرها قريباً!`
+                : trimmedSearch !== '' 
+                  ? `لا توجد نتائج مطابقة لبحثك «${searchQuery}» في هذا القسم.`
+                  : 'لا توجد منتجات متوفرة حالياً في هذا القسم.'}
             </p>
             <button
               onClick={handleResetAll}
-              className="inline-flex items-center gap-2 bg-[#E8C5B8] hover:bg-[#dfb5a6] text-gray-900 text-xs font-normal px-5 py-2.5 rounded-full transition cursor-pointer shadow-xs"
+              className="inline-flex items-center gap-2 bg-[#BE185D] hover:bg-[#9D174D] text-white text-xs font-bold px-5 py-2.5 rounded-full transition cursor-pointer shadow-xs"
             >
               <RotateCcw size={14} />
               <span>عرض جميع المنتجات</span>
