@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { PRODUCTS, Product } from '../data/products';
+import { PRODUCTS } from '../data/products';
+import type { Product } from '../data/products';
 import { Eye, Search, X, RotateCcw, Filter, ChevronLeft } from 'lucide-react';
 
 interface ProductCatalogProps {
