@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { Phone, ShieldCheck, Truck, Clock, Banknote, Sparkles, RotateCcw, HelpCircle, CheckCircle2, X, FileText } from 'lucide-react';
 
 export default function Footer() {
+  const [activePolicy, setActivePolicy] = useState<'privacy' | 'terms' | 'legal' | null>(null);
+
+  const closeModal = () => setActivePolicy(null);
+
   return (
     <footer id="contact" className="bg-gray-900 text-white pt-12 pb-8 mt-16 border-t border-gray-800 dir-rtl scroll-mt-20" dir="rtl">
       <div className="max-w-7xl mx-auto px-4">
