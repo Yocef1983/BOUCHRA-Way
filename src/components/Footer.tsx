@@ -1,5 +1,5 @@
-import React from 'react';
-import { Phone, ShieldCheck, Truck, Clock, Banknote, Sparkles, RotateCcw, HelpCircle, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Phone, ShieldCheck, Truck, Clock, Banknote, Sparkles, RotateCcw, HelpCircle, CheckCircle2, X, FileText } from 'lucide-react';
 
 export default function Footer() {
   return (
