@@ -157,61 +157,101 @@ export default function App() {
                   <div className="mb-4">
                     <h3 className="text-lg font-bold text-gray-800 mb-2">من نحن - مشاهدة الفيديو</h3>
                     <div className="aspect-video w-full rounded-2xl overflow-hidden bg-gray-100">
-                      <video className="w-full h-full object-cover" controls poster="/image/parfum-myway-femme.jpg">
-                        <source src="#" type="video/mp4" />
-                      </video>
+                      <iframe
+                        className="w-full h-full"
+                        src="https://www.youtube.com/embed/KNtRghtkl9w"
+                        title="من نحن - ماي واي"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      ></iframe>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <a href="#zod-dakhel-1" className="flex items-start gap-3 p-3 bg-white rounded-xl border border-gray-100 hover:bg-pink-50/60 hover:border-pink-200 transition">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">1</span>
-                      <div>
-                        <p className="font-bold text-gray-800">أولاً: المكسب الفوري</p>
-                        <p className="text-sm text-gray-600">تحصلي على خصم فوري عند شراء المنتجات أو الترويج لها</p>
-                      </div>
-                    </a>
-                    <a href="#zod-dakhel-2" className="flex items-start gap-3 p-3 bg-white rounded-xl border border-gray-100 hover:bg-pink-50/60 hover:border-pink-200 transition">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">2</span>
-                      <div>
-                        <p className="font-bold text-gray-800">الفرصة الحقيقية لزيادة دخلك مع مكافآت ماي واي الشهرية</p>
-                        <p className="text-sm text-gray-600">نظام مكافآت واضح وشفاف يضيف دخلاً حقيقياً</p>
-                      </div>
-                    </a>
-                    <a href="#zod-dakhel-3" className="flex items-start gap-3 p-3 bg-white rounded-xl border border-gray-100 hover:bg-pink-50/60 hover:border-pink-200 transition">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">3</span>
-                      <div>
-                        <p className="font-bold text-gray-800">كيف تنمي دخلك الشهر التالي</p>
-                        <p className="text-sm text-gray-600">بناء فريق يساعدك على نمو مستمر للدخل</p>
-                      </div>
-                    </a>
-                    <a href="#zod-dakhel-4" className="flex items-start gap-3 p-3 bg-white rounded-xl border border-gray-100 hover:bg-pink-50/60 hover:border-pink-200 transition">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">4</span>
-                      <div>
-                        <p className="font-bold text-gray-800">كيف تحصل على دخل يتراوح بين 200 - 3000 درهم في الشهر</p>
-                        <p className="text-sm text-gray-600">فرصة حقيقية تناسب الجميع مع إمكانية النمو</p>
-                      </div>
-                    </a>
-                    <a href="#zod-dakhel-5" className="flex items-start gap-3 p-3 bg-white rounded-xl border border-gray-100 hover:bg-pink-50/60 hover:border-pink-200 transition">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">5</span>
-                      <div>
-                        <p className="font-bold text-gray-800">مكافآت سنوية عند حصولك على ألقاب متميزة</p>
-                        <p className="text-sm text-gray-600">حوافز إضافية وجوائز قيمة</p>
-                      </div>
-                    </a>
-                    <a href="#zod-dakhel-6" className="flex items-start gap-3 p-3 bg-white rounded-xl border border-gray-100 hover:bg-pink-50/60 hover:border-pink-200 transition">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">6</span>
-                      <div>
-                        <p className="font-bold text-gray-800">نصائح لإدارة الوقت وتحقيق أهدافك</p>
-                        <p className="text-sm text-gray-600">خطوات عملية للنجاح اليومي</p>
-                      </div>
-                    </a>
-                    <a href="#zod-dakhel-7" className="flex items-start gap-3 p-3 bg-white rounded-xl border border-gray-100 hover:bg-pink-50/60 hover:border-pink-200 transition">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">7</span>
-                      <div>
-                        <p className="font-bold text-gray-800">التغلب على العقبات في البداية</p>
-                        <p className="text-sm text-gray-600">دعم وتوجيه مستمر من الفريق</p>
-                      </div>
-                    </a>
+                    <details className="group border border-gray-100 rounded-xl overflow-hidden">
+                      <summary className="flex items-center justify-between gap-3 p-3 bg-white cursor-pointer hover:bg-pink-50/60 transition">
+                        <div className="flex items-start gap-3">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">1</span>
+                          <div>
+                            <p className="font-bold text-gray-800">أولاً: المكسب الفوري</p>
+                          </div>
+                        </div>
+                        <span className="text-pink-600 font-bold group-open:rotate-90 transition-transform">»</span>
+                      </summary>
+                      <div className="px-4 pb-3 pt-1 text-sm text-gray-600 bg-white">تحصلي على خصم فوري عند شراء المنتجات أو الترويج لها</div>
+                    </details>
+                    <details className="group border border-gray-100 rounded-xl overflow-hidden">
+                      <summary className="flex items-center justify-between gap-3 p-3 bg-white cursor-pointer hover:bg-pink-50/60 transition">
+                        <div className="flex items-start gap-3">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">2</span>
+                          <div>
+                            <p className="font-bold text-gray-800">الفرصة الحقيقية لزيادة دخلك مع مكافآت ماي واي الشهرية</p>
+                          </div>
+                        </div>
+                        <span className="text-pink-600 font-bold group-open:rotate-90 transition-transform">»</span>
+                      </summary>
+                      <div className="px-4 pb-3 pt-1 text-sm text-gray-600 bg-white">نظام مكافآت واضح وشفاف يضيف دخلاً حقيقياً</div>
+                    </details>
+                    <details className="group border border-gray-100 rounded-xl overflow-hidden">
+                      <summary className="flex items-center justify-between gap-3 p-3 bg-white cursor-pointer hover:bg-pink-50/60 transition">
+                        <div className="flex items-start gap-3">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">3</span>
+                          <div>
+                            <p className="font-bold text-gray-800">كيف تنمي دخلك الشهر التالي</p>
+                          </div>
+                        </div>
+                        <span className="text-pink-600 font-bold group-open:rotate-90 transition-transform">»</span>
+                      </summary>
+                      <div className="px-4 pb-3 pt-1 text-sm text-gray-600 bg-white">بناء فريق يساعدك على نمو مستمر للدخل</div>
+                    </details>
+                    <details className="group border border-gray-100 rounded-xl overflow-hidden">
+                      <summary className="flex items-center justify-between gap-3 p-3 bg-white cursor-pointer hover:bg-pink-50/60 transition">
+                        <div className="flex items-start gap-3">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">4</span>
+                          <div>
+                            <p className="font-bold text-gray-800">كيف تحصل على دخل يتراوح بين 200 - 3000 درهم في الشهر</p>
+                          </div>
+                        </div>
+                        <span className="text-pink-600 font-bold group-open:rotate-90 transition-transform">»</span>
+                      </summary>
+                      <div className="px-4 pb-3 pt-1 text-sm text-gray-600 bg-white">فرصة حقيقية تناسب الجميع مع إمكانية النمو</div>
+                    </details>
+                    <details className="group border border-gray-100 rounded-xl overflow-hidden">
+                      <summary className="flex items-center justify-between gap-3 p-3 bg-white cursor-pointer hover:bg-pink-50/60 transition">
+                        <div className="flex items-start gap-3">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">5</span>
+                          <div>
+                            <p className="font-bold text-gray-800">مكافآت سنوية عند حصولك على ألقاب متميزة</p>
+                          </div>
+                        </div>
+                        <span className="text-pink-600 font-bold group-open:rotate-90 transition-transform">»</span>
+                      </summary>
+                      <div className="px-4 pb-3 pt-1 text-sm text-gray-600 bg-white">حوافز إضافية وجوائز قيمة</div>
+                    </details>
+                    <details className="group border border-gray-100 rounded-xl overflow-hidden">
+                      <summary className="flex items-center justify-between gap-3 p-3 bg-white cursor-pointer hover:bg-pink-50/60 transition">
+                        <div className="flex items-start gap-3">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">6</span>
+                          <div>
+                            <p className="font-bold text-gray-800">نصائح لإدارة الوقت وتحقيق أهدافك</p>
+                          </div>
+                        </div>
+                        <span className="text-pink-600 font-bold group-open:rotate-90 transition-transform">»</span>
+                      </summary>
+                      <div className="px-4 pb-3 pt-1 text-sm text-gray-600 bg-white">خطوات عملية للنجاح اليومي</div>
+                    </details>
+                    <details className="group border border-gray-100 rounded-xl overflow-hidden">
+                      <summary className="flex items-center justify-between gap-3 p-3 bg-white cursor-pointer hover:bg-pink-50/60 transition">
+                        <div className="flex items-start gap-3">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-pink-600 text-white text-sm font-bold shrink-0">7</span>
+                          <div>
+                            <p className="font-bold text-gray-800">التغلب على العقبات في البداية</p>
+                          </div>
+                        </div>
+                        <span className="text-pink-600 font-bold group-open:rotate-90 transition-transform">»</span>
+                      </summary>
+                      <div className="px-4 pb-3 pt-1 text-sm text-gray-600 bg-white">دعم وتوجيه مستمر من الفريق</div>
+                    </details>
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -326,15 +366,6 @@ export default function App() {
               </div>
             </section>
 
-            <ProductCatalog 
-              selectedCategory={selectedCategory}
-              setSelectedCategory={handleCategoryChange}
-              selectedSubCategory={selectedSubCategory}
-              setSelectedSubCategory={setSelectedSubCategory}
-              searchQuery={searchQuery}
-              setSearchQuery={handleSearchChange}
-              onSelectProduct={handleSelectProduct} 
-            />
           </>
         )}
       </main>
