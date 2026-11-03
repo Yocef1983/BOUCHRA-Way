@@ -80,6 +80,9 @@ export default function App() {
     }, 50);
   };
 
+  // Vue Accueil : aucune catégorie sélectionnée, pas de recherche
+  const isHomeView = selectedCategory === 'all' && !selectedSubCategory && searchQuery === '';
+
   return (
     <div className="min-h-screen bg-[#FDFCFB] text-gray-800 font-sans relative flex flex-col">
       {/* Barre de navigation globale avec menus déroulants et recherche */}
@@ -96,14 +99,25 @@ export default function App() {
         onSelectSubCategory={handleSubCategorySelect}
       />
       
-      {/* Contenu principal : alternance entre Catalogue et Fiche Produit */}
+      {/* Contenu principal : alternance entre Catalogue, Fiche Produit et Accueil */}
       <main className="flex-1">
         {selectedProduct ? (
           <ProductDetail 
             product={selectedProduct} 
             onBack={handleBackToCatalog} 
           />
+        ) : !isHomeView ? (
+          /* ── Vue Catégorie / Recherche ── */
+          <div id="catalogue" className="scroll-mt-24">
+            <ProductCatalog
+              selectedCategory={selectedCategory}
+              selectedSubCategory={selectedSubCategory}
+              searchQuery={searchQuery}
+              onSelectProduct={handleSelectProduct}
+            />
+          </div>
         ) : (
+          /* ── Vue Accueil ── */
           <>
             <HeroBanner />
             
