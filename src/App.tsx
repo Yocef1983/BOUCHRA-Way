@@ -80,14 +80,16 @@ export default function App() {
     }, 50);
   };
 
-  // Vue Accueil : aucune catégorie sélectionnée, pas de recherche
-  const isHomeView = selectedCategory === 'all' && !selectedSubCategory && searchQuery === '';
+  // Correction : La vue d'accueil ne s'active que si la catégorie est 'all' (ou vide) SANS sous-catégorie ni recherche.
+  // Si l'utilisateur clique sur "كل المنتجات", selectedCategory vaudra 'كل المنتجات', donc isHomeView sera false et le ProductCatalog s'affichera correctement.
+  const isCategoryAll = selectedCategory === 'all' || selectedCategory === 'كل المنتجات';
+  const isHomeView = isCategoryAll && !selectedSubCategory && searchQuery === '';
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] text-gray-800 font-sans relative flex flex-col">
       {/* Barre de navigation globale avec menus déroulants et recherche */}
       <Navbar 
-        selectedCategory={selectedCategory} 
+        selectedCategory={selectedCategory}
         setSelectedCategory={handleCategoryChange}
         selectedSubCategory={selectedSubCategory}
         setSelectedSubCategory={setSelectedSubCategory}
@@ -107,7 +109,7 @@ export default function App() {
             onBack={handleBackToCatalog} 
           />
         ) : !isHomeView ? (
-          /* ── Vue Catégorie / Recherche ── */
+          /* ── Vue Catégorie / Recherche / Tous les produits ── */
           <div id="catalogue" className="scroll-mt-24">
             <ProductCatalog
               selectedCategory={selectedCategory}
@@ -156,9 +158,6 @@ export default function App() {
                 <RegistrationForm />
               </div>
             </section>
-
-            {/* Bloc d'Accès aux Catalogues */}
-            {/* Supprimé selon demande */}
 
             {/* Section "كيف تزود دخلك" */}
             <section className="max-w-7xl mx-auto px-4 py-10">
@@ -379,7 +378,6 @@ export default function App() {
                 </div>
               </div>
             </section>
-
           </>
         )}
       </main>
