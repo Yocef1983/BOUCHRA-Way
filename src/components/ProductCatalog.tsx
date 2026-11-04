@@ -27,7 +27,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
   const setSelectedCategory = setControlledCategory || setInternalCategory;
 
-  // Catégories alignées avec le tableau Excel
+  // Catégories de référence pour les libellés
   const categories = [
     { id: 'all', label: 'الكل' },
     { id: 'parfum', label: 'عطور' },
@@ -51,15 +51,12 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     const text = (product.name + ' ' + product.description + ' ' + (product.altText || '') + ' ' + product.category).toLowerCase();
 
     switch (subCat) {
-      // عطور
       case 'عطر رجالي':
         return product.category === 'parfum' && (text.includes('رجالي') || text.includes('homme'));
       case 'عطر نسائي':
         return product.category === 'parfum' && (text.includes('نسائي') || text.includes('femme'));
       case 'مزيلات العرق':
         return text.includes('مزيل') || text.includes('déodorant') || text.includes('deodorant') || text.includes('عرق');
-
-      // ماكياج
       case 'البشرة':
         return product.category === 'maquillage' && (text.includes('أساس') || text.includes('بشرة') || text.includes('تصحيح') || text.includes('bb'));
       case 'الشفايف':
@@ -68,8 +65,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         return product.category === 'maquillage' && (text.includes('أظافر') || text.includes('اظافر') || text.includes('vernis'));
       case 'العيون و الحواجب':
         return product.category === 'maquillage' && (text.includes('ماسكارا') || text.includes('mascara') || text.includes('رموش') || text.includes('عيون') || text.includes('حواجب'));
-
-      // العناية بالوجه
       case 'كريمات':
         return product.category === 'soin-visage' && (text.includes('كريم') || text.includes('مرطب'));
       case 'منظفات الوجه':
@@ -78,8 +73,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         return (product.category === 'soin-visage' || product.category === 'soin-capillaire') && (text.includes('ماسك') || text.includes('غاسول') || text.includes('كريمة'));
       case 'حماية الوجه':
         return product.category === 'soin-visage' && (text.includes('حماية') || text.includes('حساسة') || text.includes('شمس') || text.includes('delicate'));
-
-      // العناية بالجسم
       case 'كريمات مرطبة':
         return product.category === 'soin-corps' && (text.includes('مرطب') || text.includes('كريم') || text.includes('ترطيب'));
       case 'زيوت مغذية':
@@ -90,33 +83,24 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         return product.category === 'soin-corps' && (text.includes('قدم') || text.includes('أقدام') || text.includes('تشققات') || text.includes('ibnosina'));
       case 'مستحضرات الحمام':
         return product.category === 'soin-corps' && (text.includes('حمام') || text.includes('صابون') || text.includes('bain') || text.includes('مزيل'));
-
-      // العناية بالشعر
       case 'شامبو':
         return product.category === 'soin-capillaire' && (text.includes('شامبو') || text.includes('shampoing'));
-      case 'ماسكات':
-        return product.category === 'soin-capillaire' && (text.includes('ماسك') || text.includes('كريمة') || text.includes('حمام'));
       case 'زيوت و سيرومات':
         return product.category === 'soin-capillaire' && (text.includes('زيت') || text.includes('سيروم') || text.includes('serum') || text.includes('huile'));
       case 'مستلزمات الشعر':
         return product.category === 'soin-capillaire';
-
-      // مستحضرات رجالية
       case 'العناية بالوجه':
         return text.includes('رجالي') || text.includes('homme') || (text.includes('وجه') && text.includes('رجالي'));
       case 'العناية بالجسم':
         return text.includes('رجالي') || text.includes('homme') || text.includes('sporty');
       case 'الحلاقة':
         return text.includes('حلاقة') || text.includes('rasage') || text.includes('barbe');
-
-      // أطفال
       case 'العناية ببشرة الطفل':
         return text.includes('طفل') || text.includes('أطفال') || text.includes('رقيقة');
       case 'العناية بشعر الطفل':
         return text.includes('طفل') || text.includes('أطفال') || (text.includes('شعر') && text.includes('طفل'));
       case 'عطر الأطفال':
         return text.includes('طفل') || text.includes('أطفال') || (text.includes('عطر') && text.includes('طفل'));
-
       default:
         return text.includes(subCat.toLowerCase());
     }
@@ -213,11 +197,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     setSelectedCategory('all');
   };
 
-  const handleCategoryPillClick = (catId: string) => {
-    setSelectedCategory(catId);
-    if (setSelectedSubCategory) setSelectedSubCategory(null);
-  };
-
   return (
     <section className="py-12 bg-[#FDFCFB] dir-rtl relative scroll-mt-20" id="catalogue" dir="rtl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -233,26 +212,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           <div className="w-12 h-0.5 bg-[#E8C5B8] mx-auto mt-3 rounded-full"></div>
         </div>
 
-        {/* Filtres par catégories interactifs */}
-        <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-8">
-          {categories.map((cat) => {
-            const isActive = (normalizedCategory === cat.id) && !selectedSubCategory;
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => handleCategoryPillClick(cat.id)}
-                className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm transition-all duration-200 cursor-pointer ${
-                  isActive
-                    ? 'bg-[#BE185D] text-white font-bold shadow-xs'
-                    : 'bg-white text-gray-600 hover:bg-[#F7F2EF] border border-gray-200 font-normal'
-                }`}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
-        </div>
+        {/* Note : La barre de boutons de catégories a été supprimée ici pour l'esthétique de la page. 
+           Le filtrage des produits se fait désormais élégamment via le menu supérieur (Navbar). */}
 
         {/* Indicateur de filtre actif (Sous-catégorie ou Recherche) */}
         {(selectedSubCategory || (normalizedCategory !== 'all')) && (
