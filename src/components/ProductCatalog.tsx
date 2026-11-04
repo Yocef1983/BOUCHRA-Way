@@ -125,24 +125,26 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   // 1. Filtrage principal par catégorie
   let filteredProducts = PRODUCTS;
 
-  if (selectedCategory !== 'all') {
-    if (selectedCategory === 'hommes') {
+  const normalizedCategory = (selectedCategory === 'كل المنتجات' || !selectedCategory) ? 'all' : selectedCategory;
+
+  if (normalizedCategory !== 'all') {
+    if (normalizedCategory === 'hommes') {
       filteredProducts = PRODUCTS.filter(p => {
         const text = (p.name + ' ' + p.description + ' ' + (p.altText || '')).toLowerCase();
         return text.includes('رجالي') || text.includes('homme');
       });
-    } else if (selectedCategory === 'enfants') {
+    } else if (normalizedCategory === 'enfants') {
       filteredProducts = PRODUCTS.filter(p => {
         const text = (p.name + ' ' + p.description + ' ' + (p.altText || '')).toLowerCase();
         return text.includes('طفل') || text.includes('أطفال');
       });
-    } else if (selectedCategory === 'accessoires') {
+    } else if (normalizedCategory === 'accessoires') {
       filteredProducts = PRODUCTS.filter(p => {
         const text = (p.name + ' ' + p.description + ' ' + (p.altText || '')).toLowerCase();
         return text.includes('مجوهرات') || text.includes('أكسسوار') || p.category === 'accessoires';
       });
     } else {
-      filteredProducts = PRODUCTS.filter(p => p.category === selectedCategory);
+      filteredProducts = PRODUCTS.filter(p => p.category === normalizedCategory);
     }
   }
 
@@ -220,7 +222,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     <section className="py-12 bg-[#FDFCFB] dir-rtl relative scroll-mt-20" id="catalogue" dir="rtl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* En-tête épuré moderne (Inspiré beautyforyou.ma) */}
+        {/* En-tête épuré moderne */}
         <div className="text-center mb-8">
           <span className="text-xs uppercase tracking-widest text-[#A8948D] font-normal block mb-1">
             NOTRE COLLECTION • MY WAY MAROC
@@ -231,10 +233,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           <div className="w-12 h-0.5 bg-[#E8C5B8] mx-auto mt-3 rounded-full"></div>
         </div>
 
-        {/* Filtres par catégories (Style pills minimaliste) */}
+        {/* Filtres par catégories interactifs */}
         <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-8">
           {categories.map((cat) => {
-            const isActive = selectedCategory === cat.id && !selectedSubCategory;
+            const isActive = (normalizedCategory === cat.id) && !selectedSubCategory;
             return (
               <button
                 key={cat.id}
@@ -253,13 +255,13 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         </div>
 
         {/* Indicateur de filtre actif (Sous-catégorie ou Recherche) */}
-        {(selectedSubCategory || (selectedCategory !== 'all' && selectedCategory)) && (
+        {(selectedSubCategory || (normalizedCategory !== 'all')) && (
           <div className="mb-6 max-w-3xl mx-auto flex flex-wrap items-center justify-between gap-3 p-3 sm:p-3.5 bg-pink-50/80 border border-pink-200 rounded-2xl text-xs sm:text-sm text-pink-950">
             <div className="flex items-center gap-2 flex-wrap">
               <Filter size={15} className="text-pink-600 shrink-0" />
               <span className="text-gray-500 font-normal">القسم المختار:</span>
               <span className="font-bold text-[#BE185D]">
-                {getCategoryLabel(selectedCategory)}
+                {getCategoryLabel(normalizedCategory)}
               </span>
               {selectedSubCategory && (
                 <>
@@ -302,7 +304,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           </div>
         )}
 
-        {/* Grille des produits cliquables sans bouton d'achat direct */}
+        {/* Grille des produits cliquables */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {filteredProducts.map((product) => (
             <button 
@@ -330,12 +332,11 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 </div>
               </div>
 
-              {/* Informations Produit (Nom et Prix en GRAS dans la couleur rose/bordeaux de la marque) */}
+              {/* Informations Produit */}
               <div className="flex flex-col flex-1 justify-between text-center mt-1">
                 <h3 className="text-xs sm:text-sm font-normal text-gray-800 line-clamp-2 min-h-[2.5rem] mb-2 group-hover:text-[#BE185D] transition-colors">
                   {product.name}
                 </h3>
-                {/* Prix en GRAS et dans la couleur rose/bordeaux de la marque */}
                 <div className="text-base sm:text-lg font-bold text-[#BE185D] mt-auto pt-2 border-t border-gray-50 flex items-center justify-center gap-1">
                   <span>{product.price}.00</span>
                   <span className="text-xs font-bold text-[#BE185D]">DH</span>
