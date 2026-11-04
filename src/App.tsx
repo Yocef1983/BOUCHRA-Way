@@ -14,9 +14,15 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  
+  // État explicite pour contrôler l'affichage de la page d'accueil vs le catalogue
+  const [showHome, setShowHome] = useState<boolean>(true);
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
+    setShowHome(false); // Quitte l'accueil pour afficher le catalogue
+    // Normalise "كل المنتجات" ou "all" pour afficher l'intégralité du catalogue
+    const normalizedCategory = (category === 'كل المنتجات' || category === 'all') ? 'all' : category;
+    setSelectedCategory(normalizedCategory);
     setSelectedSubCategory(null);
     if (selectedProduct) {
       setSelectedProduct(null);
@@ -24,7 +30,9 @@ export default function App() {
   };
 
   const handleSubCategorySelect = (category: string, subCategory: string) => {
-    setSelectedCategory(category);
+    setShowHome(false);
+    const normalizedCategory = category === 'كل المنتجات' ? 'all' : category;
+    setSelectedCategory(normalizedCategory);
     setSelectedSubCategory(subCategory);
     setSearchQuery('');
     if (selectedProduct) {
@@ -37,6 +45,9 @@ export default function App() {
   };
 
   const handleSearchChange = (query: string) => {
+    if (query.trim() !== '') {
+      setShowHome(false);
+    }
     setSearchQuery(query);
     if (selectedProduct) {
       setSelectedProduct(null);
@@ -54,6 +65,7 @@ export default function App() {
   };
 
   const handleNavigateHome = () => {
+    setShowHome(true); // Retourne explicitement à l'accueil
     setSelectedProduct(null);
     setSelectedCategory('all');
     setSelectedSubCategory(null);
@@ -62,6 +74,7 @@ export default function App() {
   };
 
   const handleNavigateToCatalog = () => {
+    setShowHome(false); // Force l'affichage du catalogue complet
     setSelectedProduct(null);
     setSelectedCategory('all');
     setSelectedSubCategory(null);
@@ -73,6 +86,7 @@ export default function App() {
   };
 
   const handleNavigateSection = (sectionId: string) => {
+    setShowHome(true);
     setSelectedProduct(null);
     setTimeout(() => {
       const el = document.getElementById(sectionId);
@@ -80,10 +94,8 @@ export default function App() {
     }, 50);
   };
 
-  // Correction : La vue d'accueil ne s'active que si la catégorie est 'all' (ou vide) SANS sous-catégorie ni recherche.
-  // Si l'utilisateur clique sur "كل المنتجات", selectedCategory vaudra 'كل المنتجات', donc isHomeView sera false et le ProductCatalog s'affichera correctement.
-  const isCategoryAll = selectedCategory === 'all' || selectedCategory === 'كل المنتجات';
-  const isHomeView = isCategoryAll && !selectedSubCategory && searchQuery === '';
+  // La vue d'accueil ne s'affiche que si showHome est true et qu'il n'y a pas de recherche active
+  const isHomeView = showHome && !selectedSubCategory && searchQuery === '';
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] text-gray-800 font-sans relative flex flex-col">
@@ -109,7 +121,7 @@ export default function App() {
             onBack={handleBackToCatalog} 
           />
         ) : !isHomeView ? (
-          /* ── Vue Catégorie / Recherche / Tous les produits ── */
+          /* ── Vue Catalogue / Recherche / Tous les produits ── */
           <div id="catalogue" className="scroll-mt-24">
             <ProductCatalog
               selectedCategory={selectedCategory}
