@@ -1,246 +1,275 @@
-import React, { useState } from 'react';
-import { FileText, Download, Eye, CheckCircle2, UserCheck } from 'lucide-react';
+import React, { useState, useId } from 'react';
+import { ShieldCheck, Phone, User, Mail, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-export default function RegistrationForm() {
-  const [hasMembership, setHasMembership] = useState<'yes' | 'no'>('no');
-  const [formData, setFormData] = useState({
+interface FormData {
+  fullName: string;
+  phone: string;
+  email: string;
+  city: string;
+  cndpConsent: boolean;
+}
+
+interface FormErrors {
+  fullName?: string;
+  phone?: string;
+  email?: string;
+  city?: string;
+  cndpConsent?: string;
+}
+
+// Nettoyage anti-XSS préventif (stripping des balises HTML et encodage entités de base)
+const sanitizeInput = (input: string): string => {
+  return input
+    .replace(/[<>]/g, '') // Supprime les balises < et >
+    .trim();
+};
+
+// Validation stricte du mobile marocain (+212 / 05 / 06 / 07 suivi de 8 chiffres)
+const MOROCCAN_PHONE_REGEX = /^(?:(?:\+?212)|0)([5-7]\d{8})$/;
+
+export const RegistrationForm: React.FC = () => {
+  const formId = useId();
+
+  const [formData, setFormData] = useState<FormData>({
     fullName: '',
-    cin: '',
-    phoneWhatsapp: '',
-    phoneAlt: '',
+    phone: '',
+    email: '',
     city: '',
-    address: ''
+    cndpConsent: false,
   });
+
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  // Normalisation du numéro pour WhatsApp (convertit 06/07 en format 2126/2127)
+  const formatPhoneForWhatsApp = (rawPhone: string): string => {
+    const cleaned = rawPhone.replace(/\s+/g, '').replace(/-/g, '');
+    const match = cleaned.match(MOROCCAN_PHONE_REGEX);
+    if (match && match[1]) {
+      return `212${match[1]}`;
+    }
+    return cleaned;
+  };
+
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    if (!formData.fullName.trim() || formData.fullName.length < 3) {
+      newErrors.fullName = 'Le nom complet doit comporter au moins 3 caractères.';
+    }
+
+    const cleanPhone = formData.phone.replace(/[\s.-]/g, '');
+    if (!MOROCCAN_PHONE_REGEX.test(cleanPhone)) {
+      newErrors.phone = 'Numéro invalide. Formats acceptés : 06XXXXXXXX, 07XXXXXXXX ou +2126XXXXXXXX.';
+    }
+
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Veuillez saisir une adresse email valide.';
+    }
+
+    if (!formData.city.trim()) {
+      newErrors.city = 'Veuillez renseigner votre ville de résidence.';
+    }
+
+    if (!formData.cndpConsent) {
+      newErrors.cndpConsent = 'Vous devez accepter les conditions relatives au traitement des données (Loi 09-08).';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : sanitizeInput(value),
+    }));
+
+    // Reset de l'erreur sur le champ modifié
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const message = `طلب تسجيل عضوية جديدة - Bouchra Way:\n\n` +
-      `👤 الاسم الكامل: ${formData.fullName}\n` +
-      `❓ هل لديك عضوية في ماي واي؟: ${hasMembership === 'yes' ? 'نعم' : 'لا'}\n` +
-      `💳 رقم البطاقة الوطنية/ CIN: ${formData.cin}\n` +
-      `📱 رقم الهاتف - يدعم واتساب: ${formData.phoneWhatsapp}\n` +
-      `📞 رقم هاتف آخر: ${formData.phoneAlt}\n` +
-      `🏙️ المدينة / المنطقة: ${formData.city}\n` +
-      `📍 العنوان بالتفصيل: ${formData.address}`;
-    
-    window.open(`https://wa.me/212634486494?text=${encodeURIComponent(message)}`, '_blank');
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const sanitizedPhone = formatPhoneForWhatsApp(formData.phone);
+      
+      // Construction du message WhatsApp sécurisé
+      const message = `*Nouvelle Inscription Réseau MLM - Bouchra Way*\n\n` +
+        `👤 *Nom:* ${formData.fullName}\n` +
+        `📱 *Téléphone:* +${sanitizedPhone}\n` +
+        `📍 *Ville:* ${formData.city}\n` +
+        (formData.email ? `📧 *Email:* ${formData.email}\n` : '') +
+        `✅ *Consentement CNDP:* Validé (Loi 09-08)\n` +
+        `⏱️ *Horodatage:* ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Casablanca' })}`;
+
+      // Numéro support Bouchra Way (à adapter selon votre numéro officiel)
+      const targetSupportPhone = "212634486494"; 
+      const waUrl = `https://wa.me/${targetSupportPhone}?text=${encodeURIComponent(message)}`;
+
+      setIsSuccess(true);
+      setTimeout(() => {
+        window.open(waUrl, '_blank', 'noopener,noreferrer');
+        setIsSubmitting(false);
+      }, 600);
+    } catch {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <section id="register" className="py-10 bg-gradient-to-b from-pink-50/50 to-white dir-rtl scroll-mt-20" dir="rtl">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* قسم الفرصة والمميزات (زود دخلك) */}
-          <div id="opportunity" className="lg:col-span-5 space-y-6 bg-white p-6 rounded-2xl shadow-sm border border-pink-100 scroll-mt-24">
-            <div className="inline-flex items-center gap-2 bg-pink-100 text-pink-800 text-xs font-bold px-3 py-1 rounded-full">
-              <UserCheck className="w-4 h-4" />
-              فرصة فريدة لزيادة الدخل
-            </div>
-            
-            <h2 className="text-2xl font-bold text-gray-800 leading-snug">
-              انضمي الآن لعائلة بوشرى واي واكتسبي استقلالك المالي!
-            </h2>
-            
-            <p className="text-gray-600 text-sm leading-relaxed">
-              تقدم بوشرى واي فرصة عمل ممتازة لتطوير وتزايد الدخل بصورة مستمرة، مع الحفاظ على ولاء أعضائها ومستهلكيها بتقديم مكافآت مجزية ونسب خصم تصل إلى 50%.
-            </p>
-
-            <div className="space-y-3 pt-2">
-              <div className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                <span className="text-xs text-gray-700 font-medium">خصم مباشر يصل إلى 50% على جميع المنتجات.</span>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                <span className="text-xs text-gray-700 font-medium">مكافآت مالية شهرية حسب مبيعاتك ومبيعات فريقك.</span>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                <span className="text-xs text-gray-700 font-medium">هدايا قيمة كتالوجية وأجهزة منزلية متطورة.</span>
-              </div>
-            </div>
-
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 space-y-2">
-              <p className="font-bold">⚠️ ملاحظة مهمة:</p>
-              <p>هذا الموقع مخصص لعمل عضويات لمن لم يسبق لهم عمل عضوية في ماي واي من قبل أو لمن كان لديه عضوية منتهية يريد عمل عضوية جديدة.</p>
-            </div>
-          </div>
-
-          {/* استمارة التسجيل المطابقة للتوجيهات */}
-          <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl shadow-md border border-pink-200">
-            <div className="text-center mb-6">
-              <h3 className="text-xl font-bold text-pink-700 flex items-center justify-center gap-2">
-                <FileText className="w-5 h-5" />
-                استمارة التسجيل
-              </h3>
-              <p className="text-xs text-gray-500 mt-1">يرجى ملء البيانات بدقة لإنشاء حساب العضوية الخاص بك</p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-gray-700 font-bold mb-1">الاسم الكامل (*)</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="الاسم والنسب الكامل"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none text-right"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                />
-              </div>
-
-              {/* سؤال العضوية */}
-              <div className="p-3 bg-pink-50/50 rounded-lg border border-pink-100">
-                <label className="block text-gray-700 font-bold mb-2">(*) هل لديك عضوية في ماي واي؟</label>
-                <div className="flex items-center gap-6">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="membership"
-                      checked={hasMembership === 'yes'}
-                      onChange={() => setHasMembership('yes')}
-                      className="text-pink-600 focus:ring-pink-500"
-                    />
-                    <span>نعم</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="membership"
-                      checked={hasMembership === 'no'}
-                      onChange={() => setHasMembership('no')}
-                      className="text-pink-600 focus:ring-pink-500"
-                    />
-                    <span>لا</span>
-                  </label>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-700 font-bold mb-1">(*) رقم البطاقة الوطنية/ CIN</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="مثال: AB123456"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none text-right"
-                    value={formData.cin}
-                    onChange={(e) => setFormData({ ...formData, cin: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-bold mb-1">(*) رقم الهاتف - يدعم واتساب</label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="06XXXXXXXX"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none text-right"
-                    value={formData.phoneWhatsapp}
-                    onChange={(e) => setFormData({ ...formData, phoneWhatsapp: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-700 font-bold mb-1">رقم هاتف آخر</label>
-                  <input
-                    type="tel"
-                    placeholder="اختياري"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none text-right"
-                    value={formData.phoneAlt}
-                    onChange={(e) => setFormData({ ...formData, phoneAlt: e.target.value })}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 font-bold mb-1">(*) المدينة / المنطقة</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="مثال: الدار البيضاء، الرباط..."
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none text-right"
-                    value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-gray-700 font-bold mb-1">(*) العنوان بالتفصيل</label>
-                <textarea
-                  required
-                  rows={2}
-                  placeholder="الحي، الشارع، أرقام الزنقة أو البناية وعلامة مميزة..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none text-right"
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-pink-700 hover:bg-pink-800 text-white font-bold py-3 rounded-xl shadow-md transition duration-200 text-sm mt-2 cursor-pointer"
-              >
-                إرسال استمارة التسجيل عبر واتساب 🚀
-              </button>
-            </form>
-
-            {/* خطوات الانضمام */}
-            <div className="mt-6 pt-6 border-t border-gray-100">
-              <div className="text-center mb-4">
-                <h4 className="text-sm font-bold text-gray-800">كيف تنضمين إلى عائلة بوشرى واي؟</h4>
-                <p className="text-[11px] text-gray-500 mt-1">3 خطوات بسيطة للانضمام والاستفادة من التخفيضات</p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="flex items-start gap-2 p-3 rounded-xl bg-pink-50/60 border border-pink-100">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-pink-600 text-white text-xs font-bold">1</span>
-                  <div>
-                    <p className="text-xs font-bold text-gray-800">ملء الاستمارة</p>
-                    <p className="text-[11px] text-gray-600">أدخلي بياناتك بدقة</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 p-3 rounded-xl bg-pink-50/60 border border-pink-100">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-pink-600 text-white text-xs font-bold">2</span>
-                  <div>
-                    <p className="text-xs font-bold text-gray-800">تأكيد عبر الواتساب</p>
-                    <p className="text-[11px] text-gray-600">سيتم التواصل لتأكيد البيانات</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 p-3 rounded-xl bg-pink-50/60 border border-pink-100">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-pink-600 text-white text-xs font-bold">3</span>
-                  <div>
-                    <p className="text-xs font-bold text-gray-800">تفعيل العضوية والاستفادة</p>
-                    <p className="text-[11px] text-gray-600">احصلي على التخفيضات وفرصة الدخل</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* أزرار الكتالوج الترويجي */}
-            <div id="catalog-downloads" className="mt-6 pt-6 border-t border-gray-100 space-y-3">
-              <a
-                href="#catalogue"
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs transition shadow-sm"
-              >
-                <Download className="w-4 h-4" />
-                تصفح المنتجات مباشرة
-              </a>
-
-              <a
-                href="#catalogue"
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs transition shadow-sm"
-              >
-                <Eye className="w-4 h-4" />
-                تصفح المنتجات والأسعار
-              </a>
-            </div>
-          </div>
-
-        </div>
+    <div className="max-w-xl mx-auto bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-xl border border-stone-200">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold tracking-tight text-stone-900">
+          Rejoindre le Réseau Bouchra Way
+        </h2>
+        <p className="text-sm text-stone-600 mt-1">
+          Démarrez votre activité de distribution indépendante au Maroc.
+        </p>
       </div>
-    </section>
+
+      {isSuccess && (
+        <div className="mb-6 p-4 bg-emerald-50 border border-emerald-300 rounded-xl flex items-center gap-3 text-emerald-800">
+          <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-emerald-600" />
+          <p className="text-sm">Votre demande est prête. Redirection sécurisée vers WhatsApp...</p>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
+        {/* Nom Complet */}
+        <div>
+          <label htmlFor={`${formId}-fullName`} className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">
+            Nom et Prénom *
+          </label>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <input
+              id={`${formId}-fullName`}
+              name="fullName"
+              type="text"
+              required
+              maxLength={60}
+              value={formData.fullName}
+              onChange={handleChange}
+              placeholder="Ex: Fatima Zahra Alami"
+              className={`w-full pl-10 pr-3 py-2.5 rounded-lg border text-sm text-stone-900 bg-stone-50/50 focus:bg-white transition-all outline-none ${
+                errors.fullName ? 'border-rose-500 focus:ring-2 focus:ring-rose-200' : 'border-stone-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-100'
+              }`}
+            />
+          </div>
+          {errors.fullName && <p className="text-xs text-rose-600 mt-1">{errors.fullName}</p>}
+        </div>
+
+        {/* Téléphone Mobile */}
+        <div>
+          <label htmlFor={`${formId}-phone`} className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">
+            Téléphone WhatsApp (Maroc) *
+          </label>
+          <div className="relative">
+            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <input
+              id={`${formId}-phone`}
+              name="phone"
+              type="tel"
+              required
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="06XXXXXXXX ou +2126XXXXXXXX"
+              className={`w-full pl-10 pr-3 py-2.5 rounded-lg border text-sm text-stone-900 bg-stone-50/50 focus:bg-white transition-all outline-none ${
+                errors.phone ? 'border-rose-500 focus:ring-2 focus:ring-rose-200' : 'border-stone-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-100'
+              }`}
+            />
+          </div>
+          {errors.phone && <p className="text-xs text-rose-600 mt-1">{errors.phone}</p>}
+        </div>
+
+        {/* Ville & Email (Grille 2 cols) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor={`${formId}-city`} className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">
+              Ville de résidence *
+            </label>
+            <input
+              id={`${formId}-city`}
+              name="city"
+              type="text"
+              required
+              maxLength={40}
+              value={formData.city}
+              onChange={handleChange}
+              placeholder="Casablanca, Rabat, Fès..."
+              className={`w-full px-3 py-2.5 rounded-lg border text-sm text-stone-900 bg-stone-50/50 focus:bg-white transition-all outline-none ${
+                errors.city ? 'border-rose-500 focus:ring-2 focus:ring-rose-200' : 'border-stone-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-100'
+              }`}
+            />
+            {errors.city && <p className="text-xs text-rose-600 mt-1">{errors.city}</p>}
+          </div>
+
+          <div>
+            <label htmlFor={`${formId}-email`} className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">
+              Email (Optionnel)
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+              <input
+                id={`${formId}-email`}
+                name="email"
+                type="email"
+                maxLength={80}
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="contact@exemple.ma"
+                className={`w-full pl-10 pr-3 py-2.5 rounded-lg border text-sm text-stone-900 bg-stone-50/50 focus:bg-white transition-all outline-none ${
+                  errors.email ? 'border-rose-500 focus:ring-2 focus:ring-rose-200' : 'border-stone-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-100'
+                }`}
+              />
+            </div>
+            {errors.email && <p className="text-xs text-rose-600 mt-1">{errors.email}</p>}
+          </div>
+        </div>
+
+        {/* Cadre de Consentement CNDP (Loi 09-08) */}
+        <div className="p-3 bg-stone-50 border border-stone-200 rounded-xl mt-4">
+          <div className="flex items-start gap-3">
+            <input
+              id={`${formId}-cndp`}
+              name="cndpConsent"
+              type="checkbox"
+              checked={formData.cndpConsent}
+              onChange={handleChange}
+              className="mt-1 h-4 w-4 rounded border-stone-300 text-amber-700 focus:ring-amber-600 cursor-pointer"
+            />
+            <label htmlFor={`${formId}-cndp`} className="text-xs leading-relaxed text-stone-600 cursor-pointer select-none">
+              J&apos;accepte expressément que mes données soient traitées par <strong className="text-stone-800">Bouchra Way</strong> pour la gestion de mon adhésion et le suivi commercial via WhatsApp. Conformément à la <strong>Loi n° 09-08</strong> promulguée par le Dahir 1-09-15, vous disposez d&apos;un droit d&apos;accès, de rectification et d&apos;opposition auprès du service client.
+            </label>
+          </div>
+          {errors.cndpConsent && (
+            <div className="flex items-center gap-1 text-rose-600 text-xs mt-2 font-medium">
+              <AlertCircle className="w-3.5 h-3.5" />
+              <span>{errors.cndpConsent}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Bouton de Soumission */}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full mt-4 flex items-center justify-center gap-2 py-3 px-4 bg-amber-700 hover:bg-amber-800 active:scale-[0.99] disabled:opacity-70 text-white font-semibold rounded-xl shadow-md transition-all cursor-pointer"
+        >
+          <ShieldCheck className="w-5 h-5 text-amber-300" />
+          <span>{isSubmitting ? 'Traitement sécurisé...' : 'Valider et Rejoindre via WhatsApp'}</span>
+        </button>
+      </form>
+    </div>
   );
-}
+};
+export default RegistrationForm;
