@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PRODUCTS } from '../data/products';
 import type { Product } from '../data/products';
-import { Eye, Search, X, RotateCcw, Filter, ChevronLeft } from 'lucide-react';
+import { Eye, Search, X, RotateCcw, Filter, ChevronLeft, Heart, Plus, Star } from 'lucide-react';
 
 interface ProductCatalogProps {
   onSelectProduct: (product: Product) => void;
@@ -11,6 +11,7 @@ interface ProductCatalogProps {
   setSelectedSubCategory?: (subCategory: string | null) => void;
   searchQuery?: string;
   setSearchQuery?: (query: string) => void;
+  onAddToCart?: (product: Product, quantity?: number) => void;
 }
 
 export const ProductCatalog: React.FC<ProductCatalogProps> = ({ 
@@ -20,9 +21,16 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   selectedSubCategory = null,
   setSelectedSubCategory,
   searchQuery = '',
-  setSearchQuery
+  setSearchQuery,
+  onAddToCart
 }) => {
   const [internalCategory, setInternalCategory] = useState<string>('all');
+  const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+
+  const toggleFavorite = (productId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFavorites(prev => ({ ...prev, [productId]: !prev[productId] }));
+  };
 
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
   const setSelectedCategory = setControlledCategory || setInternalCategory;
@@ -98,43 +106,31 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       case 'العناية ببشرة الطفل':
         return text.includes('طفل') || text.includes('أطفال') || text.includes('رقيقة');
       case 'العناية بشعر الطفل':
-        return text.includes('طفل') || text.includes('أطفال') || (text.includes('شعر') && text.includes('طفل'));
+        return text.includes('طفل') || text.includes('شعر');
       case 'عطر الأطفال':
-        return text.includes('طفل') || text.includes('أطفال') || (text.includes('عطر') && text.includes('طفل'));
+        return text.includes('طفل') || text.includes('أطفال') || text.includes('عطر');
       default:
-        return text.includes(subCat.toLowerCase());
+        return false;
     }
   };
 
-  // 1. Filtrage principal par catégorie
+  // Filtrage combiné : Catégorie principale, Sous-catégorie et Recherche textuelle
+  const normalizedCategory = selectedCategory === 'كل المنتجات' ? 'all' : selectedCategory;
+
   let filteredProducts = PRODUCTS;
 
-  const normalizedCategory = (selectedCategory === 'كل المنتجات' || !selectedCategory) ? 'all' : selectedCategory;
-
+  // 1. Filtrage par catégorie principale
   if (normalizedCategory !== 'all') {
-    if (normalizedCategory === 'hommes') {
-      filteredProducts = PRODUCTS.filter(p => {
-        const text = (p.name + ' ' + p.description + ' ' + (p.altText || '')).toLowerCase();
-        return text.includes('رجالي') || text.includes('homme');
-      });
-    } else if (normalizedCategory === 'enfants') {
-      filteredProducts = PRODUCTS.filter(p => {
-        const text = (p.name + ' ' + p.description + ' ' + (p.altText || '')).toLowerCase();
-        return text.includes('طفل') || text.includes('أطفال');
-      });
-    } else if (normalizedCategory === 'accessoires') {
-      filteredProducts = PRODUCTS.filter(p => {
-        const text = (p.name + ' ' + p.description + ' ' + (p.altText || '')).toLowerCase();
-        return text.includes('مجوهرات') || text.includes('أكسسوار') || p.category === 'accessoires';
-      });
-    } else {
-      filteredProducts = PRODUCTS.filter(p => p.category === normalizedCategory);
-    }
+    filteredProducts = filteredProducts.filter(
+      (product) => product.category.toLowerCase() === normalizedCategory.toLowerCase()
+    );
   }
 
-  // 2. Filtrage par sous-catégorie sélectionnée
+  // 2. Filtrage par sous-catégorie
   if (selectedSubCategory) {
-    filteredProducts = filteredProducts.filter(p => matchSubCategory(p, selectedSubCategory));
+    filteredProducts = filteredProducts.filter((product) => 
+      matchSubCategory(product, selectedSubCategory)
+    );
   }
 
   // 3. Filtrage en temps réel par mot-clé de recherche
@@ -198,30 +194,27 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   };
 
   return (
-    <section className="py-12 bg-[#FDFCFB] dir-rtl relative scroll-mt-20" id="catalogue" dir="rtl">
+    <section className="py-10 bg-[#FDFCFB] dir-rtl relative scroll-mt-20" id="catalogue" dir="rtl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* En-tête épuré moderne */}
         <div className="text-center mb-8">
           <span className="text-xs uppercase tracking-widest text-[#A8948D] font-normal block mb-1">
-            NOTRE COLLECTION • MY WAY MAROC
+            NOTRE SÉLECTION OFFICIELLE • BOUCHRA WAY MAROC
           </span>
           <h2 className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">
             تشكيلة المنتجات المميزة
           </h2>
-          <div className="w-12 h-0.5 bg-[#E8C5B8] mx-auto mt-3 rounded-full"></div>
+          <div className="w-12 h-0.5 bg-[#E6007E] mx-auto mt-3 rounded-full"></div>
         </div>
-
-        {/* Note : La barre de boutons de catégories a été supprimée ici pour l'esthétique de la page. 
-           Le filtrage des produits se fait désormais élégamment via le menu supérieur (Navbar). */}
 
         {/* Indicateur de filtre actif (Sous-catégorie ou Recherche) */}
         {(selectedSubCategory || (normalizedCategory !== 'all')) && (
           <div className="mb-6 max-w-3xl mx-auto flex flex-wrap items-center justify-between gap-3 p-3 sm:p-3.5 bg-pink-50/80 border border-pink-200 rounded-2xl text-xs sm:text-sm text-pink-950">
             <div className="flex items-center gap-2 flex-wrap">
-              <Filter size={15} className="text-pink-600 shrink-0" />
+              <Filter size={15} className="text-[#E6007E] shrink-0" />
               <span className="text-gray-500 font-normal">القسم المختار:</span>
-              <span className="font-bold text-[#BE185D]">
+              <span className="font-bold text-[#E6007E]">
                 {getCategoryLabel(normalizedCategory)}
               </span>
               {selectedSubCategory && (
@@ -232,12 +225,12 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   </span>
                 </>
               )}
-              <span className="text-pink-700 text-xs">({filteredProducts.length} منتج متوفر)</span>
+              <span className="text-[#E6007E] text-xs">({filteredProducts.length} منتج متوفر)</span>
             </div>
 
             <button
               onClick={handleResetAll}
-              className="inline-flex items-center gap-1 text-xs text-pink-700 hover:text-pink-950 bg-white hover:bg-pink-100/60 px-3 py-1 rounded-full border border-pink-200 transition cursor-pointer shrink-0"
+              className="inline-flex items-center gap-1 text-xs text-[#E6007E] hover:text-pink-950 bg-white hover:bg-pink-100/60 px-3 py-1 rounded-full border border-pink-200 transition cursor-pointer shrink-0"
             >
               <X size={12} />
               <span>إلغاء التصفية</span>
@@ -249,15 +242,15 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         {trimmedSearch !== '' && (
           <div className="mb-6 max-w-2xl mx-auto flex items-center justify-between p-3.5 bg-pink-50/70 border border-pink-100 rounded-2xl text-xs sm:text-sm text-pink-900">
             <div className="flex items-center gap-2 truncate">
-              <Search size={16} className="text-pink-600 shrink-0" />
+              <Search size={16} className="text-[#E6007E] shrink-0" />
               <span>
                 نتائج البحث عن: <strong className="font-semibold text-pink-950">«{searchQuery}»</strong>
-                <span className="text-pink-700 mr-2">({filteredProducts.length} منتج)</span>
+                <span className="text-[#E6007E] mr-2">({filteredProducts.length} منتج)</span>
               </span>
             </div>
             <button
               onClick={handleResetSearch}
-              className="inline-flex items-center gap-1 text-xs text-pink-700 hover:text-pink-950 bg-white hover:bg-pink-100/50 px-2.5 py-1 rounded-full border border-pink-200 transition cursor-pointer shrink-0"
+              className="inline-flex items-center gap-1 text-xs text-[#E6007E] hover:text-pink-950 bg-white hover:bg-pink-100/50 px-2.5 py-1 rounded-full border border-pink-200 transition cursor-pointer shrink-0"
             >
               <X size={12} />
               <span>إلغاء البحث</span>
@@ -265,46 +258,123 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           </div>
         )}
 
-        {/* Grille des produits cliquables */}
+        {/* Grille des cartes produits (Design conforme à la maquette - Badges, Favoris, Prix barré, Bouton + PANIER) */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {filteredProducts.map((product) => (
-            <button 
-              key={product.id} 
-              onClick={() => onSelectProduct(product)}
-              type="button"
-              className="group cursor-pointer flex flex-col bg-white p-4 rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-rose-400"
-            >
-              {/* Cadre Image épuré */}
-              <div className="w-full h-48 sm:h-56 bg-[#FAF7F5] rounded-xl flex items-center justify-center p-4 overflow-hidden relative mb-3">
-                <img
-                  src={product.image}
-                  alt={product.altText || product.name}
-                  loading="lazy"
-                  onError={(e) => handleImageError(e, product.name)}
-                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                />
+          {filteredProducts.map((product) => {
+            const originalPrice = Math.round(product.price * 1.33);
+            const isFav = !!favorites[product.id];
 
-                {/* Badge visuel discret au survol */}
-                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span className="bg-white/90 backdrop-blur-xs text-gray-800 text-xs px-3 py-1.5 rounded-full shadow-xs flex items-center gap-1 font-normal transform translate-y-2 group-hover:translate-y-0 transition-transform">
-                    <Eye size={12} />
-                    عرض التفاصيل
+            return (
+              <div 
+                key={product.id}
+                className="group relative flex flex-col bg-white p-3.5 sm:p-4 rounded-2xl border border-gray-100 shadow-xs hover:shadow-lg transition-all duration-300"
+              >
+                {/* Badges superposés en haut à gauche (-25%, OUTLET) */}
+                <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1 pointer-events-none">
+                  <span className="bg-[#E6007E] text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+                    -25%
+                  </span>
+                  <span className="bg-black text-white text-[9px] sm:text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded-sm uppercase">
+                    OUTLET
                   </span>
                 </div>
-              </div>
 
-              {/* Informations Produit */}
-              <div className="flex flex-col flex-1 justify-between text-center mt-1">
-                <h3 className="text-xs sm:text-sm font-normal text-gray-800 line-clamp-2 min-h-[2.5rem] mb-2 group-hover:text-[#BE185D] transition-colors">
-                  {product.name}
-                </h3>
-                <div className="text-base sm:text-lg font-bold text-[#BE185D] mt-auto pt-2 border-t border-gray-50 flex items-center justify-center gap-1">
-                  <span>{product.price}.00</span>
-                  <span className="text-xs font-bold text-[#BE185D]">DH</span>
+                {/* Bouton Favoris en haut à droite */}
+                <button
+                  type="button"
+                  onClick={(e) => toggleFavorite(product.id, e)}
+                  aria-label="Ajouter aux favoris"
+                  className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-white/80 backdrop-blur-xs hover:bg-white text-gray-400 hover:text-[#E6007E] transition-colors shadow-xs cursor-pointer"
+                >
+                  <Heart 
+                    size={17} 
+                    className={isFav ? "fill-[#E6007E] text-[#E6007E]" : "transition-transform group-hover:scale-110"} 
+                  />
+                </button>
+
+                {/* Cadre Image cliquable */}
+                <div 
+                  onClick={() => onSelectProduct(product)}
+                  className="w-full h-44 sm:h-52 bg-[#FAF7F5] rounded-xl flex items-center justify-center p-3 overflow-hidden relative mb-3 cursor-pointer"
+                >
+                  <img
+                    src={product.image}
+                    alt={product.altText || product.name}
+                    loading="lazy"
+                    onError={(e) => handleImageError(e, product.name)}
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  />
+
+                  {/* Bouton d'aperçu rapide au survol */}
+                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                    <span className="bg-white/90 backdrop-blur-xs text-gray-800 text-[11px] px-3 py-1 rounded-full shadow-xs flex items-center gap-1 font-medium">
+                      <Eye size={12} />
+                      عرض التفاصيل
+                    </span>
+                  </div>
+                </div>
+
+                {/* Marque & Titre cliquables */}
+                <div className="flex flex-col flex-1 text-right">
+                  <span 
+                    onClick={() => onSelectProduct(product)}
+                    className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-400 font-semibold mb-1 cursor-pointer hover:text-gray-600 transition"
+                  >
+                    BOUCHRA WAY • MY WAY
+                  </span>
+
+                  <h3 
+                    onClick={() => onSelectProduct(product)}
+                    className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem] mb-1.5 cursor-pointer group-hover:text-[#E6007E] transition-colors leading-snug"
+                  >
+                    {product.name}
+                  </h3>
+
+                  {/* Avis & Étoiles */}
+                  <div className="flex items-center gap-1 mb-3 text-amber-500">
+                    <div className="flex text-amber-400">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} size={11} className="fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                    <span className="text-[11px] font-bold text-gray-600 mr-1">4.8</span>
+                    <span className="text-[10px] text-gray-400">(120)</span>
+                  </div>
+
+                  {/* Ligne Prix & Bouton + PANIER */}
+                  <div className="mt-auto pt-2.5 border-t border-gray-100 flex items-center justify-between gap-2">
+                    {/* Prix actuel en rose vif & Prix barré */}
+                    <div className="flex flex-col text-right">
+                      <div className="flex items-baseline gap-1 text-[#E6007E] font-bold">
+                        <span className="text-base sm:text-lg leading-none">{product.price}</span>
+                        <span className="text-xs font-bold">MAD</span>
+                      </div>
+                      <span className="text-[11px] text-gray-400 line-through">
+                        {originalPrice} MAD
+                      </span>
+                    </div>
+
+                    {/* Bouton "+ PANIER" */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onAddToCart) {
+                          onAddToCart(product, 1);
+                        } else {
+                          onSelectProduct(product);
+                        }
+                      }}
+                      className="bg-[#E6007E] hover:bg-[#c9006e] active:scale-95 text-white font-bold text-xs uppercase px-3 py-2 rounded-lg flex items-center gap-1 shadow-xs transition-all cursor-pointer whitespace-nowrap"
+                    >
+                      <Plus size={13} className="stroke-[3]" />
+                      <span>PANIER</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </button>
-          ))}
+            );
+          })}
         </div>
 
         {/* État vide en cas d'absence de résultat */}
@@ -323,7 +393,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             </p>
             <button
               onClick={handleResetAll}
-              className="inline-flex items-center gap-2 bg-[#BE185D] hover:bg-[#9D174D] text-white text-xs font-bold px-5 py-2.5 rounded-full transition cursor-pointer shadow-xs"
+              className="inline-flex items-center gap-2 bg-[#E6007E] hover:bg-[#c9006e] text-white text-xs font-bold px-5 py-2.5 rounded-full transition cursor-pointer shadow-xs"
             >
               <RotateCcw size={14} />
               <span>عرض جميع المنتجات</span>
@@ -335,3 +405,4 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     </section>
   );
 };
+export default ProductCatalog;

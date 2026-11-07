@@ -1,16 +1,43 @@
 import React, { useState } from 'react';
 import { Product } from '../data/products';
-import { ArrowRight, ShieldCheck, Truck, Sparkles, ChevronLeft, Banknote, CheckCircle2 } from 'lucide-react';
+import { 
+  ArrowRight, 
+  ShieldCheck, 
+  Truck, 
+  Sparkles, 
+  ChevronLeft, 
+  Banknote, 
+  CheckCircle2, 
+  ShoppingBag, 
+  Clock, 
+  Lock, 
+  Gift, 
+  Star 
+} from 'lucide-react';
 
 interface ProductDetailProps {
   product: Product;
   onBack: () => void;
+  onAddToCart?: (product: Product, quantity: number) => void;
+  onOpenCart?: () => void;
 }
 
-export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack }) => {
+export const ProductDetail: React.FC<ProductDetailProps> = ({ 
+  product, 
+  onBack, 
+  onAddToCart,
+  onOpenCart 
+}) => {
   const [quantity, setQuantity] = useState<number>(1);
+  const [isAdded, setIsAdded] = useState<boolean>(false);
 
-  // Gestion anti-images brisées intelligente avec fallback SVG
+  // Prix calculés selon la maquette
+  const originalPrice = Math.round(product.price * 1.33);
+  const pharmacyPrice = Math.round(product.price * 1.8);
+  const pharmacySavings = pharmacyPrice - product.price;
+  const initialSavings = originalPrice - product.price;
+
+  // Gestion anti-images brisées intelligente
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const target = e.currentTarget;
     if (target.src.startsWith('data:image')) return;
@@ -19,28 +46,23 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack })
     const attempts = target.dataset.attempt ? parseInt(target.dataset.attempt, 10) : 0;
     target.dataset.attempt = (attempts + 1).toString();
 
-    // Tentative 1: 'produits-' au lieu de 'produit-'
     if (attempts === 0 && currentSrc.includes('produit-')) {
       target.src = currentSrc.replace('produit-', 'produits-');
       return;
     }
-    // Tentative 2: remplacer les tirets bas par des tirets
     if (attempts <= 1 && currentSrc.includes('_')) {
       target.src = currentSrc.replace(/_/g, '-');
       return;
     }
-    // Tentative 3: cas spécifique pearly crème fondation
     if (attempts <= 2 && currentSrc.includes('-pearly-creme-fondation')) {
       target.src = currentSrc.replace('-pearly-creme-fondation', '_pearly-creme-fondation');
       return;
     }
-    // Tentative 4: extension .png au lieu de .jpg
     if (attempts <= 3 && currentSrc.endsWith('.jpg')) {
       target.src = currentSrc.replace(/\.jpg$/i, '.png');
       return;
     }
 
-    // Fallback final: SVG élégant Bouchra Way aux teintes poudrées
     target.src = `data:image/svg+xml;utf8,${encodeURIComponent(`
       <svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500" fill="none">
         <rect width="500" height="500" fill="#FAF7F5"/>
@@ -51,6 +73,16 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack })
         <text x="250" y="355" font-family="system-ui, sans-serif" font-size="12" fill="#A8948D" text-anchor="middle" letter-spacing="2">BOUCHRA WAY</text>
       </svg>
     `)}`;
+  };
+
+  const handleAddToCartClick = () => {
+    if (onAddToCart) {
+      onAddToCart(product, quantity);
+    }
+    setIsAdded(true);
+    setTimeout(() => {
+      setIsAdded(false);
+    }, 1000);
   };
 
   const handleWhatsAppOrder = () => {
@@ -65,81 +97,87 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack })
       `▪ *الكمية المطلوبة:* ${quantity}\n` +
       `▪ *السعر الفردي:* ${product.price} درهم\n` +
       `▪ *المبلغ الإجمالي المستحق:* ${total} درهم (خالص عند الاستلام)\n\n` +
-      `📍 *معلومات التوصيل (يرجى إتمام البيانات):*\n` +
+      `📍 *معلومات التوصيل:*\n` +
       `▪ *الاسم الكامل:* \n` +
       `▪ *المدينة:* \n` +
-      `▪ *عنوان التوصيل بالتفصيل (الحي، الزنقة، رقم المنزل):* \n` +
-      `▪ *رقم هاتف للتأكيد:* \n\n` +
+      `▪ *العنوان الكامل:* \n` +
+      `▪ *رقم الهاتف للتأكيد:* \n\n` +
       `المرجو تأكيد توفر المنتج وتحديد موعد الإرسال والتوصيل. شكراً!`
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
   return (
-    <div className="py-8 md:py-12 bg-[#FDFCFB] text-gray-800 dir-rtl min-h-screen" dir="rtl">
+    <div className="py-6 md:py-10 bg-[#FDFCFB] text-gray-800 dir-rtl min-h-screen" dir="rtl">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Fil d'Ariane & Bouton retour */}
-        <nav aria-label="Breadcrumb" className="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
+        <nav aria-label="Breadcrumb" className="mb-6 flex items-center justify-between border-b border-gray-100 pb-3">
           <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 font-light">
             <button 
               onClick={onBack} 
-              className="hover:text-rose-700 transition-colors flex items-center gap-1 font-normal cursor-pointer"
+              className="hover:text-[#E6007E] transition-colors flex items-center gap-1 font-normal cursor-pointer"
             >
               الرئيسية
             </button>
             <ChevronLeft size={14} className="text-gray-400" />
             <button 
               onClick={onBack} 
-              className="hover:text-rose-700 transition-colors capitalize font-normal cursor-pointer"
+              className="hover:text-[#E6007E] transition-colors capitalize font-normal cursor-pointer"
             >
               {product.category}
             </button>
             <ChevronLeft size={14} className="text-gray-400" />
-            <span className="text-gray-800 font-normal truncate max-w-[200px] sm:max-w-none">
+            <span className="text-gray-800 font-normal truncate max-w-[180px] sm:max-w-none">
               {product.name}
             </span>
           </div>
 
           <button
             onClick={onBack}
-            className="inline-flex items-center gap-1.5 text-xs md:text-sm text-gray-600 hover:text-rose-700 transition-colors py-1.5 px-4 rounded-full border border-gray-200 hover:border-rose-200 bg-white cursor-pointer shadow-xs"
+            className="inline-flex items-center gap-1.5 text-xs md:text-sm text-gray-600 hover:text-[#E6007E] transition-colors py-1.5 px-3.5 rounded-full border border-gray-200 hover:border-pink-200 bg-white cursor-pointer shadow-xs"
           >
             <ArrowRight size={14} />
             <span>العودة للمنتجات</span>
           </button>
         </nav>
 
-        {/* Corps principal : Grille Fiche Produit (Style épuré beautyforyou.ma) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-14 items-start">
+        {/* Corps principal de la fiche produit (Design Palmarosa / Beauty for You) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           
-          {/* Section Image Principale (Grande photo avec gestion anti-images brisées) */}
+          {/* Section Image Produit avec badges superposés */}
           <div className="flex flex-col gap-4">
-            <div className="w-full bg-white rounded-3xl border border-[#F2ECE8] p-6 sm:p-10 flex items-center justify-center min-h-[380px] sm:min-h-[460px] shadow-sm relative overflow-hidden group">
-              {/* Badge d'authenticité */}
-              <div className="absolute top-4 right-4 bg-[#F9F3F0] text-[#7A645D] text-[11px] font-normal px-3 py-1 rounded-full flex items-center gap-1 border border-[#E8DDD8]">
-                <Sparkles size={12} className="text-amber-500" />
-                <span>أصلي 100%</span>
+            <div className="w-full bg-white rounded-3xl border border-gray-200 p-6 sm:p-10 flex items-center justify-center min-h-[380px] sm:min-h-[460px] shadow-xs relative overflow-hidden group">
+              
+              {/* Badge Promo en haut à gauche */}
+              <div className="absolute top-4 left-4 z-10 flex flex-col gap-1.5">
+                <span className="bg-[#E6007E] text-white text-xs font-bold px-3 py-1 rounded-full shadow-xs">
+                  PROMO -25%
+                </span>
+                <span className="bg-black text-white text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-md uppercase">
+                  OUTLET
+                </span>
               </div>
 
-              {/* Tag COD rapide */}
-              <div className="absolute top-4 left-4 bg-pink-50 text-pink-800 text-[11px] font-medium px-3 py-1 rounded-full flex items-center gap-1 border border-pink-200">
-                <Banknote size={12} className="text-[#BE185D]" />
-                <span>الدفع عند الاستلام</span>
+              {/* Badge Coup de Cœur en haut à droite */}
+              <div className="absolute top-4 right-4 z-10 bg-pink-50 text-[#E6007E] text-xs font-bold px-3 py-1 rounded-full border border-pink-200 flex items-center gap-1">
+                <Sparkles size={13} />
+                <span>WANTED</span>
               </div>
 
+              {/* Image principale */}
               <img
                 src={product.image}
                 alt={product.altText || product.name}
                 loading="eager"
                 onError={handleImageError}
-                className="max-h-[340px] sm:max-h-[400px] w-auto max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
+                className="max-h-[320px] sm:max-h-[380px] w-auto max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
               />
             </div>
 
             {/* Vignette miniature interactive */}
             <div className="flex items-center gap-3">
-              <div className="w-20 h-20 bg-white rounded-xl border-2 border-[#BE185D] p-2 flex items-center justify-center cursor-pointer shadow-xs">
+              <div className="w-18 h-18 bg-white rounded-xl border-2 border-[#E6007E] p-1.5 flex items-center justify-center cursor-pointer shadow-xs">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -150,117 +188,195 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack })
             </div>
           </div>
 
-          {/* Section Informations & Achat */}
+          {/* Section Informations, Prix & Actions */}
           <div className="flex flex-col text-right">
-            {/* Catégorie / Marque */}
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs uppercase tracking-widest text-[#9C857E] font-medium">
-                BOUCHRA WAY • MY WAY
+            
+            {/* Étoiles & Marque */}
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs uppercase tracking-widest text-[#E6007E] font-bold">
+                MY WAY • BOUCHRA WAY
               </span>
+              <div className="flex items-center gap-1 text-amber-500 text-xs font-semibold">
+                <div className="flex text-amber-400">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <span>4.8 (120 avis)</span>
+              </div>
             </div>
 
-            {/* Titre */}
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light text-gray-900 mb-4 leading-snug">
+            {/* Titre du produit */}
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-snug">
               {product.name}
             </h1>
 
-            {/* Prix en DH (en GRAS et dans la couleur rose/bordeaux de la marque) */}
-            <div className="flex items-baseline gap-2 mb-6 pb-6 border-b border-gray-100">
-              <span className="text-3xl sm:text-4xl font-bold text-[#BE185D] tracking-tight">
-                {product.price}.00
+            {/* Bloc PRIX DE RÉFÉRENCE (Style Palmarosa) */}
+            <div className="bg-stone-50/80 rounded-xl border border-stone-200 p-3.5 mb-4 text-xs space-y-1.5">
+              <span className="font-semibold text-stone-700 block uppercase tracking-wider text-[11px]">
+                PRIX DE RÉFÉRENCE ℹ️
               </span>
-              <span className="text-base sm:text-lg font-bold text-[#BE185D]">
-                DH
-              </span>
+              <div className="flex items-center justify-between text-stone-600">
+                <span>Prix pharmacie / boutique (PPM) :</span>
+                <span className="line-through font-medium">{pharmacyPrice} MAD</span>
+              </div>
+              <div className="flex items-center justify-between text-emerald-700 font-semibold pt-1 border-t border-stone-200">
+                <span>Économie vs prix public :</span>
+                <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md text-[11px]">
+                  - {pharmacySavings} MAD (-45%)
+                </span>
+              </div>
             </div>
 
-            {/* Description */}
-            <div className="mb-8">
-              <h2 className="text-xs uppercase tracking-wider text-gray-400 font-medium mb-3">
+            {/* Bannière Rose Vif : PRIX FINAL BOUCHRA WAY */}
+            <div className="bg-gradient-to-r from-[#E6007E] to-[#c9006e] text-white rounded-2xl p-4 sm:p-5 shadow-sm mb-4">
+              <div className="flex items-center justify-between text-xs font-medium opacity-90 mb-1">
+                <span>✦ PRIX FINAL BOUCHRA WAY</span>
+                <span className="bg-black/25 text-white px-2 py-0.5 rounded text-[10px] uppercase font-bold">
+                  OUTLET
+                </span>
+              </div>
+
+              <div className="flex items-baseline gap-3 my-1">
+                <span className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                  {product.price} MAD
+                </span>
+                <span className="text-sm sm:text-base line-through opacity-75">
+                  {originalPrice} MAD
+                </span>
+                <span className="bg-white text-[#E6007E] text-xs font-bold px-2 py-0.5 rounded-full shadow-xs">
+                  -25%
+                </span>
+              </div>
+
+              <p className="text-xs text-pink-100 mt-1">
+                Vous économisez <strong className="text-white underline">{initialSavings} MAD</strong> sur le prix initial !
+              </p>
+            </div>
+
+            {/* Informations Livraison Rapide & Reassurance */}
+            <div className="space-y-2 mb-5 text-xs text-gray-700">
+              <div className="flex items-center gap-2 text-stone-800">
+                <Clock size={15} className="text-[#E6007E] shrink-0" />
+                <span>Chez vous en <strong>24 à 72 h</strong> partout au Maroc</span>
+              </div>
+              <div className="flex items-center gap-2 text-stone-800">
+                <Truck size={15} className="text-[#E6007E] shrink-0" />
+                <span><strong>Livraison offerte</strong> dès 400 MAD d&apos;achats</span>
+              </div>
+              <div className="flex items-center gap-2 pt-1 flex-wrap">
+                <span className="inline-flex items-center gap-1 bg-pink-50 text-pink-900 border border-pink-200 px-2.5 py-1 rounded-lg font-medium text-[11px]">
+                  <Banknote size={13} className="text-[#E6007E]" />
+                  الدفع عند الاستلام (COD)
+                </span>
+                <span className="inline-flex items-center gap-1 bg-stone-100 text-stone-800 border border-stone-200 px-2.5 py-1 rounded-lg font-medium text-[11px]">
+                  <Lock size={13} className="text-stone-600" />
+                  Paiement sécurisé
+                </span>
+              </div>
+            </div>
+
+            {/* Programme Fidélité Callout */}
+            <div className="bg-amber-50/60 border border-amber-200/80 rounded-xl p-3 mb-5 text-xs text-amber-950 flex items-start gap-2.5">
+              <Gift size={16} className="text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <strong className="block font-semibold">+ Programme Fidélité</strong>
+                <p className="text-[11px] text-amber-800 mt-0.5">
+                  Remise immédiate de 25% appliquée sur ce produit. Offre valable dans la limite des stocks disponibles.
+                </p>
+              </div>
+            </div>
+
+            {/* Sélecteur de Quantité & Bouton Ajouter au panier */}
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold text-gray-700">الكمية :</span>
+                <div className="inline-flex items-center border border-gray-300 rounded-xl bg-white shadow-xs p-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    aria-label="Réduire la quantité"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-700 hover:bg-gray-100 transition text-base font-bold cursor-pointer"
+                  >
+                    -
+                  </button>
+                  <span className="w-10 text-center text-gray-900 font-bold text-sm select-none">
+                    {quantity}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setQuantity(quantity + 1)}
+                    aria-label="Augmenter la quantité"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-700 hover:bg-gray-100 transition text-base font-bold cursor-pointer"
+                  >
+                    +
+                  </button>
+                </div>
+                <span className="text-xs text-gray-500 mr-2">
+                  (Total : <strong className="text-[#E6007E]">{product.price * quantity} MAD</strong>)
+                </span>
+              </div>
+
+              {/* Bouton Principal : Ajouter au panier avec animation 1 seconde */}
+              <button
+                type="button"
+                onClick={handleAddToCartClick}
+                className={`w-full py-4 px-6 rounded-2xl font-bold text-base transition-all duration-300 flex items-center justify-center gap-2.5 shadow-md active:scale-[0.99] cursor-pointer ${
+                  isAdded 
+                    ? 'bg-emerald-600 text-white scale-[1.01]' 
+                    : 'bg-[#E6007E] hover:bg-[#c9006e] text-white'
+                }`}
+              >
+                {isAdded ? (
+                  <>
+                    <CheckCircle2 size={20} className="text-white animate-bounce" />
+                    <span>Ajouté au panier !</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag size={20} />
+                    <span>Ajouter au panier</span>
+                  </>
+                )}
+              </button>
+
+              {/* Bouton secondaire WhatsApp pour le marché marocain */}
+              <button
+                type="button"
+                onClick={handleWhatsAppOrder}
+                className="w-full bg-[#FAF7F5] hover:bg-[#F2ECE8] text-[#2C2422] font-medium py-3 px-4 rounded-xl border border-[#E8DDD8] transition flex items-center justify-center gap-2 text-xs sm:text-sm cursor-pointer"
+              >
+                <span>أو الطلب المباشر السريع عبر واتساب</span>
+                <span className="text-emerald-600 font-bold">WhatsApp 💬</span>
+              </button>
+            </div>
+
+            {/* Description détaillée */}
+            <div className="mb-6 pt-4 border-t border-gray-100">
+              <h2 className="text-xs uppercase tracking-wider text-gray-500 font-bold mb-2">
                 الوصف والمميزات
               </h2>
-              <p className="text-gray-600 font-light leading-relaxed text-sm sm:text-base bg-white/60 p-4 rounded-2xl border border-gray-100">
+              <p className="text-gray-700 leading-relaxed text-sm bg-stone-50/60 p-3.5 rounded-xl border border-stone-200">
                 {product.description}
               </p>
             </div>
 
-            {/* Sélecteur de quantité (- 1 +) */}
-            <div className="mb-6">
-              <label className="block text-xs uppercase tracking-wider text-gray-500 mb-3 font-medium">
-                الكمية المطلوبة
-              </label>
-              <div className="inline-flex items-center border border-gray-200 rounded-full bg-white shadow-xs p-1">
-                <button
-                  type="button"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  aria-label="Réduire la quantité"
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-gray-600 hover:bg-[#F9F3F0] hover:text-gray-900 transition-colors font-normal text-lg cursor-pointer"
-                >
-                  -
-                </button>
-                <span className="w-12 text-center text-gray-800 font-normal text-base select-none">
-                  {quantity}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setQuantity(quantity + 1)}
-                  aria-label="Augmenter la quantité"
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-gray-600 hover:bg-[#F9F3F0] hover:text-gray-900 transition-colors font-normal text-lg cursor-pointer"
-                >
-                  +
-                </button>
+            {/* Badges de Réassurance */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-center text-xs">
+              <div className="p-3 bg-white rounded-xl border border-gray-100 shadow-2xs">
+                <ShieldCheck size={18} className="text-[#E6007E] mx-auto mb-1" />
+                <span className="font-semibold block text-gray-800">أصلي 100%</span>
+                <span className="text-[10px] text-gray-500">منتجات ماي واي المعتمدة</span>
               </div>
-            </div>
-
-            {/* Total estimé (en GRAS dans la couleur rose/bordeaux de la marque) */}
-            <div className="mb-6 flex items-center justify-between p-3.5 bg-pink-50/50 rounded-xl border border-pink-100 text-xs text-pink-950">
-              <span className="font-normal">المجموع الإجمالي:</span>
-              <span className="text-base font-bold text-[#BE185D]">{product.price * quantity}.00 DH</span>
-            </div>
-
-            {/* Bouton de commande WhatsApp (Couleur poudrée #E8C5B8 avec typographie non grasse) */}
-            <button
-              type="button"
-              onClick={handleWhatsAppOrder}
-              className="w-full bg-[#E8C5B8] hover:bg-[#dfb5a6] active:bg-[#d6a999] text-[#2C2422] font-normal py-4 px-6 rounded-2xl shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center gap-3 text-base sm:text-lg cursor-pointer"
-            >
-              <span>طلب عبر الواتساب</span>
-              <svg className="w-5 h-5 fill-current text-[#2C2422]" viewBox="0 0 24 24">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
-              </svg>
-            </button>
-
-            {/* Badges de réassurance essentiels spécial marché marocain */}
-            <div className="mt-8 pt-6 border-t border-gray-100 space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                {/* Badge 1 : الدفع عند الاستلام */}
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-pink-50/60 border border-pink-100 text-pink-900">
-                  <Banknote size={18} className="text-[#BE185D] shrink-0" />
-                  <div>
-                    <span className="font-bold block">الدفع عند الاستلام</span>
-                    <span className="text-[11px] text-pink-700">تأكد من طلبيتك قبل الدفع نقداً</span>
-                  </div>
-                </div>
-
-                {/* Badge 2 : التوصيل لجميع مناطق المغرب */}
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-blue-50/60 border border-blue-100 text-blue-900">
-                  <Truck size={18} className="text-blue-600 shrink-0" />
-                  <div>
-                    <span className="font-bold block">التوصيل لجميع مناطق المغرب</span>
-                    <span className="text-[11px] text-blue-700">توصيل سريع وآمن حتى باب منزلك</span>
-                  </div>
-                </div>
+              <div className="p-3 bg-white rounded-xl border border-gray-100 shadow-2xs">
+                <Truck size={18} className="text-blue-600 mx-auto mb-1" />
+                <span className="font-semibold block text-gray-800">توصيل لكل المغرب</span>
+                <span className="text-[10px] text-gray-500">24 إلى 72 ساعة</span>
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-gray-100 text-gray-700">
-                  <ShieldCheck size={16} className="text-amber-600 shrink-0" />
-                  <span className="font-medium">منتجات أصلية 100% ماي واي</span>
-                </div>
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white border border-gray-100 text-gray-700">
-                  <CheckCircle2 size={16} className="text-purple-600 shrink-0" />
-                  <span className="font-medium">تغليف وحماية فائقة للطلبية</span>
-                </div>
+              <div className="p-3 bg-white rounded-xl border border-gray-100 shadow-2xs">
+                <Banknote size={18} className="text-emerald-600 mx-auto mb-1" />
+                <span className="font-semibold block text-gray-800">الدفع عند الاستلام</span>
+                <span className="text-[10px] text-gray-500">افحص طلبيتك قبل الدفع</span>
               </div>
             </div>
 
@@ -271,3 +387,4 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack })
     </div>
   );
 };
+export default ProductDetail;

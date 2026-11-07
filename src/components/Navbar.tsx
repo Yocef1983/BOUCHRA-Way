@@ -27,6 +27,7 @@ interface NavbarProps {
   onNavigateSection?: (sectionId: string) => void;
   onSelectSubCategory?: (category: string, subCategory: string) => void;
   cartCount?: number;
+  onOpenCart?: () => void;
 }
 
 export default function Navbar({ 
@@ -40,7 +41,8 @@ export default function Navbar({
   onNavigateToCatalog,
   onNavigateSection,
   onSelectSubCategory,
-  cartCount = 0 
+  cartCount = 0,
+  onOpenCart
 }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedMobileCategory, setExpandedMobileCategory] = useState<string | null>(null);
@@ -295,13 +297,19 @@ export default function Navbar({
           </a>
 
           <div 
-            onClick={handleAllProductsClick}
+            onClick={() => {
+              if (onOpenCart) {
+                onOpenCart();
+              } else {
+                handleAllProductsClick();
+              }
+            }}
             title="السلة والتسوق"
-            className="relative cursor-pointer p-2 bg-pink-50 rounded-full text-pink-700 hover:bg-pink-100 transition"
+            className="relative cursor-pointer p-2 bg-pink-50 rounded-full text-pink-700 hover:bg-pink-100 transition active:scale-95"
           >
-            <ShoppingBag className="w-5 h-5" />
+            <ShoppingBag className="w-5 h-5 text-[#E6007E]" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-pink-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              <span className="absolute -top-1 -right-1 bg-[#E6007E] text-white text-[11px] rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-xs">
                 {cartCount}
               </span>
             )}
