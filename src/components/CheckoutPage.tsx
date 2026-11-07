@@ -90,6 +90,19 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     return cleaned;
   };
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, productName: string) => {
+    const target = e.currentTarget;
+    if (target.src.startsWith('data:image')) return;
+    target.src = `data:image/svg+xml;utf8,${encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+        <rect width="80" height="80" fill="#FAF7F5"/>
+        <circle cx="40" cy="32" r="14" fill="#E8C5B8" opacity="0.45"/>
+        <text x="40" y="55" font-family="system-ui, sans-serif" font-size="6" fill="#6B5A54" text-anchor="middle" font-weight="600">${productName.slice(0, 14)}</text>
+        <text x="40" y="65" font-family="system-ui, sans-serif" font-size="5" fill="#A8948D" text-anchor="middle" letter-spacing="1">BOUCHRA WAY</text>
+      </svg>
+    `)}`;
+  };
+
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
 
@@ -420,6 +433,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         <img
                           src={item.product.image}
                           alt={item.product.name}
+                          onError={(e) => handleImageError(e, item.product.name)}
                           className="max-h-full max-w-full object-contain"
                         />
                         <span className="absolute -top-1.5 -right-1.5 bg-black text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">

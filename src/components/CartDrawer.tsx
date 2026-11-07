@@ -51,6 +51,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const progressPercent = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
   const shippingCost = subtotal >= freeShippingThreshold || items.length === 0 ? 0 : 20;
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, productName: string) => {
+    const target = e.currentTarget;
+    if (target.src.startsWith('data:image')) return;
+    target.src = `data:image/svg+xml;utf8,${encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="none">
+        <rect width="100" height="100" fill="#FAF7F5"/>
+        <circle cx="50" cy="40" r="18" fill="#E8C5B8" opacity="0.45"/>
+        <text x="50" y="68" font-family="system-ui, sans-serif" font-size="7" fill="#6B5A54" text-anchor="middle" font-weight="600">${productName.slice(0, 16)}</text>
+        <text x="50" y="80" font-family="system-ui, sans-serif" font-size="6" fill="#A8948D" text-anchor="middle" letter-spacing="1">BOUCHRA WAY</text>
+      </svg>
+    `)}`;
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex justify-end" dir="ltr">
       {/* Fond sombre avec flou d'arrière-plan (backdrop-blur-sm) */}
@@ -143,6 +156,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     <img
                       src={item.product.image}
                       alt={item.product.name}
+                      onError={(e) => handleImageError(e, item.product.name)}
                       className="max-h-full max-w-full object-contain"
                     />
                   </div>

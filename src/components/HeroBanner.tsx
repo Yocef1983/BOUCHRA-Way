@@ -1,7 +1,11 @@
 import React from 'react';
 import { Sparkles, ArrowRight, UserPlus, ShieldCheck, Tag } from 'lucide-react';
 
-export default function HeroBanner() {
+interface HeroBannerProps {
+  onNavigateToCatalog?: () => void;
+}
+
+export default function HeroBanner({ onNavigateToCatalog }: HeroBannerProps) {
   return (
     <div className="relative overflow-hidden bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 text-white rounded-3xl p-8 md:p-12 shadow-xl my-6">
       {/* Background Decorator / Motif d'arrière-plan */}
@@ -29,7 +33,13 @@ export default function HeroBanner() {
         <div className="flex flex-wrap gap-4">
           <a
             href="#catalogue"
-            className="bg-white text-rose-600 hover:bg-rose-50 font-extrabold px-6 py-3.5 rounded-2xl shadow-lg transition duration-200 flex items-center gap-2 text-sm"
+            onClick={(e) => {
+              if (onNavigateToCatalog) {
+                e.preventDefault();
+                onNavigateToCatalog();
+              }
+            }}
+            className="bg-white text-rose-600 hover:bg-rose-50 font-extrabold px-6 py-3.5 rounded-2xl shadow-lg transition duration-200 flex items-center gap-2 text-sm cursor-pointer"
           >
             تصفح العروض <ArrowRight size={18} />
           </a>

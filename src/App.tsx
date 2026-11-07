@@ -270,7 +270,7 @@ export default function App() {
         ) : (
           /* ── Vue Accueil ── */
           <>
-            <HeroBanner />
+            <HeroBanner onNavigateToCatalog={handleNavigateToCatalog} />
             
             {/* Section Supérieure Asymétrique (فرصة فريدة لزيادة الدخل + إستمارة التسجيل) */}
             <section className="max-w-7xl mx-auto px-4 py-8">
@@ -509,7 +509,7 @@ export default function App() {
       <FloatingWhatsApp />
 
       {/* Pied de page avec badges COD et mentions légales */}
-      <Footer />
+      <Footer onNavigateToCatalog={handleNavigateToCatalog} onNavigateSection={handleNavigateSection} />
     </div>
   );
 }

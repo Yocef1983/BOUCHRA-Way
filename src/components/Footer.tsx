@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import { Phone, ShieldCheck, Truck, Clock, Banknote, Sparkles, RotateCcw, HelpCircle, CheckCircle2, X, FileText } from 'lucide-react';
+import { Phone, ShieldCheck, Truck, Clock, Banknote, Sparkles, RotateCcw, HelpCircle, FileText, X } from 'lucide-react';
 
-export default function Footer() {
+interface FooterProps {
+  onNavigateToCatalog?: () => void;
+  onNavigateSection?: (sectionId: string) => void;
+}
+
+export default function Footer({ onNavigateToCatalog, onNavigateSection }: FooterProps = {}) {
   const [activePolicy, setActivePolicy] = useState<'privacy' | 'terms' | 'legal' | null>(null);
 
   const closeModal = () => setActivePolicy(null);
@@ -34,7 +39,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* قسم الثقة والشفافية : السياسات الأساسية للمتجر (P1/P2) */}
+        {/* قسم الثقة والشفافية : السياسات الأساسية للمتجر */}
         <div className="mb-12 p-6 rounded-2xl bg-gray-800/60 border border-gray-700/60">
           <div className="text-center md:text-right mb-6">
             <div className="inline-flex items-center gap-2 text-rose-400 text-xs font-bold uppercase tracking-wider mb-1">
@@ -96,7 +101,7 @@ export default function Footer() {
                 href="https://wa.me/212634486494?text=مرحباً%20بوشرى%20واي،%20أود%20الاستفسار%20عن%20الطلبيات%20أو%20السياسات"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-3 rounded-lg text-[11px] transition"
+                className="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-3 rounded-lg text-[11px] transition cursor-pointer"
               >
                 <Phone size={13} />
                 <span>واتساب مباشر: 06 34 48 64 94</span>
@@ -127,20 +132,53 @@ export default function Footer() {
             <h4 className="text-sm font-bold text-gray-200 mb-3 border-b border-gray-800 pb-2">روابط سريعة</h4>
             <ul className="space-y-2 text-xs text-gray-400">
               <li>
-                <a href="#catalogue" className="hover:text-rose-400 transition-colors">تشكيلة المنتجات المميزة</a>
+                <a 
+                  href="#catalogue" 
+                  onClick={(e) => {
+                    if (onNavigateToCatalog) {
+                      e.preventDefault();
+                      onNavigateToCatalog();
+                    }
+                  }}
+                  className="hover:text-rose-400 transition-colors cursor-pointer"
+                >
+                  تشكيلة المنتجات المميزة
+                </a>
               </li>
               <li>
-                <a href="#opportunity" className="hover:text-rose-400 transition-colors">فرصة زيادة الدخل (زود دخلك)</a>
+                <a 
+                  href="#opportunity" 
+                  onClick={(e) => {
+                    if (onNavigateSection) {
+                      e.preventDefault();
+                      onNavigateSection('opportunity');
+                    }
+                  }}
+                  className="hover:text-rose-400 transition-colors cursor-pointer"
+                >
+                  فرصة زيادة الدخل (زود دخلك)
+                </a>
               </li>
               <li>
-                <a href="#register" className="hover:text-rose-400 transition-colors">استمارة التسجيل في ماي واي</a>
+                <a 
+                  href="#opportunity" 
+                  onClick={(e) => {
+                    if (onNavigateSection) {
+                      e.preventDefault();
+                      onNavigateSection('opportunity');
+                    }
+                  }}
+                  className="hover:text-rose-400 transition-colors cursor-pointer"
+                >
+                  استمارة التسجيل في ماي واي
+                </a>
               </li>
               <li>
                 <a 
                   href="https://wa.me/212634486494?text=مرحباً%20بوشرى%20واي،%20أود%20الاستفسار%20عن%20الكتالوج%20والعروض" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="hover:text-rose-400 transition-colors"
+                  className="hover:text-rose-400 transition-colors cursor-pointer"
                 >
                   طلب الكتالوج الشهري عبر واتساب
                 </a>
@@ -158,7 +196,7 @@ export default function Footer() {
               href="https://wa.me/212634486494?text=مرحباً%20بوشرى%20واي،%20أود%20التواصل%20معكم%20للحصول%20على%20المساعدة" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-md"
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-md cursor-pointer"
             >
               <Phone size={16} /> تواصل معنا عبر واتساب: 06 34 48 64 94
             </a>
@@ -171,7 +209,7 @@ export default function Footer() {
             <button
               type="button"
               onClick={() => setActivePolicy('privacy')}
-              className="hover:text-rose-400 transition-colors flex items-center gap-1.5"
+              className="hover:text-rose-400 transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <FileText size={14} />
               <span>سياسة الخصوصية</span>
@@ -180,7 +218,7 @@ export default function Footer() {
             <button
               type="button"
               onClick={() => setActivePolicy('terms')}
-              className="hover:text-rose-400 transition-colors flex items-center gap-1.5"
+              className="hover:text-rose-400 transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <FileText size={14} />
               <span>الشروط والأحكام</span>
@@ -189,7 +227,7 @@ export default function Footer() {
             <button
               type="button"
               onClick={() => setActivePolicy('legal')}
-              className="hover:text-rose-400 transition-colors flex items-center gap-1.5"
+              className="hover:text-rose-400 transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <FileText size={14} />
               <span>إشعار قانوني</span>
@@ -215,7 +253,7 @@ export default function Footer() {
                 {activePolicy === 'terms' && 'الشروط والأحكام'}
                 {activePolicy === 'legal' && 'إشعار قانوني'}
               </h5>
-              <button onClick={closeModal} className="p-2 rounded-full hover:bg-gray-800 text-gray-400 hover:text-white transition">
+              <button onClick={closeModal} className="p-2 rounded-full hover:bg-gray-800 text-gray-400 hover:text-white transition cursor-pointer">
                 <X size={18} />
               </button>
             </div>
@@ -244,7 +282,7 @@ export default function Footer() {
               )}
             </div>
             <div className="px-5 py-3 border-t border-gray-800 text-center">
-              <button onClick={closeModal} className="text-xs px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-white transition">إغلاق</button>
+              <button onClick={closeModal} className="text-xs px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-white transition cursor-pointer">إغلاق</button>
             </div>
           </div>
         </div>

@@ -51,7 +51,7 @@ export const PRODUCTS: Product[] = [
     name: 'أحمر الشفاه الأحمر الكلاسيكي',
     category: 'maquillage',
     price: 60,
-    image: '/image/maquillage-red-rougealevrevs-myway.jpg',
+    image: '/image/maquillage-red-rougealevres-myway.jpg',
     altText: 'أحمر شفاه أحمر ماي واي - maquillage red rouge a levres myway',
     description: 'أحمر شفاه ثابت بلون جريء وأنيق يناسب كل المناسبات.'
   },
@@ -226,7 +226,7 @@ export const PRODUCTS: Product[] = [
     name: 'منظف متعدد الاستعمالات للأرضيات',
     category: 'menage',
     price: 40,
-    image: '/image/produit-clean-multiusage-sols-maison-menagers-myway.jpg',
+    image: '/image/produits-clean-multiusage-sols-maison-menagers-myway.jpg',
     altText: 'منظف أرضيات متعدد الاستعمالات ماي واي - produit clean multiusage sols maison menagers myway',
     description: 'تطهير عمق ولمعان براق لكل أرضيات المنزل.'
   },
@@ -235,7 +235,7 @@ export const PRODUCTS: Product[] = [
     name: 'بخاخ لتنظيف وتلميع الخشب',
     category: 'menage',
     price: 50,
-    image: '/image/produit-clean-spray-bois-maison-menagers-myway.jpg',
+    image: '/image/produits-clean-spray-bois-maison-menagers-myway.jpg',
     altText: 'بخاخ تنظيف الخشب ماي واي - produit clean spray bois maison menagers myway',
     description: 'يحافظ على بريق الأثاث الخشبى ويحميه من الغبار.'
   },
@@ -244,7 +244,7 @@ export const PRODUCTS: Product[] = [
     name: 'عجينة الهلوبة التنظيفية متعددة الاستعمالات',
     category: 'menage',
     price: 55,
-    image: '/image/produit-elhalouba-pate-nettoyante-multi-usage-maison-menagers-myway.jpg',
+    image: '/image/produits-elhalouba-pate-nettoyante-multi-usage-maison-menagers-myway.jpg',
     altText: 'عجينة الهلوبة منظفة ماي واي - produit elhalouba pate nettoyante multi usage maison menagers myway',
     description: 'المنتج السحري لإزالة البواقي الصعبة والأوساخ المستعصية.'
   },
@@ -253,7 +253,7 @@ export const PRODUCTS: Product[] = [
     name: 'مسحوق الغسيل الفعال للملابس',
     category: 'menage',
     price: 85,
-    image: '/image/produit-power-lessive-maison-menagers-myway.jpg',
+    image: '/image/produits-power-lessive-maison-menagers-myway.jpg',
     altText: 'مسحوق غسيل ماي واي - produit power lessive maison menagers myway',
     description: 'نظافة ناصعة وبياض مشرق لملابس العائلة.'
   },
@@ -262,7 +262,7 @@ export const PRODUCTS: Product[] = [
     name: 'بخاخ مزيل الدهون القوي للمطبخ',
     category: 'menage',
     price: 50,
-    image: '/image/produit-power-menagers-maison-spray-degraissant-puissant-cuisine-myway.jpg',
+    image: '/image/produits-power-menagers-maison-spray-degraissant-puissant-cuisine-myway.jpg',
     altText: 'بخاخ مزيل الدهون المطبخ ماي واي - produit power menagers maison spray degraissant puissant cuisine myway',
     description: 'يزيل أخبث الدهون والزيوت في المطبخ بكل سهولة.'
   },
@@ -374,7 +374,7 @@ export const PRODUCTS: Product[] = [
     name: 'كريم صوبريت المفتح للمناطق الداكنة',
     category: 'soin-corps',
     price: 70,
-    image: '/image/soin-corps-sobright_creme_eclaircissante_zones_sombres_hydratante_myway.jpg',
+    image: '/image/soin-corps-sobright_creme_eclaircissante-zones_sombres-hydratante-myway.jpg',
     altText: 'كريم صوبريت المفتح ماي واي - soin corps sobright creme eclaircissante zones sombres hydratante myway',
     description: 'ترطيب وتفتيح فعال للمناطق الداكنة بالجسم.'
   },
@@ -403,7 +403,7 @@ export const PRODUCTS: Product[] = [
     name: 'كريم أساس بيارلي المرطب للوجه',
     category: 'soin-visage',
     price: 90,
-    image: '/image/soin-visage-pearly-creme-fondation-fonddeteint-myway.jpg',
+    image: '/image/soin-visage_pearly-creme-fondation-fonddeteint-myway.jpg',
     altText: 'كريم أساس بيارلي للوجه ماي واي - soin visage pearly creme fondation fond de teint myway',
     description: 'إشراقة طبيعية ومظهر متألق للوجه.'
   },
