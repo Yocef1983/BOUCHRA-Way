@@ -55,7 +55,7 @@ export const OrderSuccess: React.FC<OrderSuccessProps> = ({
           </div>
           <div className="flex justify-between">
             <span className="text-stone-500">Mode de paiement :</span>
-            <span className="font-semibold text-emerald-700">Paiement à la livraison (COD)</span>
+            <span className="font-semibold text-emerald-700">الدفع عند الاستلام بدون أي مصاريف إضافية (COD)</span>
           </div>
           <div className="flex justify-between pt-2 border-t border-stone-200 text-sm font-bold">
             <span>Montant à régler :</span>

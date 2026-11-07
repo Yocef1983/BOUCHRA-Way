@@ -109,7 +109,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     const total = product.price * quantity;
     const message = encodeURIComponent(
       `*طلب جديد عبر الموقع - Bouchra Way* 🛍️\n` +
-      `*(خدمة الدفع عند الاستلام)* 🇲🇦\n\n` +
+      `*(خدمة الدفع عند الاستلام بدون أي مصاريف إضافية)* 🇲🇦\n\n` +
       `📋 *تفاصيل الطلبية:*\n` +
       `▪ *اسم المنتج:* ${product.name}\n` +
       `▪ *المرجع / القسم:* ${product.category}\n` +
@@ -284,9 +284,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <span><strong>Livraison offerte</strong> dès 400 MAD d&apos;achats</span>
               </div>
               <div className="flex items-center gap-2 pt-1 flex-wrap">
-                <span className="inline-flex items-center gap-1 bg-pink-50 text-pink-900 border border-pink-200 px-2.5 py-1 rounded-lg font-medium text-[11px]">
-                  <Banknote size={13} className="text-[#E6007E]" />
-                  الدفع عند الاستلام (COD)
+                <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-900 border border-emerald-200 px-2.5 py-1 rounded-lg font-bold text-[11px]">
+                  <Banknote size={13} className="text-emerald-700" />
+                  الدفع عند الاستلام بدون أي مصاريف إضافية
                 </span>
                 <span className="inline-flex items-center gap-1 bg-stone-100 text-stone-800 border border-stone-200 px-2.5 py-1 rounded-lg font-medium text-[11px]">
                   <Lock size={13} className="text-stone-600" />
@@ -395,7 +395,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               <div className="p-3 bg-white rounded-xl border border-gray-100 shadow-2xs">
                 <Banknote size={18} className="text-emerald-600 mx-auto mb-1" />
                 <span className="font-semibold block text-gray-800">الدفع عند الاستلام</span>
-                <span className="text-[10px] text-gray-500">افحص طلبيتك قبل الدفع</span>
+                <span className="text-[10px] text-emerald-700 font-bold">بدون أي مصاريف إضافية</span>
               </div>
             </div>
 

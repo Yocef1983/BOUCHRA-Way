@@ -25,7 +25,7 @@ export default function Footer({ onNavigateToCatalog, onNavigateSection }: Foote
           <div className="flex flex-col items-center p-3 rounded-xl bg-gray-800/40 border border-gray-800">
             <Banknote size={24} className="text-amber-400 mb-2" />
             <h5 className="text-sm font-bold text-white">الدفع عند الاستلام</h5>
-            <p className="text-[11px] text-gray-400 mt-1">لا تدفع حتى تستلم طلبيتك وتتأكد منها</p>
+            <p className="text-[11px] text-amber-300 font-semibold mt-1">بدون أي مصاريف إضافية</p>
           </div>
           <div className="flex flex-col items-center p-3 rounded-xl bg-gray-800/40 border border-gray-800">
             <ShieldCheck size={24} className="text-rose-400 mb-2" />
@@ -71,7 +71,7 @@ export default function Footer({ onNavigateToCatalog, onNavigateSection }: Foote
                 <h5>الدفع عند الاستلام (COD)</h5>
               </div>
               <p className="text-gray-400 leading-relaxed text-[11px]">
-                تسوق بكل أمان وراحة بال دون الحاجة لبطاقة بنكية. السداد يتم <strong>نقداً يداً بيد</strong> للموزع بعد استلام الطرد والتأكد من سلامة المنتجات ومطابقتها لطلبك.
+                تسوق بكل أمان وراحة بال دون الحاجة لبطاقة بنكية. السداد يتم <strong>نقداً يداً بيد</strong> للموزع بعد استلام الطرد والتأكد من سلامة المنتجات ومطابقتها لطلبك، <strong>بدون أي مصاريف إضافية مخفية</strong>.
               </p>
             </div>
 

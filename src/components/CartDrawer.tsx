@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, Truck, Gift, Lock, Banknote } from 'lucide-react';
+import { X, Plus, Minus, Trash2, ShoppingBag, ArrowLeft, Truck, Gift, Lock, Banknote, ShieldCheck } from 'lucide-react';
 import { CartItem } from '../types/cart';
 
 interface CartDrawerProps {
@@ -19,7 +19,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onRemoveItem,
   onCheckout
 }) => {
-  // Verrouillage du scroll en arrière-plan lorsque le tiroir est ouvert
+  // Verrouillage du défilement d'arrière-plan lorsque le tiroir est ouvert
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -50,6 +50,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
   const progressPercent = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
   const shippingCost = subtotal >= freeShippingThreshold || items.length === 0 ? 0 : 20;
+  const finalTotal = subtotal + shippingCost;
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, productName: string) => {
     const target = e.currentTarget;
@@ -65,28 +66,29 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end" dir="ltr">
+    <div className="fixed inset-0 z-50 flex justify-start" dir="rtl">
       {/* Fond sombre avec flou d'arrière-plan (backdrop-blur-sm) */}
       <div 
         onClick={onClose}
-        className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity duration-300"
+        className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity duration-300"
         aria-hidden="true"
       />
 
-      {/* Panneau latéral du panier */}
-      <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col z-10 transform transition-transform duration-300 ease-out">
+      {/* Panneau latéral du panier avec continuité RTL */}
+      <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col z-10 transform transition-transform duration-300 ease-out text-right">
         
-        {/* En-tête du panier */}
+        {/* En-tête du panier bilingue */}
         <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-gray-900">
-              Mon panier <span className="text-[#E6007E]">({totalItemsCount})</span>
+            <h2 className="text-base sm:text-lg font-bold text-gray-900">
+              سلة المشتريات <span className="text-xs text-gray-400 font-normal">/ Mon Panier</span>{' '}
+              <span className="text-[#E6007E]">({totalItemsCount})</span>
             </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fermer le panier"
+            aria-label="إغلاق السلة"
             className="p-1.5 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition cursor-pointer"
           >
             <X size={20} />
@@ -94,14 +96,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         </div>
 
         {/* Barre de progression livraison offerte */}
-        <div className="bg-pink-50/60 px-5 py-3 border-b border-pink-100">
+        <div className="bg-pink-50/70 px-5 py-3 border-b border-pink-100">
           {remainingForFreeShipping > 0 ? (
-            <p className="text-xs text-gray-700 mb-1.5">
-              Encore <strong className="text-[#E6007E] font-bold">{remainingForFreeShipping} MAD</strong> et la livraison est offerte partout au Maroc
+            <p className="text-xs text-gray-700 mb-1.5 leading-relaxed">
+              باقي <strong className="text-[#E6007E] font-bold">{remainingForFreeShipping} MAD</strong> للاستفادة من <strong>التوصيل المجاني</strong> بالمغرب
             </p>
           ) : (
             <p className="text-xs text-emerald-800 font-bold mb-1.5 flex items-center gap-1">
-              <span>🎉 Félicitations ! La livraison vous est offerte !</span>
+              <span>🎉 هنيئاً لك ! استفدت من التوصيل المجاني بالمغرب !</span>
             </p>
           )}
           <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
@@ -112,14 +114,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           </div>
         </div>
 
-        {/* Offre cadeau débloquable */}
-        <div className="p-3 mx-4 mt-3 bg-amber-50/70 rounded-xl border border-amber-200/80 flex items-start gap-2.5 text-xs text-amber-950">
-          <Gift size={16} className="text-amber-600 shrink-0 mt-0.5" />
-          <div>
-            <span className="font-semibold block">Cadeau exclusif BOUCHRA WAY</span>
-            <span className="text-[11px] text-amber-800">
-              Ajoutez vos produits favoris pour profiter de nos offres spéciales du mois !
-            </span>
+        {/* Badge réassurance COD marocain */}
+        <div className="px-5 pt-3 pb-1">
+          <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-xs text-emerald-900 font-medium">
+            <Banknote size={16} className="text-emerald-600 shrink-0" />
+            <span>الدفع عند الاستلام بدون أي مصاريف إضافية (COD)</span>
           </div>
         </div>
 
@@ -130,16 +129,16 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="w-16 h-16 rounded-full bg-pink-50 flex items-center justify-center text-[#E6007E] mb-3">
                 <ShoppingBag size={28} />
               </div>
-              <h3 className="text-base font-bold text-gray-800 mb-1">Votre panier est vide</h3>
-              <p className="text-xs text-gray-500 mb-4 max-w-xs">
-                Découvrez nos collections de parfums, maquillage et soins pour composer votre panier.
+              <h3 className="text-base font-bold text-gray-800 mb-1">سلة التسوق فارغة</h3>
+              <p className="text-xs text-gray-500 mb-4 max-w-xs leading-relaxed">
+                اكتشفي تشكيلة ماي واي من العطور، الماكياج ومنتجات العناية واختاري ما يناسبك.
               </p>
               <button
                 type="button"
                 onClick={onClose}
                 className="bg-[#E6007E] hover:bg-[#c9006e] text-white text-xs font-bold px-5 py-2.5 rounded-full transition cursor-pointer shadow-xs"
               >
-                Découvrir nos produits
+                تصفح المنتجات
               </button>
             </div>
           ) : (
@@ -166,7 +165,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     <div className="flex items-start justify-between gap-1">
                       <div>
                         <span className="text-[10px] uppercase tracking-wider text-gray-400 font-bold block">
-                          MY WAY
+                          MY WAY • BOUCHRA WAY
                         </span>
                         <h4 className="text-xs font-semibold text-gray-900 line-clamp-1">
                           {item.product.name}
@@ -175,8 +174,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       <button
                         type="button"
                         onClick={() => onRemoveItem(item.product.id)}
-                        aria-label="Supprimer le produit"
-                        className="text-gray-400 hover:text-rose-600 transition p-1"
+                        aria-label="حذف المنتج"
+                        className="text-gray-400 hover:text-rose-600 transition p-1 cursor-pointer"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -205,7 +204,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       </div>
 
                       {/* Prix */}
-                      <div className="text-right">
+                      <div className="text-left" dir="ltr">
                         <div className="flex items-baseline justify-end gap-1 text-[#E6007E] font-bold text-sm">
                           <span>{item.product.price * item.quantity}</span>
                           <span className="text-xs">MAD</span>
@@ -227,20 +226,26 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           <div className="p-5 border-t border-gray-100 bg-white space-y-3">
             {/* Sous-total */}
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600 font-medium">Sous-total</span>
+              <span className="text-gray-600 font-medium">المجموع الجزئي / Sous-total</span>
               <span className="text-base font-bold text-gray-900">{subtotal} MAD</span>
             </div>
 
             {/* Livraison */}
             <div className="flex items-center justify-between text-xs text-gray-500">
-              <span>Livraison</span>
+              <span>مصاريف التوصيل / Livraison</span>
               {shippingCost === 0 ? (
                 <span className="text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded">
-                  Offerte
+                  مجاناً / Offerte
                 </span>
               ) : (
                 <span className="font-medium text-gray-700">20 MAD</span>
               )}
+            </div>
+
+            {/* Total général */}
+            <div className="flex items-baseline justify-between pt-2 border-t border-gray-100">
+              <span className="text-sm font-bold text-gray-800">المبلغ الإجمالي المستحق :</span>
+              <span className="text-xl font-extrabold text-[#E6007E]">{finalTotal} MAD</span>
             </div>
 
             {/* Bouton principal de commande */}
@@ -252,8 +257,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               }}
               className="w-full py-3.5 px-4 bg-gradient-to-r from-[#E6007E] to-[#c9006e] hover:from-[#c9006e] hover:to-[#b00060] text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer active:scale-[0.99]"
             >
-              <span>Commander</span>
-              <ArrowRight size={16} />
+              <span>إتمام الطلب / Commander ({finalTotal} MAD)</span>
+              <ArrowLeft size={16} />
             </button>
 
             {/* Continuer mes achats */}
@@ -262,22 +267,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               onClick={onClose}
               className="w-full text-center text-xs text-gray-500 hover:text-[#E6007E] py-1 transition cursor-pointer"
             >
-              Continuer mes achats
+              متابعة التسوق / Continuer mes achats
             </button>
 
             {/* Badges de réassurance */}
             <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-[10px] text-gray-500">
               <span className="flex items-center gap-1">
                 <Banknote size={12} className="text-emerald-600" />
-                Paiement à la livraison
+                الدفع عند الاستلام
               </span>
               <span className="flex items-center gap-1">
                 <Truck size={12} className="text-blue-600" />
-                24 à 72 h
+                24 إلى 72 ساعة
               </span>
               <span className="flex items-center gap-1">
-                <Lock size={12} className="text-stone-600" />
-                Sécurisé
+                <ShieldCheck size={12} className="text-[#E6007E]" />
+                أصلي 100%
               </span>
             </div>
           </div>
