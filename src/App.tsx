@@ -9,6 +9,7 @@ import { OrderSuccess } from './components/OrderSuccess';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import RegistrationForm from './components/RegistrationForm';
 import Footer from './components/Footer';
+import { Testimonials } from './components/Testimonials';
 import { Product } from './data/products';
 import { CartItem, CompletedOrder } from './types/cart';
 import { CheckCircle2, Gift, Users, BookOpen, Sparkles } from 'lucide-react';
@@ -442,6 +443,9 @@ export default function App() {
                 </div>
               </div>
             </section>
+
+            {/* Section des Témoignages et Preuve Sociale (Ajoutée ici) */}
+            <Testimonials />
 
             {/* Section Institutionnelle "نبذة عن شركة ماي واي" */}
             <section className="max-w-7xl mx-auto px-4 py-10 mb-6" dir="rtl">
