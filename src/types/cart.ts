@@ -13,6 +13,7 @@ export interface CustomerOrderInfo {
   city: string;
   address: string;
   notes?: string;
+  cndpConsent?: boolean;
 }
 
 export interface CompletedOrder {

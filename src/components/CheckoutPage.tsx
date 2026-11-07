@@ -26,15 +26,17 @@ interface FormErrors {
   email?: string;
   city?: string;
   address?: string;
+  cndpConsent?: string;
 }
 
-// Nettoyage anti-XSS préventif
+// Nettoyage anti-XSS préventif (stripping des balises < > et trim)
 const sanitizeInput = (input: string): string => {
   return input.replace(/[<>]/g, '').trim();
 };
 
-// Validation stricte du mobile marocain (+212 / 05 / 06 / 07 suivi de 8 chiffres)
-const MOROCCAN_PHONE_REGEX = /^(?:(?:\+?212)|0)([5-7]\d{8})$/;
+// Validation & normalisation tolérante et stricte des numéros marocains
+// Accepte : 06XXXXXXXX, 07XXXXXXXX, 6XXXXXXXX, 7XXXXXXXX, +2126XXXXXXXX, 002126XXXXXXXX, 2126XXXXXXXX, fixes 05...
+const MOROCCAN_PHONE_REGEX = /^(?:(?:(?:\+|00)212)|212|0)?([5-7]\d{8})$/;
 
 const MOROCCAN_CITIES = [
   'Casablanca',
@@ -67,7 +69,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     email: '',
     city: 'Casablanca',
     address: '',
-    notes: ''
+    notes: '',
+    cndpConsent: false
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -81,8 +84,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const shipping = subtotal >= 400 || formData.city === 'Casablanca' ? 0 : 20;
   const finalTotal = subtotal + shipping;
 
+  // Normalisation du numéro pour WhatsApp (+212XXXXXXXXX) sans faux rejets
   const formatPhoneForWhatsApp = (rawPhone: string): string => {
-    const cleaned = rawPhone.replace(/\s+/g, '').replace(/-/g, '');
+    const cleaned = rawPhone.replace(/[\s.-]/g, '');
     const match = cleaned.match(MOROCCAN_PHONE_REGEX);
     if (match && match[1]) {
       return `212${match[1]}`;
@@ -116,7 +120,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
     const cleanPhone = formData.phone.replace(/[\s.-]/g, '');
     if (!MOROCCAN_PHONE_REGEX.test(cleanPhone)) {
-      newErrors.phone = 'Numéro invalide. Formats acceptés : 06XXXXXXXX, 07XXXXXXXX ou +2126XXXXXXXX.';
+      newErrors.phone = 'Numéro de téléphone marocain invalide (Ex: 0612345678, 0712345678 ou +212612345678).';
     }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -131,15 +135,22 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       newErrors.address = 'Veuillez préciser votre adresse de livraison complète.';
     }
 
+    if (!formData.cndpConsent) {
+      newErrors.cndpConsent = 'يجب الموافقة على معالجة البيانات الشخصية وفقاً للقانون 09-08 للمتابعة.';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    const isCheckbox = type === 'checkbox';
+    const checked = (e.target as HTMLInputElement).checked;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: sanitizeInput(value),
+      [name]: isCheckbox ? checked : sanitizeInput(value),
     }));
 
     if (errors[name as keyof FormErrors]) {
@@ -155,25 +166,33 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     setIsSubmitting(true);
 
     try {
+      // Application rigoureuse de la sanitisation anti-XSS sur tous les champs
+      const sanitizedFirstName = sanitizeInput(formData.firstName);
+      const sanitizedLastName = sanitizeInput(formData.lastName);
+      const sanitizedCity = sanitizeInput(formData.city);
+      const sanitizedAddress = sanitizeInput(formData.address);
+      const sanitizedEmail = formData.email ? sanitizeInput(formData.email) : '';
       const sanitizedPhone = formatPhoneForWhatsApp(formData.phone);
+      
       const randomRef = Math.floor(10000 + Math.random() * 90000);
       const orderRef = `#BW-${randomRef}`;
 
       // Récapitulatif des articles pour le message WhatsApp
       const itemsListText = items
-        .map((item, idx) => `▪ ${idx + 1}. *${item.product.name}* (x${item.quantity}) = ${item.product.price * item.quantity} MAD`)
+        .map((item, idx) => `▪ ${idx + 1}. *${sanitizeInput(item.product.name)}* (x${item.quantity}) = ${item.product.price * item.quantity} MAD`)
         .join('\n');
 
-      // Construction du message structuré
+      // Construction du message WhatsApp conforme et encodé UTF-8
       const waMessage = 
         `*NOUVELLE COMMANDE BOUCHRA WAY - ${orderRef}* 🛍️\n` +
         `*(Paiement à la livraison / COD)* 🇲🇦\n\n` +
         `👤 *Informations Client:*\n` +
-        `▪ *Nom complet:* ${formData.firstName} ${formData.lastName}\n` +
+        `▪ *Nom complet:* ${sanitizedFirstName} ${sanitizedLastName}\n` +
         `▪ *Téléphone:* +${sanitizedPhone}\n` +
-        `📍 *Ville:* ${formData.city}\n` +
-        `🏠 *Adresse de livraison:* ${formData.address}\n` +
-        (formData.email ? `📧 *E-mail:* ${formData.email}\n` : '') +
+        `📍 *Ville:* ${sanitizedCity}\n` +
+        `🏠 *Adresse de livraison:* ${sanitizedAddress}\n` +
+        (sanitizedEmail ? `📧 *E-mail:* ${sanitizedEmail}\n` : '') +
+        `✅ *Consentement CNDP:* Validé (Loi 09-08)\n` +
         `\n📦 *Articles commandés:*\n${itemsListText}\n\n` +
         `💰 *Sous-total:* ${subtotal} MAD\n` +
         `🚚 *Frais de livraison:* ${shipping === 0 ? 'Offerte (Gratuit)' : `${shipping} MAD`}\n` +
@@ -187,14 +206,22 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       const completedOrder: CompletedOrder = {
         orderId: orderRef,
         items: [...items],
-        customer: { ...formData },
+        customer: {
+          firstName: sanitizedFirstName,
+          lastName: sanitizedLastName,
+          phone: sanitizedPhone,
+          email: sanitizedEmail,
+          city: sanitizedCity,
+          address: sanitizedAddress,
+          cndpConsent: formData.cndpConsent
+        },
         subtotal,
         shipping,
         total: finalTotal,
         createdAt: new Date().toISOString()
       };
 
-      // Ouverture WhatsApp puis redirection vers page de succès
+      // Ouverture WhatsApp puis redirection vers page de confirmation
       window.open(waUrl, '_blank', 'noopener,noreferrer');
 
       setTimeout(() => {
@@ -275,7 +302,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         required
                         value={formData.phone}
                         onChange={handleChange}
-                        placeholder="06 12 34 56 78"
+                        placeholder="06 12 34 56 78 ou 612345678"
                         className="w-full px-3 py-2.5 text-sm outline-none bg-white text-gray-900"
                       />
                     </div>
@@ -297,6 +324,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         name="firstName"
                         required
+                        maxLength={50}
                         value={formData.firstName}
                         onChange={handleChange}
                         placeholder="Prénom"
@@ -317,6 +345,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         type="text"
                         name="lastName"
                         required
+                        maxLength={50}
                         value={formData.lastName}
                         onChange={handleChange}
                         placeholder="Nom"
@@ -338,6 +367,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     <input
                       type="email"
                       name="email"
+                      maxLength={80}
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="nom@gmail.com"
@@ -401,6 +431,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                       name="address"
                       rows={2}
                       required
+                      maxLength={150}
                       value={formData.address}
                       onChange={handleChange}
                       placeholder="Nom de rue, quartier, N° de maison/bâtiment, appartement..."
@@ -413,6 +444,32 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     )}
                   </div>
                 </div>
+              </div>
+
+              {/* Bloc de Consentement Légal CNDP (Loi 09-08) */}
+              <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl text-right" dir="rtl">
+                <div className="flex items-start gap-3">
+                  <input
+                    id="checkout-cndp"
+                    name="cndpConsent"
+                    type="checkbox"
+                    checked={formData.cndpConsent}
+                    onChange={handleChange}
+                    className="mt-1 h-4 w-4 rounded border-stone-300 text-[#E6007E] focus:ring-pink-500 cursor-pointer shrink-0 accent-[#E6007E]"
+                  />
+                  <label htmlFor="checkout-cndp" className="text-xs leading-relaxed text-stone-700 cursor-pointer select-none">
+                    أوافق على معالجة بياناتي الشخصية لتسيير طلبي والتواصل معي عبر الواتساب وفقاً للقانون 09-08.
+                    <span className="block text-[11px] text-stone-500 mt-0.5">
+                      J&apos;accepte expressément le traitement de mes données pour la livraison et le suivi de ma commande conformément à la <strong>Loi 09-08</strong> (CNDP).
+                    </span>
+                  </label>
+                </div>
+                {errors.cndpConsent && (
+                  <div className="flex items-center gap-1 text-rose-600 text-xs mt-2 font-medium">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                    <span>{errors.cndpConsent}</span>
+                  </div>
+                )}
               </div>
 
             </div>
