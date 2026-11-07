@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Product } from '../data/products';
 import { 
   ArrowRight, 
@@ -30,6 +30,25 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [isAdded, setIsAdded] = useState<boolean>(false);
+
+  // Mise à jour dynamique du titre SEO et de la description lors de la consultation produit
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = `${product.name} | ${product.price} MAD - BOUCHRA WAY ماي واي المغرب`;
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    const previousDesc = metaDesc ? metaDesc.getAttribute('content') : null;
+    if (metaDesc) {
+      metaDesc.setAttribute('content', `${product.name}: ${product.description} - اشتر الآن بسعر ${product.price} درهم مع الدفع عند الاستلام والتوصيل بالمغرب.`);
+    }
+
+    return () => {
+      document.title = previousTitle;
+      if (metaDesc && previousDesc) {
+        metaDesc.setAttribute('content', previousDesc);
+      }
+    };
+  }, [product]);
 
   // Prix calculés selon la maquette
   const originalPrice = Math.round(product.price * 1.33);
