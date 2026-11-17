@@ -12,6 +12,7 @@ interface ProductCatalogProps {
   searchQuery?: string;
   setSearchQuery?: (query: string) => void;
   onAddToCart?: (product: Product, quantity?: number) => void;
+  lang?: 'ar' | 'fr';
 }
 
 export const ProductCatalog: React.FC<ProductCatalogProps> = ({ 
@@ -22,7 +23,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   setSelectedSubCategory,
   searchQuery = '',
   setSearchQuery,
-  onAddToCart
+  onAddToCart,
+  lang = 'ar'
 }) => {
   const [internalCategory, setInternalCategory] = useState<string>('all');
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
@@ -35,113 +37,97 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
   const setSelectedCategory = setControlledCategory || setInternalCategory;
 
-  // Catégories de référence pour les libellés
+  // Normalisation de la catégorie (support direct arabe et slugs bilingues)
+  const normalizeCategory = (cat: string): string => {
+    if (!cat || cat === 'all' || cat === 'كل المنتجات' || cat === 'الكل' || cat === 'Tous les produits') return 'all';
+    const map: Record<string, string> = {
+      'parfum': 'عطور',
+      'parfums': 'عطور',
+      'عطور': 'عطور',
+      'maquillage': 'ماكياج',
+      'ماكياج': 'ماكياج',
+      'soin-visage': 'العناية بالوجه',
+      'soinVisage': 'العناية بالوجه',
+      'العناية بالوجه': 'العناية بالوجه',
+      'soin-corps': 'العناية بالجسم',
+      'soinCorps': 'العناية بالجسم',
+      'العناية بالجسم': 'العناية بالجسم',
+      'soin-capillaire': 'العناية بالشعر',
+      'soinCapillaire': 'العناية بالشعر',
+      'العناية بالشعر': 'العناية بالشعر',
+      'menage': 'منظفات المنزل',
+      'منظفات المنزل': 'منظفات المنزل',
+      'enfants': 'أطفال',
+      'أطفال': 'أطفال'
+    };
+    return map[cat] || map[cat.toLowerCase()] || cat;
+  };
+
+  const normalizedCategory = normalizeCategory(selectedCategory);
+
+  // Catégories officielles issues du fichier Excel
   const categories = [
-    { id: 'all', label: 'الكل' },
-    { id: 'parfum', label: 'عطور' },
-    { id: 'maquillage', label: 'ماكياج' },
-    { id: 'soin-visage', label: 'العناية بالوجه' },
-    { id: 'soin-corps', label: 'العناية بالجسم' },
-    { id: 'soin-capillaire', label: 'العناية بالشعر' },
-    { id: 'hommes', label: 'مستحضرات رجالية' },
-    { id: 'accessoires', label: 'مجوهرات و أكسيسوارات' },
-    { id: 'enfants', label: 'أطفال' },
-    { id: 'menage', label: 'منظفات المنزل' },
+    { id: 'all', label: 'الكل', labelFr: 'Tous les produits' },
+    { id: 'ماكياج', label: 'ماكياج', labelFr: 'Maquillage' },
+    { id: 'العناية بالوجه', label: 'العناية بالوجه', labelFr: 'Soin du visage' },
+    { id: 'العناية بالجسم', label: 'العناية بالجسم', labelFr: 'Soin du corps' },
+    { id: 'العناية بالشعر', label: 'العناية بالشعر', labelFr: 'Soin des cheveux' },
+    { id: 'عطور', label: 'عطور', labelFr: 'Parfums' },
+    { id: 'منظفات المنزل', label: 'منظفات المنزل', labelFr: 'Entretien ménager' },
+    { id: 'أطفال', label: 'أطفال', labelFr: 'Enfants' },
   ];
 
   const getCategoryLabel = (catId: string) => {
-    const found = categories.find(c => c.id === catId);
-    return found ? found.label : catId;
-  };
-
-  // Fonction de filtrage précis par sous-catégorie
-  const matchSubCategory = (product: Product, subCat: string): boolean => {
-    const text = (product.name + ' ' + product.description + ' ' + (product.altText || '') + ' ' + product.category).toLowerCase();
-
-    switch (subCat) {
-      case 'عطر رجالي':
-        return product.category === 'parfum' && (text.includes('رجالي') || text.includes('homme'));
-      case 'عطر نسائي':
-        return product.category === 'parfum' && (text.includes('نسائي') || text.includes('femme'));
-      case 'مزيلات العرق':
-        return text.includes('مزيل') || text.includes('déodorant') || text.includes('deodorant') || text.includes('عرق');
-      case 'البشرة':
-        return product.category === 'maquillage' && (text.includes('أساس') || text.includes('بشرة') || text.includes('تصحيح') || text.includes('bb'));
-      case 'الشفايف':
-        return product.category === 'maquillage' && (text.includes('شفاه') || text.includes('شفايف') || text.includes('ملمع') || text.includes('rouge') || text.includes('gloss'));
-      case 'الأظافر':
-        return product.category === 'maquillage' && (text.includes('أظافر') || text.includes('اظافر') || text.includes('vernis'));
-      case 'العيون و الحواجب':
-        return product.category === 'maquillage' && (text.includes('ماسكارا') || text.includes('mascara') || text.includes('رموش') || text.includes('عيون') || text.includes('حواجب'));
-      case 'كريمات':
-        return product.category === 'soin-visage' && (text.includes('كريم') || text.includes('مرطب'));
-      case 'منظفات الوجه':
-        return product.category === 'soin-visage' && (text.includes('لوشن') || text.includes('منظف') || text.includes('غسول') || text.includes('nettoyant'));
-      case 'ماسكات':
-        return (product.category === 'soin-visage' || product.category === 'soin-capillaire') && (text.includes('ماسك') || text.includes('غاسول') || text.includes('كريمة'));
-      case 'حماية الوجه':
-        return product.category === 'soin-visage' && (text.includes('حماية') || text.includes('حساسة') || text.includes('شمس') || text.includes('delicate'));
-      case 'كريمات مرطبة':
-        return product.category === 'soin-corps' && (text.includes('مرطب') || text.includes('كريم') || text.includes('ترطيب'));
-      case 'زيوت مغذية':
-        return product.category === 'soin-corps' && (text.includes('زيت') || text.includes('مغذي') || text.includes('huile'));
-      case 'العناية باليدين':
-        return product.category === 'soin-corps' && (text.includes('يدين') || text.includes('يد') || text.includes('mains') || text.includes('refine'));
-      case 'العناية بالقدمين':
-        return product.category === 'soin-corps' && (text.includes('قدم') || text.includes('أقدام') || text.includes('تشققات') || text.includes('ibnosina'));
-      case 'مستحضرات الحمام':
-        return product.category === 'soin-corps' && (text.includes('حمام') || text.includes('صابون') || text.includes('bain') || text.includes('مزيل'));
-      case 'شامبو':
-        return product.category === 'soin-capillaire' && (text.includes('شامبو') || text.includes('shampoing'));
-      case 'زيوت و سيرومات':
-        return product.category === 'soin-capillaire' && (text.includes('زيت') || text.includes('سيروم') || text.includes('serum') || text.includes('huile'));
-      case 'مستلزمات الشعر':
-        return product.category === 'soin-capillaire';
-      case 'العناية بالوجه':
-        return text.includes('رجالي') || text.includes('homme') || (text.includes('وجه') && text.includes('رجالي'));
-      case 'العناية بالجسم':
-        return text.includes('رجالي') || text.includes('homme') || text.includes('sporty');
-      case 'الحلاقة':
-        return text.includes('حلاقة') || text.includes('rasage') || text.includes('barbe');
-      case 'العناية ببشرة الطفل':
-        return text.includes('طفل') || text.includes('أطفال') || text.includes('رقيقة');
-      case 'العناية بشعر الطفل':
-        return text.includes('طفل') || text.includes('شعر');
-      case 'عطر الأطفال':
-        return text.includes('طفل') || text.includes('أطفال') || text.includes('عطر');
-      default:
-        return false;
+    const norm = normalizeCategory(catId);
+    if (norm === 'all') return lang === 'fr' ? 'Tous les produits' : 'الكل';
+    const found = categories.find(c => c.id === norm || c.label === norm);
+    if (found) {
+      return lang === 'fr' ? found.labelFr : found.label;
     }
+    return catId;
   };
 
-  // Filtrage combiné : Catégorie principale, Sous-catégorie et Recherche textuelle
-  const normalizedCategory = selectedCategory === 'كل المنتجات' ? 'all' : selectedCategory;
-
+  // Filtrage combiné conforme aux exigences du fichier Excel
   let filteredProducts = PRODUCTS;
 
-  // 1. Filtrage par catégorie principale
+  // 1. Filtrage par catégorie principale (recherche dans le tableau categories[] ou category)
   if (normalizedCategory !== 'all') {
-    filteredProducts = filteredProducts.filter(
-      (product) => product.category.toLowerCase() === normalizedCategory.toLowerCase()
-    );
+    filteredProducts = filteredProducts.filter((product) => {
+      const matchInArray = product.categories && Array.isArray(product.categories) && product.categories.includes(normalizedCategory);
+      const matchSingle = product.category === normalizedCategory;
+      return matchInArray || matchSingle;
+    });
   }
 
-  // 2. Filtrage par sous-catégorie
+  // 2. Filtrage par sous-catégorie (vérifie obligatoirement le couple Catégorie parente + Sous-catégorie)
   if (selectedSubCategory) {
-    filteredProducts = filteredProducts.filter((product) => 
-      matchSubCategory(product, selectedSubCategory)
-    );
+    filteredProducts = filteredProducts.filter((product) => {
+      // Si une catégorie parente est sélectionnée, elle doit obligatoirement correspondre
+      if (normalizedCategory !== 'all') {
+        const matchCat = (product.categories && Array.isArray(product.categories) && product.categories.includes(normalizedCategory)) ||
+                         product.category === normalizedCategory;
+        if (!matchCat) return false;
+      }
+      // Vérification de la sous-catégorie dans subCategories[] ou subCategory
+      const matchInSubArray = product.subCategories && Array.isArray(product.subCategories) && product.subCategories.includes(selectedSubCategory);
+      const matchSingleSub = product.subCategory === selectedSubCategory;
+      return matchInSubArray || matchSingleSub;
+    });
   }
 
   // 3. Filtrage en temps réel par mot-clé de recherche
   const trimmedSearch = searchQuery.trim().toLowerCase();
   if (trimmedSearch !== '') {
     filteredProducts = filteredProducts.filter((product) => {
-      const matchName = product.name.toLowerCase().includes(trimmedSearch);
-      const matchDesc = product.description.toLowerCase().includes(trimmedSearch);
-      const matchAlt = product.altText ? product.altText.toLowerCase().includes(trimmedSearch) : false;
-      const matchCat = product.category.toLowerCase().includes(trimmedSearch);
-      return matchName || matchDesc || matchAlt || matchCat;
+      const matchName = product.name?.toLowerCase().includes(trimmedSearch) || false;
+      const matchNameAr = product.nameAr?.toLowerCase().includes(trimmedSearch) || false;
+      const matchNameFr = product.nameFr?.toLowerCase().includes(trimmedSearch) || false;
+      const matchDesc = product.description?.toLowerCase().includes(trimmedSearch) || false;
+      const matchDescAr = product.descriptionAr?.toLowerCase().includes(trimmedSearch) || false;
+      const matchDescFr = product.descriptionFr?.toLowerCase().includes(trimmedSearch) || false;
+      const matchSku = product.sku?.toLowerCase().includes(trimmedSearch) || false;
+      const matchCat = product.category?.toLowerCase().includes(trimmedSearch) || false;
+      return matchName || matchNameAr || matchNameFr || matchDesc || matchDescAr || matchDescFr || matchSku || matchCat;
     });
   }
 

@@ -13,8 +13,15 @@ import { Testimonials } from './components/Testimonials';
 import { Product } from './data/products';
 import { CartItem, CompletedOrder } from './types/cart';
 import { CheckCircle2, Gift, Users, BookOpen, Sparkles } from 'lucide-react';
+// Importations pour le bilinguisme
+import { Language, translations } from './i18n/translations';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
 
 export default function App() {
+  // État de la langue active ('ar' par défaut ou 'fr')
+  const [lang, setLang] = useState<Language>('ar');
+  const t = translations[lang];
+
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
@@ -62,7 +69,6 @@ export default function App() {
       }
       return [...prevItems, { product, quantity }];
     });
-    // Ouvre le tiroir panier latéral pour un retour visuel direct
     setIsCartOpen(true);
   };
 
@@ -191,13 +197,12 @@ export default function App() {
     }, 50);
   };
 
-  // La vue d'accueil ne s'affiche que si showHome est true et qu'il n'y a pas de recherche active
   const isHomeView = showHome && !selectedSubCategory && searchQuery === '';
 
   // Vue spéciale : Tunnel de Commande (Checkout)
   if (currentView === 'checkout') {
     return (
-      <div className="min-h-screen bg-[#FDFCFB] flex flex-col">
+      <div className="min-h-screen bg-[#FDFCFB] flex flex-col" dir={t.dir}>
         <CheckoutPage
           items={cartItems}
           onBackToCart={() => {
@@ -221,7 +226,7 @@ export default function App() {
   // Vue spéciale : Confirmation de Commande (Success)
   if (currentView === 'success' && completedOrder) {
     return (
-      <div className="min-h-screen bg-[#FDFCFB] flex flex-col">
+      <div className="min-h-screen bg-[#FDFCFB] flex flex-col" dir={t.dir}>
         <OrderSuccess
           order={completedOrder}
           onContinueShopping={handleContinueShopping}
@@ -231,22 +236,31 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] text-gray-800 font-sans relative flex flex-col">
-      {/* Barre de navigation globale avec menus déroulants, recherche et panier */}
-      <Navbar 
-        selectedCategory={selectedCategory}
-        setSelectedCategory={handleCategoryChange}
-        selectedSubCategory={selectedSubCategory}
-        setSelectedSubCategory={setSelectedSubCategory}
-        searchQuery={searchQuery}
-        setSearchQuery={handleSearchChange}
-        onNavigateHome={handleNavigateHome}
-        onNavigateToCatalog={handleNavigateToCatalog}
-        onNavigateSection={handleNavigateSection}
-        onSelectSubCategory={handleSubCategorySelect}
-        cartCount={totalCartCount}
-        onOpenCart={() => setIsCartOpen(true)}
-      />
+    <div className="min-h-screen bg-[#FDFCFB] text-gray-800 font-sans relative flex flex-col" dir={t.dir}>
+      
+      {/* Barre de navigation globale incluant le sélecteur de langue */}
+      <div className="relative">
+        <Navbar 
+          selectedCategory={selectedCategory}
+          setSelectedCategory={handleCategoryChange}
+          selectedSubCategory={selectedSubCategory}
+          setSelectedSubCategory={setSelectedSubCategory}
+          searchQuery={searchQuery}
+          setSearchQuery={handleSearchChange}
+          onNavigateHome={handleNavigateHome}
+          onNavigateToCatalog={handleNavigateToCatalog}
+          onNavigateSection={handleNavigateSection}
+          onSelectSubCategory={handleSubCategorySelect}
+          cartCount={totalCartCount}
+          onOpenCart={() => setIsCartOpen(true)}
+          lang={lang}
+        />
+        
+        {/* Intégration du composant LanguageSwitcher en haut */}
+        <div className="absolute top-3 left-4 sm:left-8 z-50">
+          <LanguageSwitcher currentLang={lang} onLanguageChange={setLang} />
+        </div>
+      </div>
       
       {/* Contenu principal : alternance entre Catalogue, Fiche Produit et Accueil */}
       <main className="flex-1">
@@ -256,9 +270,9 @@ export default function App() {
             onBack={handleBackToCatalog}
             onAddToCart={handleAddToCart}
             onOpenCart={() => setIsCartOpen(true)}
+            lang={lang} /* <--- ICI : Passage de la langue active au composant ProductDetail */
           />
         ) : !isHomeView ? (
-          /* ── Vue Catalogue / Recherche / Tous les produits ── */
           <div id="catalogue" className="scroll-mt-24">
             <ProductCatalog
               selectedCategory={selectedCategory}
@@ -266,18 +280,17 @@ export default function App() {
               searchQuery={searchQuery}
               onSelectProduct={handleSelectProduct}
               onAddToCart={handleAddToCart}
+              lang={lang}
             />
           </div>
         ) : (
-          /* ── Vue Accueil ── */
           <>
             <HeroBanner onNavigateToCatalog={handleNavigateToCatalog} />
             
-            {/* Section Supérieure Asymétrique (فرصة فريدة لزيادة الدخل + إستمارة التسجيل) */}
+            {/* Section Supérieure Asymétrique */}
             <section className="max-w-7xl mx-auto px-4 py-8">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-                {/* À droite : Encart présentation opportunité */}
-                <div className="bg-white rounded-2xl shadow-sm border border-pink-100 p-6 sm:p-8 space-y-4 text-right" dir="rtl">
+                <div className="bg-white rounded-2xl shadow-sm border border-pink-100 p-6 sm:p-8 space-y-4 text-right">
                   <div className="inline-flex items-center gap-2 bg-pink-100 text-pink-800 text-xs font-bold px-3 py-1 rounded-full">
                     <Sparkles className="w-4 h-4 text-[#E6007E]" />
                     فرصة فريدة لزيادة الدخل
@@ -310,13 +323,12 @@ export default function App() {
                   </a>
                 </div>
 
-                {/* À gauche : Formulaire de parrainage */}
                 <RegistrationForm />
               </div>
             </section>
 
             {/* Section "كيف تزود دخلك" */}
-            <section className="max-w-7xl mx-auto px-4 py-10" dir="rtl">
+            <section className="max-w-7xl mx-auto px-4 py-10">
               <div className="text-center mb-8">
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">كيف تزود دخلك مع ماي واي؟</h2>
                 <div className="w-20 h-1 bg-[#E6007E] mx-auto mt-3 rounded-full"></div>
@@ -399,8 +411,8 @@ export default function App() {
               </div>
             </section>
 
-            {/* Cartes d'avantages "مزايا العمل في ماي واي" */}
-            <section className="max-w-7xl mx-auto px-4 py-8" dir="rtl">
+            {/* Cartes d'avantages */}
+            <section className="max-w-7xl mx-auto px-4 py-8">
               <div className="text-center mb-8">
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">مزايا العمل في ماي واي</h2>
                 <div className="w-20 h-1 bg-[#E6007E] mx-auto mt-3 rounded-full"></div>
@@ -444,11 +456,10 @@ export default function App() {
               </div>
             </section>
 
-            {/* Section des Témoignages et Preuve Sociale (Ajoutée ici) */}
             <Testimonials />
 
-            {/* Section Institutionnelle "نبذة عن شركة ماي واي" */}
-            <section className="max-w-7xl mx-auto px-4 py-10 mb-6" dir="rtl">
+            {/* Section Institutionnelle */}
+            <section className="max-w-7xl mx-auto px-4 py-10 mb-6">
               <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-10 text-right">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   <div className="space-y-4">
@@ -499,7 +510,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Tiroir Panier Latéral Flou (CartDrawer) */}
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -509,10 +519,8 @@ export default function App() {
         onCheckout={handleProceedToCheckout}
       />
 
-      {/* Icône WhatsApp flottante présente sur les pages principales */}
       <FloatingWhatsApp />
 
-      {/* Pied de page avec badges COD et mentions légales */}
       <Footer onNavigateToCatalog={handleNavigateToCatalog} onNavigateSection={handleNavigateSection} />
     </div>
   );

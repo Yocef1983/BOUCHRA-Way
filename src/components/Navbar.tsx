@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Search, Phone, UserPlus, Home, Layers, MessageSquare, X, Menu, ChevronLeft, ChevronDown, Sparkles, Check, Gem, Baby, Sparkle } from 'lucide-react';
+import { Language } from '../i18n/translations';
 
 export interface SubCategoryItem {
   label: string;
+  labelFr?: string;
   categoryId: string;
 }
 
 export interface NavCategoryItem {
   id: string;
   label: string;
+  labelFr?: string;
   categoryId: string;
   isDirectLink?: boolean;
   directHref?: string;
@@ -28,6 +31,7 @@ interface NavbarProps {
   onSelectSubCategory?: (category: string, subCategory: string) => void;
   cartCount?: number;
   onOpenCart?: () => void;
+  lang?: Language;
 }
 
 export default function Navbar({ 
@@ -42,99 +46,84 @@ export default function Navbar({
   onNavigateSection,
   onSelectSubCategory,
   cartCount = 0,
-  onOpenCart
+  onOpenCart,
+  lang = 'ar'
 }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedMobileCategory, setExpandedMobileCategory] = useState<string | null>(null);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
-  // Définition exacte des rubriques selon le tableau Excel dans l'ordre strict demandé
+  // Définition exacte de l'arborescence selon le fichier Excel et les spécifications
   const menuCategories: NavCategoryItem[] = [
-    {
-      id: 'parfum',
-      label: 'عطور',
-      categoryId: 'parfum',
-      subCategories: [
-        { label: 'عطر رجالي', categoryId: 'parfum' },
-        { label: 'عطر نسائي', categoryId: 'parfum' },
-        { label: 'مزيلات العرق', categoryId: 'parfum' },
-      ]
-    },
     {
       id: 'maquillage',
       label: 'ماكياج',
-      categoryId: 'maquillage',
+      labelFr: 'Maquillage',
+      categoryId: 'ماكياج',
       subCategories: [
-        { label: 'البشرة', categoryId: 'maquillage' },
-        { label: 'الشفايف', categoryId: 'maquillage' },
-        { label: 'الأظافر', categoryId: 'maquillage' },
-        { label: 'العيون و الحواجب', categoryId: 'maquillage' },
+        { label: 'البشرة', labelFr: 'Teint / Peau', categoryId: 'ماكياج' },
+        { label: 'الشفايف', labelFr: 'Lèvres', categoryId: 'ماكياج' },
+        { label: 'العيون و الحواجب', labelFr: 'Yeux & Sourcils', categoryId: 'ماكياج' },
       ]
     },
     {
       id: 'soin-visage',
       label: 'العناية بالوجه',
-      categoryId: 'soin-visage',
+      labelFr: 'Soin du visage',
+      categoryId: 'العناية بالوجه',
       subCategories: [
-        { label: 'كريمات', categoryId: 'soin-visage' },
-        { label: 'منظفات الوجه', categoryId: 'soin-visage' },
-        { label: 'ماسكات', categoryId: 'soin-visage' },
-        { label: 'حماية الوجه', categoryId: 'soin-visage' },
+        { label: 'كريمات', labelFr: 'Crèmes', categoryId: 'العناية بالوجه' },
+        { label: 'منظفات الوجه', labelFr: 'Nettoyants visage', categoryId: 'العناية بالوجه' },
+        { label: 'حماية الوجه', labelFr: 'Protection visage', categoryId: 'العناية بالوجه' },
+        { label: 'ماسكات', labelFr: 'Masques', categoryId: 'العناية بالوجه' },
       ]
     },
     {
       id: 'soin-corps',
       label: 'العناية بالجسم',
-      categoryId: 'soin-corps',
+      labelFr: 'Soin du corps',
+      categoryId: 'العناية بالجسم',
       subCategories: [
-        { label: 'كريمات مرطبة', categoryId: 'soin-corps' },
-        { label: 'زيوت مغذية', categoryId: 'soin-corps' },
-        { label: 'العناية باليدين', categoryId: 'soin-corps' },
-        { label: 'العناية بالقدمين', categoryId: 'soin-corps' },
-        { label: 'مستحضرات الحمام', categoryId: 'soin-corps' },
+        { label: 'كريمات مرطبة', labelFr: 'Crèmes hydratantes', categoryId: 'العناية بالجسم' },
+        { label: 'العناية باليدين', labelFr: 'Soin des mains', categoryId: 'العناية بالجسم' },
+        { label: 'العناية بالقدمين', labelFr: 'Soin des pieds', categoryId: 'العناية بالجسم' },
+        { label: 'مستحضرات الحمام', labelFr: 'Produits de bain & déodorants', categoryId: 'العناية بالجسم' },
+        { label: 'زيوت مغذية', labelFr: 'Huiles nourrissantes', categoryId: 'العناية بالجسم' },
       ]
     },
     {
       id: 'soin-capillaire',
       label: 'العناية بالشعر',
-      categoryId: 'soin-capillaire',
+      labelFr: 'Soin des cheveux',
+      categoryId: 'العناية بالشعر',
       subCategories: [
-        { label: 'شامبو', categoryId: 'soin-capillaire' },
-        { label: 'ماسكات', categoryId: 'soin-capillaire' },
-        { label: 'زيوت و سيرومات', categoryId: 'soin-capillaire' },
-        { label: 'مستلزمات الشعر', categoryId: 'soin-capillaire' },
+        { label: 'شامبو', labelFr: 'Shampooings', categoryId: 'العناية بالشعر' },
+        { label: 'زيوت و سيرومات', labelFr: 'Huiles & Sérums', categoryId: 'العناية بالشعر' },
+        { label: 'ماسكات', labelFr: 'Masques capillaires', categoryId: 'العناية بالشعر' },
       ]
     },
     {
-      id: 'hommes',
-      label: 'مستحضرات رجالية',
-      categoryId: 'hommes',
+      id: 'parfum',
+      label: 'عطور',
+      labelFr: 'Parfums',
+      categoryId: 'عطور',
       subCategories: [
-        { label: 'العناية بالوجه', categoryId: 'hommes' },
-        { label: 'العناية بالجسم', categoryId: 'hommes' },
-        { label: 'الحلاقة', categoryId: 'hommes' },
-      ]
-    },
-    {
-      id: 'accessoires',
-      label: 'مجوهرات و أكسيسوارات',
-      categoryId: 'accessoires',
-      isDirectLink: true
-    },
-    {
-      id: 'enfants',
-      label: 'أطفال',
-      categoryId: 'enfants',
-      subCategories: [
-        { label: 'العناية ببشرة الطفل', categoryId: 'enfants' },
-        { label: 'العناية بشعر الطفل', categoryId: 'enfants' },
-        { label: 'عطر الأطفال', categoryId: 'enfants' },
+        { label: 'عطر نسائي', labelFr: 'Parfum femme', categoryId: 'عطور' },
+        { label: 'عطر رجالي', labelFr: 'Parfum homme', categoryId: 'عطور' },
       ]
     },
     {
       id: 'menage',
       label: 'منظفات المنزل',
-      categoryId: 'menage',
+      labelFr: 'Entretien ménager',
+      categoryId: 'منظفات المنزل',
+      isDirectLink: true
+    },
+    {
+      id: 'enfants',
+      label: 'أطفال',
+      labelFr: 'Enfants',
+      categoryId: 'أطفال',
       isDirectLink: true
     }
   ];
@@ -372,10 +361,11 @@ export default function Navbar({
             {menuCategories.map((category) => {
               const hasSubCategories = category.subCategories && category.subCategories.length > 0;
               const isHovered = hoveredCategory === category.id;
-              const isCategoryActive = selectedCategory === category.categoryId;
+              const isCategoryActive = selectedCategory === category.categoryId || selectedCategory === category.id;
+              const displayLabel = (lang === 'fr' && category.labelFr) ? category.labelFr : category.label;
 
               if (category.isDirectLink || !hasSubCategories) {
-                // أقسام مباشرة بدون قائمة منسدلة (مجوهرات و أكسيسوارات، منظفات المنزل)
+                // أقسام مباشرة بدون قائمة منسدلة (منظفات المنزل، أطفال)
                 return (
                   <li key={category.id}>
                     <button
@@ -387,7 +377,7 @@ export default function Navbar({
                           : 'text-gray-700'
                       }`}
                     >
-                      {category.label}
+                      {displayLabel}
                     </button>
                   </li>
                 );
@@ -413,7 +403,7 @@ export default function Navbar({
                     aria-expanded={isHovered}
                     aria-controls={`dropdown-${category.id}`}
                   >
-                    <span>{category.label}</span>
+                    <span>{displayLabel}</span>
                     <ChevronDown 
                       size={12} 
                       className={`text-gray-400 group-hover:text-pink-600 transition-transform duration-200 ${
@@ -431,28 +421,31 @@ export default function Navbar({
                         : 'opacity-0 invisible -translate-y-1 pointer-events-none'
                     }`}
                     role="menu"
-                    aria-label={category.label}
+                    aria-label={displayLabel}
                   >
                     <div className="bg-white rounded-2xl shadow-xl shadow-pink-950/10 border border-pink-100 p-2 text-right overflow-hidden">
                       {/* رأس القائمة */}
                       <div className="px-3 py-1.5 mb-1 border-b border-gray-100 flex items-center justify-between text-[11px] text-pink-700 font-bold bg-pink-50/60 rounded-lg">
-                        <span>{category.label}</span>
+                        <span>{displayLabel}</span>
                         <Sparkles size={12} className="text-pink-500" />
                       </div>
 
                       {/* عناصر القائمة المنسدلة (الفرعية) */}
                       <div className="space-y-0.5">
-                        {category.subCategories.map((subItem, idx) => (
-                          <button
-                            key={idx}
-                            type="button"
-                            onClick={() => handleSubCategorySelect(subItem.categoryId, subItem.label)}
-                            className="w-full text-right px-3 py-2 rounded-xl text-xs text-gray-700 hover:text-pink-700 hover:bg-pink-50 transition flex items-center justify-between group/sub cursor-pointer"
-                          >
-                            <span>{subItem.label}</span>
-                            <ChevronLeft size={13} className="text-gray-300 group-hover/sub:text-pink-600 transition-transform group-hover/sub:-translate-x-0.5" />
-                          </button>
-                        ))}
+                        {category.subCategories.map((subItem, idx) => {
+                          const subDisplayLabel = (lang === 'fr' && subItem.labelFr) ? subItem.labelFr : subItem.label;
+                          return (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => handleSubCategorySelect(subItem.categoryId, subItem.label)}
+                              className="w-full text-right px-3 py-2 rounded-xl text-xs text-gray-700 hover:text-pink-700 hover:bg-pink-50 transition flex items-center justify-between group/sub cursor-pointer"
+                            >
+                              <span>{subDisplayLabel}</span>
+                              <ChevronLeft size={13} className="text-gray-300 group-hover/sub:text-pink-600 transition-transform group-hover/sub:-translate-x-0.5" />
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -548,7 +541,8 @@ export default function Navbar({
                 {menuCategories.map((category) => {
                   const hasSubCategories = category.subCategories && category.subCategories.length > 0;
                   const isExpanded = expandedMobileCategory === category.id;
-                  const isCategoryActive = selectedCategory === category.categoryId;
+                  const isCategoryActive = selectedCategory === category.categoryId || selectedCategory === category.id;
+                  const displayLabel = (lang === 'fr' && category.labelFr) ? category.labelFr : category.label;
 
                   if (category.isDirectLink || !hasSubCategories) {
                     return (
@@ -562,7 +556,7 @@ export default function Navbar({
                             : 'border-gray-100 text-gray-800 hover:bg-gray-50'
                         }`}
                       >
-                        <span>{category.label}</span>
+                        <span>{displayLabel}</span>
                         <ChevronLeft size={14} className="text-gray-400" />
                       </button>
                     );
@@ -581,7 +575,7 @@ export default function Navbar({
                         }`}
                       >
                         <span className="flex items-center gap-2">
-                          <span>{category.label}</span>
+                          <span>{displayLabel}</span>
                           <span className="text-[10px] text-gray-400">({category.subCategories.length})</span>
                         </span>
                         <ChevronDown 
@@ -595,17 +589,20 @@ export default function Navbar({
                       {/* قائمة العناصر الفرعية للهاتف */}
                       {isExpanded && (
                         <div className="bg-pink-50/40 p-2 space-y-1 border-t border-pink-100/50">
-                          {category.subCategories.map((subItem, idx) => (
-                            <button
-                              key={idx}
-                              type="button"
-                              onClick={() => handleSubCategorySelect(subItem.categoryId, subItem.label)}
-                              className="w-full text-right px-3 py-1.5 rounded-lg text-xs text-gray-700 hover:text-pink-700 hover:bg-white transition flex items-center justify-between cursor-pointer"
-                            >
-                              <span>{subItem.label}</span>
-                              <ChevronLeft size={13} className="text-gray-300" />
-                            </button>
-                          ))}
+                          {category.subCategories.map((subItem, idx) => {
+                            const subDisplayLabel = (lang === 'fr' && subItem.labelFr) ? subItem.labelFr : subItem.label;
+                            return (
+                              <button
+                                key={idx}
+                                type="button"
+                                onClick={() => handleSubCategorySelect(subItem.categoryId, subItem.label)}
+                                className="w-full text-right px-3 py-1.5 rounded-lg text-xs text-gray-700 hover:text-pink-700 hover:bg-white transition flex items-center justify-between cursor-pointer"
+                              >
+                                <span>{subDisplayLabel}</span>
+                                <ChevronLeft size={13} className="text-gray-300" />
+                              </button>
+                            );
+                          })}
                         </div>
                       )}
                     </div>
