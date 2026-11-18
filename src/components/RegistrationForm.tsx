@@ -1,5 +1,6 @@
 import React, { useState, useId } from 'react';
 import { ShieldCheck, Phone, User, Mail, MapPin, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { MOROCCAN_PHONE_REGEX, normalizeMaPhone } from '../config/validation';
 
 interface FormData {
   hasMembership: 'نعم' | 'لا';
@@ -25,8 +26,6 @@ const sanitizeInput = (input: string): string => {
     .trim();
 };
 
-// Validation stricte du mobile marocain (+212 / 05 / 06 / 07 suivi de 8 chiffres)
-const MOROCCAN_PHONE_REGEX = /^(?:(?:\+?212)|0)([5-7]\d{8})$/;
 
 export const RegistrationForm: React.FC = () => {
   const formId = useId();
@@ -44,15 +43,6 @@ export const RegistrationForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Normalisation du numéro pour WhatsApp (convertit 06/07 en format 2126/2127)
-  const formatPhoneForWhatsApp = (rawPhone: string): string => {
-    const cleaned = rawPhone.replace(/\s+/g, '').replace(/-/g, '');
-    const match = cleaned.match(MOROCCAN_PHONE_REGEX);
-    if (match && match[1]) {
-      return `212${match[1]}`;
-    }
-    return cleaned;
-  };
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -109,7 +99,7 @@ export const RegistrationForm: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const sanitizedPhone = formatPhoneForWhatsApp(formData.phone);
+      const sanitizedPhone = normalizeMaPhone(formData.phone);
       
       // Construction du message WhatsApp sécurisé et encodé en UTF-8
       const message = `*طلب انضمام جديد - شبكة بوشرى واي*\n\n` +

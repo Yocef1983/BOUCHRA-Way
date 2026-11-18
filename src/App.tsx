@@ -10,7 +10,7 @@ import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import RegistrationForm from './components/RegistrationForm';
 import Footer from './components/Footer';
 import { Testimonials } from './components/Testimonials';
-import { Product } from './data/products';
+import { Product, PRODUCTS } from './data/products';
 import { CartItem, CompletedOrder } from './types/cart';
 import { CheckCircle2, Gift, Users, BookOpen, Sparkles } from 'lucide-react';
 // Importations pour le bilinguisme
@@ -52,7 +52,23 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem('bw_cart_items');
-      return saved ? JSON.parse(saved) : [];
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) return [];
+
+      const rehydrated: CartItem[] = [];
+      for (const item of parsed) {
+        const productId = item.id || item.product?.id;
+        const quantity = typeof item.quantity === 'number' && item.quantity > 0 ? item.quantity : 1;
+        if (productId) {
+          const product = PRODUCTS.find((p) => p.id === productId);
+          if (product) {
+            rehydrated.push({ product, quantity });
+          }
+        }
+      }
+      return rehydrated;
+
     } catch {
       return [];
     }
@@ -60,12 +76,23 @@ export default function App() {
 
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [currentView, setCurrentView] = useState<'main' | 'checkout' | 'success'>('main');
-  const [completedOrder, setCompletedOrder] = useState<CompletedOrder | null>(null);
+  const [completedOrder, setCompletedOrder] = useState<CompletedOrder | null>(() => {
+    try {
+      const saved = sessionStorage.getItem('bw_last_order');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
   // Sauvegarde automatique du panier dans le stockage local
   useEffect(() => {
     try {
-      localStorage.setItem('bw_cart_items', JSON.stringify(cartItems));
+      const simplified = cartItems.map((item) => ({
+        id: item.product.id,
+        quantity: item.quantity,
+      }));
+      localStorage.setItem('bw_cart_items', JSON.stringify(simplified));
     } catch {
       // Ignorer si stockage non disponible
     }
@@ -115,14 +142,23 @@ export default function App() {
 
   const handleOrderSuccess = (order: CompletedOrder) => {
     setCompletedOrder(order);
+    try {
+      sessionStorage.setItem('bw_last_order', JSON.stringify(order));
+    } catch {
+      // Ignorer
+    }
+    // Bascule sur la vue success sans vider immédiatement le panier
+    setCurrentView('success');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleConfirmOrderSent = () => {
     setCartItems([]);
     try {
       localStorage.removeItem('bw_cart_items');
     } catch {
       // Ignorer
     }
-    setCurrentView('success');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleContinueShopping = () => {
@@ -130,6 +166,11 @@ export default function App() {
     setShowHome(false);
     setSelectedProduct(null);
     setCompletedOrder(null);
+    try {
+      sessionStorage.removeItem('bw_last_order');
+    } catch {
+      // Ignorer
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -248,6 +289,7 @@ export default function App() {
         <OrderSuccess
           order={completedOrder}
           onContinueShopping={handleContinueShopping}
+          onOrderConfirmed={handleConfirmOrderSent}
         />
       </div>
     );

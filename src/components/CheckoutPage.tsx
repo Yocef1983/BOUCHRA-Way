@@ -12,6 +12,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { CartItem, CompletedOrder, CustomerOrderInfo } from '../types/cart';
+import { MOROCCAN_PHONE_REGEX, normalizeMaPhone } from '../config/validation';
 
 interface CheckoutPageProps {
   items: CartItem[];
@@ -34,8 +35,6 @@ const sanitizeInput = (input: string): string => {
   return input.replace(/[<>]/g, '').trim();
 };
 
-// Validation & normalisation tolérante et stricte des numéros marocains (+212, 00212, 06, 07, 6, 7, 05)
-const MOROCCAN_PHONE_REGEX = /^(?:(?:(?:\+|00)212)|212|0)?([5-7]\d{8})$/;
 
 const MOROCCAN_CITIES = [
   'الدار البيضاء (Casablanca)',
@@ -85,15 +84,6 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const shipping = subtotal >= 400 || isCasablanca ? 0 : 20;
   const finalTotal = subtotal + shipping;
 
-  // Normalisation du numéro pour WhatsApp (+212XXXXXXXXX) sans faux rejets
-  const formatPhoneForWhatsApp = (rawPhone: string): string => {
-    const cleaned = rawPhone.replace(/[\s.-]/g, '');
-    const match = cleaned.match(MOROCCAN_PHONE_REGEX);
-    if (match && match[1]) {
-      return `212${match[1]}`;
-    }
-    return cleaned;
-  };
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, productName: string) => {
     const target = e.currentTarget;
@@ -188,7 +178,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       const sanitizedCity = sanitizeInput(formData.city);
       const sanitizedAddress = sanitizeInput(formData.address);
       const sanitizedEmail = formData.email ? sanitizeInput(formData.email) : '';
-      const sanitizedPhone = formatPhoneForWhatsApp(formData.phone);
+      const sanitizedPhone = normalizeMaPhone(formData.phone);
       
       const randomRef = Math.floor(10000 + Math.random() * 90000);
       const orderRef = `#BW-${randomRef}`;

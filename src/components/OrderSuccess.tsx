@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Check, ShoppingBag, ArrowRight, MessageCircle } from 'lucide-react';
 import { CompletedOrder } from '../types/cart';
 
 interface OrderSuccessProps {
   order: CompletedOrder;
   onContinueShopping: () => void;
+  onOrderConfirmed?: () => void;
 }
 
 export const OrderSuccess: React.FC<OrderSuccessProps> = ({
   order,
-  onContinueShopping
+  onContinueShopping,
+  onOrderConfirmed,
 }) => {
+  const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+
+  const handleConfirmSent = () => {
+    setIsConfirmed(true);
+    onOrderConfirmed?.();
+  };
+
   const handleOpenWhatsAppAgain = () => {
     const phoneNumber = '212634486494';
     const message = encodeURIComponent(
@@ -69,6 +78,25 @@ export const OrderSuccess: React.FC<OrderSuccessProps> = ({
 
         {/* Boutons d'actions */}
         <div className="space-y-3 pt-2">
+          {/* Bouton de confirmation finale de l'envoi WhatsApp */}
+          <button
+            type="button"
+            onClick={handleConfirmSent}
+            disabled={isConfirmed}
+            className={`w-full py-3.5 px-4 font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm ${
+              isConfirmed
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 cursor-default'
+                : 'bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white cursor-pointer'
+            }`}
+          >
+            <Check size={18} className={isConfirmed ? 'text-emerald-600' : 'text-white'} />
+            <span>
+              {isConfirmed
+                ? 'تم تأكيد إرسال الطلب بنجاح ✓ / Commande confirmée'
+                : 'تم إرسال الطلب عبر واتساب / J\'ai bien envoyé ma commande'}
+            </span>
+          </button>
+
           <button
             type="button"
             onClick={handleOpenWhatsAppAgain}
