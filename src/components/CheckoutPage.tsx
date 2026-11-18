@@ -13,11 +13,13 @@ import {
 } from 'lucide-react';
 import { CartItem, CompletedOrder, CustomerOrderInfo } from '../types/cart';
 import { MOROCCAN_PHONE_REGEX, normalizeMaPhone } from '../config/validation';
+import { Language } from '../i18n/translations';
 
 interface CheckoutPageProps {
   items: CartItem[];
   onBackToCart: () => void;
   onOrderSuccess: (order: CompletedOrder) => void;
+  lang?: Language;
 }
 
 interface FormErrors {
@@ -58,8 +60,10 @@ const MOROCCAN_CITIES = [
 export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   items,
   onBackToCart,
-  onOrderSuccess
+  onOrderSuccess,
+  lang: propLang
 }) => {
+  const lang = propLang || (typeof document !== 'undefined' && document.documentElement.lang === 'fr' ? 'fr' : (typeof localStorage !== 'undefined' && localStorage.getItem('bw_lang') === 'fr' ? 'fr' : 'ar'));
   const [formData, setFormData] = useState<CustomerOrderInfo>({
     firstName: '',
     lastName: '',
@@ -240,6 +244,33 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       setIsSubmitting(false);
     }
   };
+
+  // État vide lorsque le panier ne contient aucun article
+  if (items.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#FDFCFB] text-gray-800 font-sans flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-3xl p-8 sm:p-10 border border-gray-100 shadow-xl text-center space-y-6">
+          <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto shadow-xs">
+            <ShoppingBag size={40} className="text-gray-300" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
+              {lang === 'fr' ? 'Votre panier est vide.' : 'سلة التسوق فارغة.'}
+            </h2>
+          </div>
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={onBackToCart}
+              className="bg-[#E6007E] text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:opacity-95 transition cursor-pointer shadow-md inline-flex items-center justify-center"
+            >
+              {lang === 'fr' ? 'Retourner à la boutique' : 'العودة للمنتجات'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] text-gray-800 font-sans dir-rtl text-right" dir="rtl">
