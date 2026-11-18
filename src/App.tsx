@@ -19,8 +19,26 @@ import { LanguageSwitcher } from './components/LanguageSwitcher';
 
 export default function App() {
   // État de la langue active ('ar' par défaut ou 'fr')
-  const [lang, setLang] = useState<Language>('ar');
+  const [lang, setLang] = useState<Language>(() => {
+    try {
+      const saved = localStorage.getItem('bw_lang');
+      return (saved === 'fr' || saved === 'ar') ? saved : 'ar';
+    } catch {
+      return 'ar';
+    }
+  });
   const t = translations[lang];
+
+  // Synchronisation de la langue et de la direction sur l'élément <html> et persistance dans localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('bw_lang', lang);
+    } catch {
+      // Ignorer si stockage non disponible
+    }
+    document.documentElement.lang = lang;
+    document.documentElement.dir = t.dir;
+  }, [lang, t.dir]);
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
