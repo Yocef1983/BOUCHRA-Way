@@ -340,7 +340,7 @@ export default function App() {
                     <div className="aspect-video w-full rounded-2xl overflow-hidden bg-gray-100">
                       <iframe
                         className="w-full h-full"
-                        src="https://www.youtube.com/embed/KNtRghtkl9w"
+                        src="https://www.youtube-nocookie.com/embed/KNtRghtkl9w"
                         title="من نحن - ماي واي"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
