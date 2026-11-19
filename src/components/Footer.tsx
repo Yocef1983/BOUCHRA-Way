@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Truck, ShieldCheck, RotateCcw, Headphones, Lock } from 'lucide-react';
 import { LegalModal } from './LegalModal';
+import { Language } from '../i18n/translations';
 
 interface FooterProps {
   onNavigateToCatalog: () => void;
   onNavigateSection: (sectionId: string) => void;
+  lang?: Language;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigateToCatalog }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigateToCatalog, lang = 'ar' }) => {
   const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
   const [activeLegalTab, setActiveLegalTab] = useState<'shipping' | 'returns' | 'terms' | 'privacy'>('shipping');
 
@@ -17,7 +19,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToCatalog }) => {
   };
 
   return (
-    <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 mt-auto dir-rtl" dir="rtl">
+    <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 mt-auto" dir={lang === 'fr' ? 'ltr' : 'rtl'}>
       
       {/* 4 Piliers de confiance */}
       <div className="max-w-7xl mx-auto px-4 py-8 border-b border-slate-800">

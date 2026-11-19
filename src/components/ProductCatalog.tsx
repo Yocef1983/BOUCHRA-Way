@@ -313,7 +313,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     onClick={() => onSelectProduct(product)}
                     className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem] mb-1.5 cursor-pointer group-hover:text-[#E6007E] transition-colors leading-snug"
                   >
-                    {product.name}
+                    {lang === 'fr' ? (product.nameFr || product.name) : (product.nameAr || product.name)}
                   </h3>
 
                   {/* Avis & Étoiles */}

@@ -9,6 +9,7 @@ interface CartDrawerProps {
   onUpdateQuantity: (productId: string, quantity: number) => void;
   onRemoveItem: (productId: string) => void;
   onCheckout: () => void;
+  lang?: 'ar' | 'fr';
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -17,7 +18,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   items,
   onUpdateQuantity,
   onRemoveItem,
-  onCheckout
+  onCheckout,
+  lang = 'ar'
 }) => {
   // Verrouillage du défilement d'arrière-plan lorsque le tiroir est ouvert
   useEffect(() => {
@@ -152,12 +154,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 >
                   {/* Miniature produit */}
                   <div className="w-20 h-20 bg-stone-50 rounded-lg p-1.5 flex items-center justify-center shrink-0 border border-gray-100">
-                    <img
-                      src={item.product.image}
-                      alt={item.product.name}
-                      onError={(e) => handleImageError(e, item.product.name)}
-                      className="max-h-full max-w-full object-contain"
-                    />
+<img
+                       src={item.product.image}
+                       alt={lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name)}
+                       onError={(e) => handleImageError(e, item.product.name)}
+                       className="max-h-full max-w-full object-contain"
+                     />
                   </div>
 
                   {/* Détails & Quantité */}
@@ -168,7 +170,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           MY WAY • BOUCHRA WAY
                         </span>
                         <h4 className="text-xs font-semibold text-gray-900 line-clamp-1">
-                          {item.product.name}
+                          {lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name)}
                         </h4>
                       </div>
                       <button

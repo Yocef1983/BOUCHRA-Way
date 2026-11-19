@@ -38,15 +38,19 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const t = translations[lang];
   const isAr = lang === 'ar';
 
+  // Titre et description localisés selon la langue active
+  const displayName = lang === 'fr' ? (product.nameFr || product.name) : (product.nameAr || product.name);
+  const displayDescription = lang === 'fr' ? (product.descriptionFr || product.description) : (product.descriptionAr || product.description);
+
   // Mise à jour dynamique du titre SEO et de la description lors de la consultation produit
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = `${product.name} | ${product.price} ${t.currency} - BOUCHRA WAY`;
+    document.title = `${displayName} | ${product.price} ${t.currency} - BOUCHRA WAY`;
 
     const metaDesc = document.querySelector('meta[name="description"]');
     const previousDesc = metaDesc ? metaDesc.getAttribute('content') : null;
     if (metaDesc) {
-      metaDesc.setAttribute('content', `${product.name}: ${product.description}`);
+      metaDesc.setAttribute('content', `${displayName}: ${displayDescription}`);
     }
 
     return () => {
@@ -55,7 +59,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
         metaDesc.setAttribute('content', previousDesc);
       }
     };
-  }, [product, t]);
+  }, [product, displayName, displayDescription, t]);
 
   // Prix calculés selon la maquette
   const originalPrice = Math.round(product.price * 1.33);
@@ -85,10 +89,10 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     const total = product.price * quantity;
     const message = encodeURIComponent(
       `*طلب جديد عبر الموقع - Bouchra Way* 🛍️\n\n` +
-      `▪ *المنتج:* ${product.name}\n` +
+      `▪ ${isAr ? '*المنتج:*' : '*Produit:*'} ${displayName}\n` +
       `▪ *SKU:* ${product.sku}\n` +
-      `▪ *الكمية:* ${quantity}\n` +
-      `▪ *المجموع:* ${total} ${t.currency}\n`
+      `▪ ${isAr ? '*الكمية:*' : '*Quantité:*'} ${quantity}\n` +
+      `▪ ${isAr ? '*المجموع:*' : '*Total:*'} ${total} ${t.currency}\n`
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
@@ -115,7 +119,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             </button>
             <ChevronLeft size={14} className="text-gray-400" />
             <span className="text-gray-800 font-normal truncate max-w-[180px] sm:max-w-none">
-              {product.name}
+              {displayName}
             </span>
           </div>
 
@@ -145,7 +149,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
               <img
                 src={product.image}
-                alt={product.name}
+                alt={displayName}
                 loading="eager"
                 onError={handleImageError}
                 className="max-h-[320px] sm:max-h-[380px] w-auto max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
@@ -172,7 +176,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
             {/* Titre du produit & SKU */}
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 leading-snug">
-              {product.name}
+              {displayName}
             </h1>
             <p className="text-xs text-gray-400 mb-4 font-mono">
               {t.skuLabel}: {product.sku}
@@ -266,7 +270,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 {t.aboutProduct}
               </h2>
               <p className="text-gray-700 leading-relaxed text-sm bg-stone-50/60 p-3.5 rounded-xl border border-stone-200">
-                {product.description}
+                {displayDescription}
               </p>
             </div>
 

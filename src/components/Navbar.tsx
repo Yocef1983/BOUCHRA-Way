@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Search, Phone, UserPlus, Home, Layers, MessageSquare, X, Menu, ChevronLeft, ChevronDown, Sparkles, Check, Gem, Baby, Sparkle } from 'lucide-react';
 import { Language } from '../i18n/translations';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export interface SubCategoryItem {
   label: string;
@@ -32,6 +33,7 @@ interface NavbarProps {
   cartCount?: number;
   onOpenCart?: () => void;
   lang?: Language;
+  onLanguageChange?: (lang: Language) => void;
 }
 
 export default function Navbar({ 
@@ -47,7 +49,8 @@ export default function Navbar({
   onSelectSubCategory,
   cartCount = 0,
   onOpenCart,
-  lang = 'ar'
+  lang = 'ar',
+  onLanguageChange
 }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedMobileCategory, setExpandedMobileCategory] = useState<string | null>(null);
@@ -224,7 +227,7 @@ export default function Navbar({
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md font-sans dir-rtl" dir="rtl">
+    <header className="sticky top-0 z-50 bg-white shadow-md font-sans" dir={lang === 'fr' ? 'ltr' : 'rtl'}>
       {/* شريط الإشعارات العلوي */}
       <div className="bg-pink-700 text-white text-xs py-1.5 px-4 text-center font-medium">
         ✨ انضمي إلى عائلة بوشرى واي اليوم واحصلي على خصومات تصل إلى 50% وتوصيل لجميع مناطق المغرب!
@@ -275,11 +278,15 @@ export default function Navbar({
 
         {/* أيقونات الإجراءات */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {onLanguageChange && (
+            <LanguageSwitcher currentLang={lang} onLanguageChange={onLanguageChange} />
+          )}
+
           <a
             href="https://wa.me/212634486494?text=مرحباً%20بوشرى%20واي،%20أود%20التواصل%20والاستفسار%20عن%20المنتجات"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 sm:px-3.5 py-2 rounded-full font-semibold transition shadow-xs"
+            className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 sm:px-3.5 py-2 rounded-full font-semibold transition shadow-xs"
           >
             <Phone className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">واتساب</span>
@@ -293,7 +300,7 @@ export default function Navbar({
                 handleAllProductsClick();
               }
             }}
-            title="السلة والتسوق"
+            title={lang === 'fr' ? 'Panier' : 'السلة والتسوق'}
             className="relative cursor-pointer p-2 bg-pink-50 rounded-full text-pink-700 hover:bg-pink-100 transition active:scale-95"
           >
             <ShoppingBag className="w-5 h-5 text-[#E6007E]" />
@@ -491,23 +498,28 @@ export default function Navbar({
             aria-hidden="true"
           />
 
-          {/* لوحة القائمة المنزلقة من اليمين (RTL) */}
-          <aside className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-50 flex flex-col p-5 overflow-y-auto transform transition-transform duration-300 ease-out">
+          {/* لوحة القائمة المنزلقة من اليمين (RTL) أو اليسار (LTR) */}
+          <aside className={`fixed top-0 ${lang === 'fr' ? 'left-0' : 'right-0'} h-full w-[85%] max-w-sm bg-white shadow-2xl z-50 flex flex-col p-5 overflow-y-auto transform transition-transform duration-300 ease-out`} dir={lang === 'fr' ? 'ltr' : 'rtl'}>
             
-            {/* ترويسة القائمة مع زر الإغلاق الواضح */}
+            {/* ترويسة القائمة مع زر الإغلاق الواضح وسلكتور اللغة */}
             <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
               <div>
                 <span className="text-lg font-bold text-pink-700">BOUCHRA WAY</span>
-                <span className="block text-[11px] text-gray-500 font-medium">ماي واي المغرب</span>
+                <span className="block text-[11px] text-gray-500 font-medium">{lang === 'fr' ? 'My Way Maroc' : 'ماي واي المغرب'}</span>
               </div>
-              <button
-                type="button"
-                onClick={closeMenu}
-                aria-label="إغلاق القائمة"
-                className="p-2 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition cursor-pointer"
-              >
-                <X size={20} />
-              </button>
+              <div className="flex items-center gap-2">
+                {onLanguageChange && (
+                  <LanguageSwitcher currentLang={lang} onLanguageChange={onLanguageChange} />
+                )}
+                <button
+                  type="button"
+                  onClick={closeMenu}
+                  aria-label="إغلاق القائمة"
+                  className="p-2 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition cursor-pointer"
+                >
+                  <X size={20} />
+                </button>
+              </div>
             </div>
 
             {/* روابط البداية الرئيسية */}

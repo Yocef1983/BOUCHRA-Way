@@ -189,7 +189,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
       // Récapitulatif des articles pour le message WhatsApp
       const itemsListText = items
-        .map((item, idx) => `▪ ${idx + 1}. *${sanitizeInput(item.product.name)}* (x${item.quantity}) = ${item.product.price * item.quantity} MAD`)
+        .map((item, idx) => `▪ ${idx + 1}. *${sanitizeInput(lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name))}* (x${item.quantity}) = ${item.product.price * item.quantity} MAD`)
         .join('\n');
 
       // Construction du message WhatsApp bilingue structuré
@@ -535,12 +535,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                   {items.map((item) => (
                     <div key={item.product.id} className="flex items-center gap-3">
                       <div className="relative w-14 h-14 bg-stone-50 rounded-lg p-1 border border-gray-100 shrink-0 flex items-center justify-center">
-                        <img
-                          src={item.product.image}
-                          alt={item.product.name}
-                          onError={(e) => handleImageError(e, item.product.name)}
-                          className="max-h-full max-w-full object-contain"
-                        />
+<img
+                           src={item.product.image}
+                           alt={lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name)}
+                           onError={(e) => handleImageError(e, item.product.name)}
+                           className="max-h-full max-w-full object-contain"
+                         />
                         <span className="absolute -top-1.5 -left-1.5 bg-black text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
                           {item.quantity}
                         </span>
@@ -548,7 +548,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
                       <div className="flex-1 min-w-0">
                         <h4 className="text-xs font-semibold text-gray-900 line-clamp-1">
-                          {item.product.name}
+                          {lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name)}
                         </h4>
                         <div className="flex items-baseline gap-2 mt-0.5" dir="ltr">
                           <span className="text-xs font-bold text-[#E6007E]">

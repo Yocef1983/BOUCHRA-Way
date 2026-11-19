@@ -15,7 +15,6 @@ import { CartItem, CompletedOrder } from './types/cart';
 import { CheckCircle2, Gift, Users, BookOpen, Sparkles } from 'lucide-react';
 // Importations pour le bilinguisme
 import { Language, translations } from './i18n/translations';
-import { LanguageSwitcher } from './components/LanguageSwitcher';
 
 export default function App() {
   // État de la langue active ('ar' par défaut ou 'fr')
@@ -37,7 +36,7 @@ export default function App() {
       // Ignorer si stockage non disponible
     }
     document.documentElement.lang = lang;
-    document.documentElement.dir = t.dir;
+    document.documentElement.dir = lang === 'fr' ? 'ltr' : 'rtl';
   }, [lang, t.dir]);
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -269,6 +268,7 @@ export default function App() {
             setIsCartOpen(true);
           }}
           onOrderSuccess={handleOrderSuccess}
+          lang={lang}
         />
         <CartDrawer
           isOpen={isCartOpen}
@@ -277,6 +277,7 @@ export default function App() {
           onUpdateQuantity={handleUpdateQuantity}
           onRemoveItem={handleRemoveFromCart}
           onCheckout={handleProceedToCheckout}
+          lang={lang}
         />
       </div>
     );
@@ -314,12 +315,8 @@ export default function App() {
           cartCount={totalCartCount}
           onOpenCart={() => setIsCartOpen(true)}
           lang={lang}
+          onLanguageChange={setLang}
         />
-        
-        {/* Intégration du composant LanguageSwitcher en haut */}
-        <div className="absolute top-3 left-4 sm:left-8 z-50">
-          <LanguageSwitcher currentLang={lang} onLanguageChange={setLang} />
-        </div>
       </div>
       
       {/* Contenu principal : alternance entre Catalogue, Fiche Produit et Accueil */}
