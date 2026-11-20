@@ -292,7 +292,8 @@ export default function Navbar({
             <span className="hidden sm:inline">واتساب</span>
           </a>
 
-          <div 
+          <button 
+            type="button"
             onClick={() => {
               if (onOpenCart) {
                 onOpenCart();
@@ -300,8 +301,13 @@ export default function Navbar({
                 handleAllProductsClick();
               }
             }}
+            aria-label={
+              lang === 'fr'
+                ? (cartCount > 0 ? `Panier, ${cartCount} article${cartCount > 1 ? 's' : ''}` : 'Panier, vide')
+                : (cartCount > 0 ? `سلة التسوق (${cartCount} ${cartCount === 1 ? 'منتج' : 'منتجات'})` : 'سلة التسوق (فارغة)')
+            }
             title={lang === 'fr' ? 'Panier' : 'السلة والتسوق'}
-            className="relative cursor-pointer p-2 bg-pink-50 rounded-full text-pink-700 hover:bg-pink-100 transition active:scale-95"
+            className="relative cursor-pointer p-2 bg-pink-50 rounded-full text-pink-700 hover:bg-pink-100 transition active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#E6007E]"
           >
             <ShoppingBag className="w-5 h-5 text-[#E6007E]" />
             {cartCount > 0 && (
@@ -309,7 +315,7 @@ export default function Navbar({
                 {cartCount}
               </span>
             )}
-          </div>
+          </button>
         </div>
       </div>
 

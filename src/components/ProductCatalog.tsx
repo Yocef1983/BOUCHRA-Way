@@ -249,6 +249,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           {filteredProducts.map((product) => {
             const originalPrice = Math.round(product.price * 1.33);
             const isFav = !!favorites[product.id];
+            const productName = lang === 'fr' ? (product.nameFr || product.name) : (product.nameAr || product.name);
 
             return (
               <div 
@@ -269,8 +270,12 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 <button
                   type="button"
                   onClick={(e) => toggleFavorite(product.id, e)}
-                  aria-label="Ajouter aux favoris"
-                  className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-white/80 backdrop-blur-xs hover:bg-white text-gray-400 hover:text-[#E6007E] transition-colors shadow-xs cursor-pointer"
+                  aria-label={
+                    lang === 'fr'
+                      ? (isFav ? `Retirer ${productName} des favoris` : `Ajouter ${productName} aux favoris`)
+                      : (isFav ? `إزالة ${productName} من المفضلة` : `إضافة ${productName} إلى المفضلة`)
+                  }
+                  className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-white/80 backdrop-blur-xs hover:bg-white text-gray-400 hover:text-[#E6007E] transition-colors shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E6007E]"
                 >
                   <Heart 
                     size={17} 
@@ -278,85 +283,93 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   />
                 </button>
 
-                {/* Cadre Image cliquable */}
-                <div 
+                {/* Bouton cliquable pour voir les détails du produit (Image, Marque & Titre) */}
+                <button
+                  type="button"
                   onClick={() => onSelectProduct(product)}
-                  className="w-full h-44 sm:h-52 bg-[#FAF7F5] rounded-xl flex items-center justify-center p-3 overflow-hidden relative mb-3 cursor-pointer"
+                  aria-label={
+                    lang === 'fr'
+                      ? `Voir les détails de ${productName}`
+                      : `عرض تفاصيل ${productName}`
+                  }
+                  className="w-full text-right cursor-pointer bg-transparent border-0 p-0 flex flex-col flex-1 focus:outline-none focus:ring-2 focus:ring-[#E6007E] focus:ring-offset-2 rounded-xl group/cardbtn"
                 >
-                  <img
-                    src={product.image}
-                    alt={product.altText || product.name}
-                    loading="lazy"
-                    onError={(e) => handleImageError(e, product.name)}
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                  />
+                  {/* Cadre Image */}
+                  <div className="w-full h-44 sm:h-52 bg-[#FAF7F5] rounded-xl flex items-center justify-center p-3 overflow-hidden relative mb-3">
+                    <img
+                      src={product.image}
+                      alt={product.altText || productName}
+                      loading="lazy"
+                      onError={(e) => handleImageError(e, product.name)}
+                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                    />
 
-                  {/* Bouton d'aperçu rapide au survol */}
-                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                    <span className="bg-white/90 backdrop-blur-xs text-gray-800 text-[11px] px-3 py-1 rounded-full shadow-xs flex items-center gap-1 font-medium">
-                      <Eye size={12} />
-                      عرض التفاصيل
-                    </span>
-                  </div>
-                </div>
-
-                {/* Marque & Titre cliquables */}
-                <div className="flex flex-col flex-1 text-right">
-                  <span 
-                    onClick={() => onSelectProduct(product)}
-                    className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-400 font-semibold mb-1 cursor-pointer hover:text-gray-600 transition"
-                  >
-                    BOUCHRA WAY • MY WAY
-                  </span>
-
-                  <h3 
-                    onClick={() => onSelectProduct(product)}
-                    className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem] mb-1.5 cursor-pointer group-hover:text-[#E6007E] transition-colors leading-snug"
-                  >
-                    {lang === 'fr' ? (product.nameFr || product.name) : (product.nameAr || product.name)}
-                  </h3>
-
-                  {/* Avis & Étoiles */}
-                  <div className="flex items-center gap-1 mb-3 text-amber-500">
-                    <div className="flex text-amber-400">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={11} className="fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
-                    <span className="text-[11px] font-bold text-gray-600 mr-1">4.8</span>
-                    <span className="text-[10px] text-gray-400">(120)</span>
-                  </div>
-
-                  {/* Ligne Prix & Bouton + PANIER */}
-                  <div className="mt-auto pt-2.5 border-t border-gray-100 flex items-center justify-between gap-2">
-                    {/* Prix actuel en rose vif & Prix barré */}
-                    <div className="flex flex-col text-right">
-                      <div className="flex items-baseline gap-1 text-[#E6007E] font-bold">
-                        <span className="text-base sm:text-lg leading-none">{product.price}</span>
-                        <span className="text-xs font-bold">MAD</span>
-                      </div>
-                      <span className="text-[11px] text-gray-400 line-through">
-                        {originalPrice} MAD
+                    {/* Aperçu rapide au survol */}
+                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                      <span className="bg-white/90 backdrop-blur-xs text-gray-800 text-[11px] px-3 py-1 rounded-full shadow-xs flex items-center gap-1 font-medium">
+                        <Eye size={12} />
+                        {lang === 'fr' ? 'Voir les détails' : 'عرض التفاصيل'}
                       </span>
                     </div>
-
-                    {/* Bouton "+ PANIER" */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (onAddToCart) {
-                          onAddToCart(product, 1);
-                        } else {
-                          onSelectProduct(product);
-                        }
-                      }}
-                      className="bg-[#E6007E] hover:bg-[#c9006e] active:scale-95 text-white font-bold text-xs uppercase px-3 py-2 rounded-lg flex items-center gap-1 shadow-xs transition-all cursor-pointer whitespace-nowrap"
-                    >
-                      <Plus size={13} className="stroke-[3]" />
-                      <span>PANIER</span>
-                    </button>
                   </div>
+
+                  {/* Marque & Titre */}
+                  <div className="flex flex-col flex-1 text-right w-full">
+                    <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-400 font-semibold mb-1 block">
+                      BOUCHRA WAY • MY WAY
+                    </span>
+
+                    <span className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem] mb-1.5 group-hover:text-[#E6007E] transition-colors leading-snug block">
+                      {productName}
+                    </span>
+                  </div>
+                </button>
+
+                {/* Avis & Étoiles */}
+                <div className="flex items-center gap-1 mb-3 text-amber-500">
+                  <div className="flex text-amber-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={11} className="fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
+                  <span className="text-[11px] font-bold text-gray-600 mr-1">4.8</span>
+                  <span className="text-[10px] text-gray-400">(120)</span>
+                </div>
+
+                {/* Ligne Prix & Bouton + PANIER */}
+                <div className="mt-auto pt-2.5 border-t border-gray-100 flex items-center justify-between gap-2">
+                  {/* Prix actuel en rose vif & Prix barré */}
+                  <div className="flex flex-col text-right">
+                    <div className="flex items-baseline gap-1 text-[#E6007E] font-bold">
+                      <span className="text-base sm:text-lg leading-none">{product.price}</span>
+                      <span className="text-xs font-bold">MAD</span>
+                    </div>
+                    <span className="text-[11px] text-gray-400 line-through">
+                      {originalPrice} MAD
+                    </span>
+                  </div>
+
+                  {/* Bouton "+ PANIER" */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onAddToCart) {
+                        onAddToCart(product, 1);
+                      } else {
+                        onSelectProduct(product);
+                      }
+                    }}
+                    aria-label={
+                      lang === 'fr'
+                        ? `Ajouter ${productName} au panier`
+                        : `إضافة ${productName} إلى السلة`
+                    }
+                    className="bg-[#E6007E] hover:bg-[#c9006e] active:scale-95 text-white font-bold text-xs uppercase px-3 py-2 rounded-lg flex items-center gap-1 shadow-xs transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#E6007E]"
+                  >
+                    <Plus size={13} className="stroke-[3]" />
+                    <span>PANIER</span>
+                  </button>
                 </div>
               </div>
             );
