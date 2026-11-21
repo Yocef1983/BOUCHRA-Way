@@ -13,6 +13,7 @@ import {
   Info
 } from 'lucide-react';
 import { CartItem, CompletedOrder, CustomerOrderInfo } from '../types/cart';
+import { SITE, computeShipping } from '../config/site';
 import { MOROCCAN_PHONE_REGEX, normalizeMaPhone } from '../config/validation';
 import { Language } from '../i18n/translations';
 import { LegalModal } from './LegalModal';
@@ -88,8 +89,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const totalOriginal = items.reduce((sum, item) => sum + Math.round(item.product.price * 1.33) * item.quantity, 0);
   const totalSavings = totalOriginal - subtotal;
-  const isCasablanca = formData.city.includes('Casablanca') || formData.city.includes('الدار البيضاء');
-  const shipping = subtotal >= 400 || isCasablanca ? 0 : 20;
+  const shipping = computeShipping(subtotal, formData.city);
+
   const finalTotal = subtotal + shipping;
 
 
@@ -215,7 +216,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         `⏱️ *التاريخ:* ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Casablanca' })}\n` +
         `المرجو تأكيد موعد التوصيل. شكراً!`;
 
-      const targetSupportPhone = "212634486494";
+      const targetSupportPhone = SITE.whatsapp;
       const waUrl = `https://wa.me/${targetSupportPhone}?text=${encodeURIComponent(waMessage)}`;
 
       const completedOrder: CompletedOrder = {

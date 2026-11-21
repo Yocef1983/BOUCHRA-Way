@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Check, ShoppingBag, MessageCircle } from 'lucide-react';
 import { CompletedOrder } from '../types/cart';
+import { SITE } from '../config/site';
 
 interface OrderSuccessProps {
   order: CompletedOrder;
@@ -21,7 +22,7 @@ export const OrderSuccess: React.FC<OrderSuccessProps> = ({
   };
 
   const handleOpenWhatsAppAgain = () => {
-    const phoneNumber = '212634486494';
+    const phoneNumber = SITE.whatsapp;
     const message = encodeURIComponent(
       `مرحباً بوشرى واي، أود متابعة طلبيتي رقم ${order.orderId} المسجلة بمبلغ ${order.total} درهم. شكراً!`
     );

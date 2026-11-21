@@ -1,6 +1,7 @@
 import React, { useState, useId } from 'react';
 import { ShieldCheck, Phone, User, Mail, MapPin, AlertCircle, CheckCircle2, FileText, Info } from 'lucide-react';
 import { MOROCCAN_PHONE_REGEX, normalizeMaPhone } from '../config/validation';
+import { SITE } from '../config/site';
 import { LegalModal } from './LegalModal';
 
 interface FormData {
@@ -115,7 +116,7 @@ export const RegistrationForm: React.FC = () => {
         `⏱️ *التاريخ:* ${new Date().toLocaleString('ar-MA', { timeZone: 'Africa/Casablanca' })}`;
 
       // Numéro support Bouchra Way
-      const targetSupportPhone = "212634486494"; 
+      const targetSupportPhone = SITE.whatsapp; 
       const waUrl = `https://wa.me/${targetSupportPhone}?text=${encodeURIComponent(message)}`;
 
       setIsSuccess(true);

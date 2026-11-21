@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowLeft, Truck, Banknote, ShieldCheck } from 'lucide-react';
 import { CartItem } from '../types/cart';
+import { SITE, computeShipping } from '../config/site';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -48,10 +49,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   const totalItemsCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const freeShippingThreshold = 400;
+  const freeShippingThreshold = SITE.freeShippingThreshold;
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
   const progressPercent = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
-  const shippingCost = subtotal >= freeShippingThreshold || items.length === 0 ? 0 : 20;
+  const shippingCost = items.length === 0 ? 0 : computeShipping(subtotal);
+
   const finalTotal = subtotal + shippingCost;
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, productName: string) => {

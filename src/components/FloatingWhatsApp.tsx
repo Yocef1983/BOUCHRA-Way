@@ -1,8 +1,9 @@
 import React from 'react';
+import { SITE } from '../config/site';
 
 export const FloatingWhatsApp: React.FC = () => {
   const handleClick = () => {
-    const phoneNumber = '212634486494';
+    const phoneNumber = SITE.whatsapp;
     const message = encodeURIComponent('مرحباً بوشرى واي، أود الاستفسار عن المنتجات والعروض.');
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };

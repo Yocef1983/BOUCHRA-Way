@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Product } from '../data/products';
+import { SITE } from '../config/site';
 import { Language, translations } from '../i18n/translations';
 import { 
   ArrowRight, 
@@ -78,7 +79,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   };
 
   const handleWhatsAppOrder = () => {
-    const phoneNumber = '212634486494';
+    const phoneNumber = SITE.whatsapp;
     const total = product.price * quantity;
     const message = encodeURIComponent(
       `*طلب جديد عبر الموقع - Bouchra Way* 🛍️\n\n` +
