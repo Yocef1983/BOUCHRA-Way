@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, Plus, Minus, Trash2, ShoppingBag, ArrowLeft, Truck, Gift, Lock, Banknote, ShieldCheck } from 'lucide-react';
+import { X, Plus, Minus, Trash2, ShoppingBag, ArrowLeft, Truck, Banknote, ShieldCheck } from 'lucide-react';
 import { CartItem } from '../types/cart';
 
 interface CartDrawerProps {

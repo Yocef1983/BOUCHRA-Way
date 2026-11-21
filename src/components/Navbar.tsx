@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Search, Phone, UserPlus, Home, Layers, MessageSquare, X, Menu, ChevronLeft, ChevronDown, Sparkles, Check, Gem, Baby, Sparkle } from 'lucide-react';
+import { ShoppingBag, Search, Phone, Home, Layers, X, Menu, ChevronLeft, ChevronDown, Sparkles } from 'lucide-react';
 import { Language } from '../i18n/translations';
 import { LanguageSwitcher } from './LanguageSwitcher';
 

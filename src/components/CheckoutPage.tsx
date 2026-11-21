@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { 
   ShieldCheck, 
   Lock, 
-  ArrowRight, 
   Truck, 
   Banknote, 
   Gift, 

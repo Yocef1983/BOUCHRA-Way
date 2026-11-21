@@ -3,16 +3,9 @@ import { Product } from '../data/products';
 import { Language, translations } from '../i18n/translations';
 import { 
   ArrowRight, 
-  ShieldCheck, 
-  Truck, 
-  Sparkles, 
   ChevronLeft, 
-  Banknote, 
   CheckCircle2, 
   ShoppingBag, 
-  Clock, 
-  Lock, 
-  Gift, 
   Star 
 } from 'lucide-react';
 

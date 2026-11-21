@@ -80,9 +80,6 @@ export const categoryHierarchy = {
 export const translations = {
   ar: {
     dir: 'rtl' as const,
-    collectionTitle: 'تشكيلة ماي واي',
-    resultsCount: (current: number, total: number) => `عرض النتائج ${current} من ${total}`,
-    allProducts: 'جميع المنتجات',
     pointsLabel: 'النقاط',
     exclusivePoints: 'حصرية لأعضاء شبكة Bouchra Way',
     skuLabel: 'رمز المنتج (SKU)',
@@ -92,9 +89,6 @@ export const translations = {
   },
   fr: {
     dir: 'ltr' as const,
-    collectionTitle: 'MYWAY COLLECTION',
-    resultsCount: (current: number, total: number) => `Affichage des résultats 1 à ${current} sur ${total}`,
-    allProducts: 'Tous les produits',
     pointsLabel: 'POINTS',
     exclusivePoints: 'Exclusivité Membres Réseau Bouchra Way',
     skuLabel: 'SKU',

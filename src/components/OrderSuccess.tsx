@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, ShoppingBag, ArrowRight, MessageCircle } from 'lucide-react';
+import { Check, ShoppingBag, MessageCircle } from 'lucide-react';
 import { CompletedOrder } from '../types/cart';
 
 interface OrderSuccessProps {
