@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, ShieldCheck, Truck, RotateCcw, Lock } from 'lucide-react';
 
 interface LegalModalProps {
@@ -8,27 +8,63 @@ interface LegalModalProps {
   setActiveTab: (tab: 'shipping' | 'returns' | 'terms' | 'privacy') => void;
 }
 
+const parseMarkdownBold = (text: string): React.ReactNode => {
+  const parts = text.split(/(\*\*.*?\*\*)/);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+      return <strong key={index} className="font-semibold">{part.slice(2, -2)}</strong>;
+    }
+    return <span key={index}>{part}</span>;
+  });
+};
+
 export const LegalModal: React.FC<LegalModalProps> = ({
   isOpen,
   onClose,
   activeTab,
   setActiveTab,
 }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" dir="rtl">
-      <div className="bg-white rounded-3xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden">
+      <div
+        className="bg-white rounded-3xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="legal-modal-title"
+      >
         
         {/* En-tête de la modale */}
         <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-slate-50">
           <div className="flex items-center gap-2 text-slate-800 font-bold text-lg">
             <ShieldCheck className="w-5 h-5 text-emerald-600" />
-            <span>سياسات المتجر والشروط القانونية</span>
+            <span id="legal-modal-title">سياسات المتجر والشروط القانونية</span>
           </div>
           <button
             onClick={onClose}
             className="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200/60 transition"
+            aria-label="إغلاق النافذة"
           >
             <X className="w-5 h-5" />
           </button>
@@ -82,12 +118,12 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                 شروط الشحن والتوصيل في المغرب
               </h3>
               <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-emerald-900 font-medium">
-                🚚 **تعرفة التوصيل موحدة:** 20 درهم مغربي (20 MAD) فقط لجميع الطلبيات نحو جميع المدن المغربية.
+                {parseMarkdownBold('🚚 **تعرفة التوصيل موحدة:** 20 درهم مغربي (20 MAD) فقط لجميع الطلبيات نحو جميع المدن المغربية.')}
               </div>
               <ul className="space-y-2 list-disc list-inside text-slate-600">
-                <li>**آجال التسليم:** يتم توصيل الطلبيات في غضون 24 إلى 48 ساعة بالنسبة للمدن الكبرى (الدار البيضاء، الرباط، سلا، القنيطرة، فاس، مكناس، مراكش، أقاليم الشمال والجنوب).</li>
-                <li>**طريقة الدفع:** الدفع عند الاستلام نقداً (Cash on Delivery) بعد معاينة الطرد مع موزع التوصيل.</li>
-                <li>**التتبع:** يتم التواصل معكم مباشرة عبر الواتساب أو الهاتف لتأكيد موعد ومكان التسليم المناسب لكم.</li>
+                <li>{parseMarkdownBold('**آجال التسليم:** يتم توصيل الطلبيات في غضون 24 إلى 48 ساعة بالنسبة للمدن الكبرى (الدار البيضاء، الرباط، سلا، القنيطرة، فاس، مكناس، مراكش، أقاليم الشمال والجنوب).')}</li>
+                <li>{parseMarkdownBold('**طريقة الدفع:** الدفع عند الاستلام نقداً (Cash on Delivery) بعد معاينة الطرد مع موزع التوصيل.')}</li>
+                <li>{parseMarkdownBold('**التتبع:** يتم التواصل معكم مباشرة عبر الواتساب أو الهاتف لتأكيد موعد ومكان التسليم المناسب لكم.')}</li>
               </ul>
             </div>
           )}
@@ -100,12 +136,12 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                 سياسة الاستبدال والضمان
               </h3>
               <p>
-                حرصاً منا على تقديم أفضل خدمة لعميلاتنا، نضمن لكم أصالة منتجات **ماي واي MyWay** ومطابقتها للمواصفات.
+                {parseMarkdownBold('حرصاً منا على تقديم أفضل خدمة لعميلاتنا، نضمن لكم أصالة منتجات **ماي واي MyWay** ومطابقتها للمواصفات.')}
               </p>
               <ul className="space-y-2 list-disc list-inside text-slate-600">
-                <li>**حالة التلف أو عدم المطابقة:** إذا وصلك منتج متضرر أثناء الشحن أو غير مطابق لطلبيتك، يحق لك طلب استبداله مجاناً في غضون 7 أيام من تاريخ الاستلام.</li>
-                <li>**منتجات التجميل والعناية الشخصية:** لأسباب صحية ووقائية، لا يمكن إرجاع أو استبدال منتجات التجميل والعناية التي تم فتح غلافها الأصلي أو تجريبها إلا في حالة وجود عيب تصنيع مثبت.</li>
-                <li>**إجراءات الطلب:** يكفي التواصل مع فريق الدعم عبر الواتساب مع إرفاق صورة للمنتج المعني وسنقوم بمعالجة طلبكم فوراً.</li>
+                <li>{parseMarkdownBold('**حالة التلف أو عدم المطابقة:** إذا وصلك منتج متضرر أثناء الشحن أو غير مطابق لطلبيتك، يحق لك طلب استبداله مجاناً في غضون 7 أيام من تاريخ الاستلام.')}</li>
+                <li>{parseMarkdownBold('**منتجات التجميل والعناية الشخصية:** لأسباب صحية ووقائية، لا يمكن إرجاع أو استبدال منتجات التجميل والعناية التي تم فتح غلافها الأصلي أو تجريبها إلا في حالة وجود عيب تصنيع مثبت.')}</li>
+                <li>{parseMarkdownBold('**إجراءات الطلب:** يكفي التواصل مع فريق الدعم عبر الواتساب مع إرفاق صورة للمنتج المعني وسنقوم بمعالجة طلبكم فوراً.')}</li>
               </ul>
             </div>
           )}
@@ -118,7 +154,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                 حماية المعطيات الشخصية (القانون 09-08)
               </h3>
               <p>
-                يلتزم موقع **BOUCHRA Way** بحماية خصوصيتك وبياناتك الشخصية وفقاً لأحكام القانون المغربي رقم 09-08 المتعلق بحماية الأشخاص الذاتيين تجاه معالجة المعطيات ذات الطابع الشخصي.
+                {parseMarkdownBold('يلتزم موقع **BOUCHRA Way** بحماية خصوصيتك وبياناتك الشخصية وفقاً لأحكام القانون المغربي رقم 09-08 المتعلق بحماية الأشخاص الذاتيين تجاه معالجة المعطيات ذات الطابع الشخصي.')}
               </p>
               <ul className="space-y-2 list-disc list-inside text-slate-600">
                 <li>المعلومات المجمعة (الاسم، الهاتف، العنوان) تُستخدم حصرياً لمعالجة طلبيتكم وتأكيد التوصيل مع شركة الشحن.</li>
@@ -135,6 +171,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
           <button
             onClick={onClose}
             className="bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-slate-800 transition"
+            aria-label="إغلاق النافذة"
           >
             إغلاق
           </button>
