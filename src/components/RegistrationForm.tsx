@@ -1,6 +1,7 @@
 import React, { useState, useId } from 'react';
-import { ShieldCheck, Phone, User, Mail, MapPin, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Phone, User, Mail, MapPin, AlertCircle, CheckCircle2, FileText, Info } from 'lucide-react';
 import { MOROCCAN_PHONE_REGEX, normalizeMaPhone } from '../config/validation';
+import { LegalModal } from './LegalModal';
 
 interface FormData {
   hasMembership: 'نعم' | 'لا';
@@ -42,6 +43,8 @@ export const RegistrationForm: React.FC = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
+  const [activeLegalTab, setActiveLegalTab] = useState<'shipping' | 'returns' | 'terms' | 'privacy'>('privacy');
 
 
   const validate = (): boolean => {
@@ -287,7 +290,27 @@ export const RegistrationForm: React.FC = () => {
               className="mt-1 h-4 w-4 rounded border-stone-300 text-pink-600 focus:ring-pink-500 cursor-pointer shrink-0 accent-pink-600"
             />
             <label htmlFor={`${formId}-cndp`} className="text-xs leading-relaxed text-stone-600 cursor-pointer select-none">
-              أوافق على معالجة بياناتي الشخصية لتسيير طلبي والتواصل معي عبر الواتساب وفقاً للقانون 09-08.
+              أوافق على معالجة بياناتي الشخصية لتسيير طلبي والتواصل معي عبر الواتساب وفقاً لـ <strong>القانون 09-08</strong> (CNDP).
+              <div className="flex flex-wrap gap-2 mt-1.5 text-[11px]">
+                <button
+                  type="button"
+                  onClick={() => { setActiveLegalTab('privacy'); setIsLegalModalOpen(true); }}
+                  className="text-pink-600 hover:underline font-medium flex items-center gap-1"
+                  aria-label="Voir la politique de confidentialité"
+                >
+                  <Info className="w-3 h-3" />
+                  <span>سياسة الخصوصية</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setActiveLegalTab('terms'); setIsLegalModalOpen(true); }}
+                  className="text-blue-600 hover:underline font-medium flex items-center gap-1"
+                  aria-label="Voir les conditions générales"
+                >
+                  <FileText className="w-3 h-3" />
+                  <span>الشروط العامة</span>
+                </button>
+              </div>
             </label>
           </div>
           {errors.cndpConsent && (
@@ -308,6 +331,14 @@ export const RegistrationForm: React.FC = () => {
           <span>{isSubmitting ? 'جاري المعالجة...' : 'تأكيد والانضمام عبر الواتساب'}</span>
         </button>
       </form>
+
+      {/* Modale Juridique (CNDP / CGV) */}
+      <LegalModal
+        isOpen={isLegalModalOpen}
+        onClose={() => setIsLegalModalOpen(false)}
+        activeTab={activeLegalTab}
+        setActiveTab={setActiveLegalTab}
+      />
     </div>
   );
 };

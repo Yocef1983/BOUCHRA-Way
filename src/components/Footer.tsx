@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Truck, ShieldCheck, RotateCcw, Headphones, Lock } from 'lucide-react';
+import { Truck, ShieldCheck, RotateCcw, Headphones, Lock, FileText } from 'lucide-react';
 import { LegalModal } from './LegalModal';
 import { Language } from '../i18n/translations';
 
@@ -97,6 +97,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToCatalog, lang = 'ar'
                   سياسة الاستبدال والضمان
                 </button>
               </li>
+              <li>
+                <button onClick={() => openLegal('terms')} className="hover:text-white transition">
+                  الشروط العامة للبيع (CGV)
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -107,6 +112,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToCatalog, lang = 'ar'
                 <button onClick={() => openLegal('privacy')} className="flex items-center gap-1 hover:text-white transition">
                   <Lock className="w-3 h-3 text-emerald-400" />
                   <span>حماية البيانات الشخصية (CNDP 09-08)</span>
+                </button>
+              </li>
+              <li>
+                <button onClick={() => openLegal('terms')} className="flex items-center gap-1 hover:text-white transition">
+                  <FileText className="w-3 h-3 text-blue-400" />
+                  <span>الشروط العامة للبيع (قانون 31-08)</span>
                 </button>
               </li>
               <li className="text-[11px] text-slate-500 pt-2">
@@ -120,6 +131,25 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToCatalog, lang = 'ar'
         {/* Copyright */}
         <div className="mt-8 pt-6 border-t border-slate-800 text-center text-xs text-slate-500">
           © {new Date().getFullYear()} BOUCHRA Way. جميع الحقوق محفوظة.
+        </div>
+
+        {/* Mentions légales - Informations éditeur */}
+        <div className="mt-6 pt-4 border-t border-slate-800 text-center text-[11px] text-slate-500 space-y-1">
+          <p><strong>BOUCHRA Way</strong> - علامة تجارية مغربية لتوزيع منتجات <strong>MyWay</strong> الأصلية.</p>
+          <p>
+            <span className="text-rose-600">[À compléter : raison sociale / الشكل القانوني]</span> •
+            <span className="text-rose-600">[À compléter : RC]</span> •
+            <span className="text-rose-600">[À compléter : IF]</span> •
+            <span className="text-rose-600">[À compléter : ICE]</span> •
+            <span className="text-rose-600">[À compléter : Siège social / عنوان المقر]</span>
+          </p>
+          <p>
+            دعم العملاء: <a href="https://wa.me/212634486494" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">+212 6 34 48 64 94</a> •
+            إيميل: <span className="text-rose-600">[À compléter : contact@bouchraway.ma]</span>
+          </p>
+          <p className="text-slate-600">
+            <span className="text-rose-600">[À compléter : N° récépissé / Autorisation CNDP إن وجد]</span>
+          </p>
         </div>
       </div>
 

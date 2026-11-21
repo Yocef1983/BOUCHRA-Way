@@ -8,11 +8,14 @@ import {
   AlertCircle, 
   CheckCircle2, 
   ShoppingBag,
-  ChevronDown
+  ChevronDown,
+  FileText,
+  Info
 } from 'lucide-react';
 import { CartItem, CompletedOrder, CustomerOrderInfo } from '../types/cart';
 import { MOROCCAN_PHONE_REGEX, normalizeMaPhone } from '../config/validation';
 import { Language } from '../i18n/translations';
+import { LegalModal } from './LegalModal';
 
 interface CheckoutPageProps {
   items: CartItem[];
@@ -79,6 +82,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const [promoCode, setPromoCode] = useState('');
   const [showPromoInput, setShowPromoInput] = useState(false);
   const [promoStatus, setPromoStatus] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
+  const [activeLegalTab, setActiveLegalTab] = useState<'shipping' | 'returns' | 'terms' | 'privacy'>('privacy');
 
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const totalOriginal = items.reduce((sum, item) => sum + Math.round(item.product.price * 1.33) * item.quantity, 0);
@@ -504,10 +509,30 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     className="mt-1 h-4 w-4 rounded border-stone-300 text-[#E6007E] focus:ring-pink-500 cursor-pointer shrink-0 accent-[#E6007E]"
                   />
                   <label htmlFor="checkout-cndp" className="text-xs leading-relaxed text-stone-700 cursor-pointer select-none">
-                    أوافق على معالجة بياناتي الشخصية لتسيير طلبي والتواصل معي عبر الواتساب وفقاً للقانون 09-08.
-                    <span className="block text-[11px] text-stone-500 mt-0.5">
+                    أوافق على معالجة بياناتي الشخصية لتسيير طلبي والتواصل معي عبر الواتساب وفقاً لـ <strong>القانون 09-08</strong> (CNDP).
+                    <span className="block text-[11px] text-stone-500 mt-1">
                       J&apos;accepte le traitement de mes données pour la livraison et le suivi de ma commande conformément à la <strong>Loi 09-08</strong> (CNDP).
                     </span>
+                    <div className="flex flex-wrap gap-2 mt-1.5 text-[11px]">
+                      <button
+                        type="button"
+                        onClick={() => { setActiveLegalTab('privacy'); setIsLegalModalOpen(true); }}
+                        className="text-[#E6007E] hover:underline font-medium flex items-center gap-1"
+                        aria-label="Voir la politique de confidentialité"
+                      >
+                        <Info className="w-3 h-3" />
+                        <span>سياسة الخصوصية / Politique de confidentialité</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setActiveLegalTab('terms'); setIsLegalModalOpen(true); }}
+                        className="text-blue-600 hover:underline font-medium flex items-center gap-1"
+                        aria-label="Voir les conditions générales de vente"
+                      >
+                        <FileText className="w-3 h-3" />
+                        <span>الشروط العامة للبيع (CGV)</span>
+                      </button>
+                    </div>
                   </label>
                 </div>
                 {errors.cndpConsent && (
@@ -688,6 +713,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
           </div>
         </form>
       </main>
+
+      {/* Modale Juridique (CNDP / CGV) */}
+      <LegalModal
+        isOpen={isLegalModalOpen}
+        onClose={() => setIsLegalModalOpen(false)}
+        activeTab={activeLegalTab}
+        setActiveTab={setActiveLegalTab}
+      />
 
     </div>
   );
