@@ -11,6 +11,7 @@ export interface Product {
   price: number;
   points: number;
   image: string;
+  altText?: string;
   description: string;
   descriptionAr: string;
   descriptionFr: string;
