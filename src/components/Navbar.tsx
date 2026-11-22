@@ -249,7 +249,7 @@ export default function Navbar({
           </button>
 
           <a href="#" onClick={handleHomeClick} className="text-right cursor-pointer">
-            <h1 className="text-xl sm:text-2xl font-bold text-pink-700 tracking-wide">BOUCHRA WAY</h1>
+            <span className="block text-xl sm:text-2xl font-bold text-pink-700 tracking-wide">BOUCHRA WAY</span>
             <p className="text-[10px] sm:text-xs text-purple-800 font-semibold">عائلة واحدة - فرصة نجاح</p>
           </a>
         </div>

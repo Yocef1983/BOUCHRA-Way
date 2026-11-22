@@ -13,6 +13,7 @@ interface ProductCatalogProps {
   setSearchQuery?: (query: string) => void;
   onAddToCart?: (product: Product, quantity?: number) => void;
   lang?: 'ar' | 'fr';
+  isStandaloneView?: boolean;
 }
 
 export const ProductCatalog: React.FC<ProductCatalogProps> = ({ 
@@ -24,7 +25,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   searchQuery = '',
   setSearchQuery,
   onAddToCart,
-  lang = 'ar'
+  lang = 'ar',
+  isStandaloneView = false
 }) => {
   const [internalCategory, setInternalCategory] = useState<string>('all');
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
@@ -188,9 +190,15 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           <span className="text-xs uppercase tracking-widest text-[#A8948D] font-normal block mb-1">
             NOTRE SÉLECTION OFFICIELLE • BOUCHRA WAY MAROC
           </span>
-          <h2 className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">
-            تشكيلة المنتجات المميزة
-          </h2>
+          {isStandaloneView ? (
+            <h1 className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">
+              تشكيلة المنتجات المميزة
+            </h1>
+          ) : (
+            <h2 className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">
+              تشكيلة المنتجات المميزة
+            </h2>
+          )}
           <div className="w-12 h-0.5 bg-[#E6007E] mx-auto mt-3 rounded-full"></div>
         </div>
 

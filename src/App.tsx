@@ -39,13 +39,34 @@ export default function App() {
     document.documentElement.dir = lang === 'fr' ? 'ltr' : 'rtl';
   }, [lang, t.dir]);
 
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const skuParam = params.get('sku') || params.get('product');
+      if (skuParam) {
+        return PRODUCTS.find((p) => p.sku === skuParam || p.id === skuParam) || null;
+      }
+    } catch {
+      // Ignorer
+    }
+    return null;
+  });
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   
   // État explicite pour contrôler l'affichage de la page d'accueil vs le catalogue
-  const [showHome, setShowHome] = useState<boolean>(true);
+  const [showHome, setShowHome] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('sku') || params.get('product')) return false;
+    } catch {
+      // Ignorer
+    }
+    return true;
+  });
 
   // État du panier et de la navigation du tunnel d'achat
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
@@ -96,6 +117,32 @@ export default function App() {
       // Ignorer si stockage non disponible
     }
   }, [cartItems]);
+
+  // Synchronisation de l'URL avec l'état du produit affiché (History API popstate & pushState)
+  useEffect(() => {
+    const handlePopState = () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const skuParam = params.get('sku') || params.get('product');
+        if (skuParam) {
+          const matched = PRODUCTS.find((p) => p.sku === skuParam || p.id === skuParam);
+          if (matched) {
+            setSelectedProduct(matched);
+            setShowHome(false);
+            setCurrentView('main');
+            return;
+          }
+        }
+        // Pas de paramètre de produit dans l'URL : fermer la fiche détail
+        setSelectedProduct(null);
+      } catch {
+        // Ignorer
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const totalCartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -181,6 +228,16 @@ export default function App() {
     setSelectedSubCategory(null);
     if (selectedProduct) {
       setSelectedProduct(null);
+      try {
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('sku') || url.searchParams.has('product')) {
+          url.searchParams.delete('sku');
+          url.searchParams.delete('product');
+          window.history.pushState({}, '', url.pathname + (url.search ? url.search : ''));
+        }
+      } catch {
+        // Ignorer
+      }
     }
   };
 
@@ -193,6 +250,16 @@ export default function App() {
     setSearchQuery('');
     if (selectedProduct) {
       setSelectedProduct(null);
+      try {
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('sku') || url.searchParams.has('product')) {
+          url.searchParams.delete('sku');
+          url.searchParams.delete('product');
+          window.history.pushState({}, '', url.pathname + (url.search ? url.search : ''));
+        }
+      } catch {
+        // Ignorer
+      }
     }
     setTimeout(() => {
       const el = document.getElementById('catalogue');
@@ -208,17 +275,47 @@ export default function App() {
     setSearchQuery(query);
     if (selectedProduct) {
       setSelectedProduct(null);
+      try {
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('sku') || url.searchParams.has('product')) {
+          url.searchParams.delete('sku');
+          url.searchParams.delete('product');
+          window.history.pushState({}, '', url.pathname + (url.search ? url.search : ''));
+        }
+      } catch {
+        // Ignorer
+      }
     }
   };
 
   const handleSelectProduct = (product: Product) => {
     setCurrentView('main');
     setSelectedProduct(product);
+    try {
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('sku') !== product.sku) {
+        url.searchParams.delete('product');
+        url.searchParams.set('sku', product.sku);
+        window.history.pushState({ sku: product.sku }, '', url.toString());
+      }
+    } catch {
+      // Ignorer si indisponible
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBackToCatalog = () => {
     setSelectedProduct(null);
+    try {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('sku') || url.searchParams.has('product')) {
+        url.searchParams.delete('sku');
+        url.searchParams.delete('product');
+        window.history.pushState({}, '', url.pathname + (url.search ? url.search : ''));
+      }
+    } catch {
+      // Ignorer
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -229,6 +326,16 @@ export default function App() {
     setSelectedCategory('all');
     setSelectedSubCategory(null);
     setSearchQuery('');
+    try {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('sku') || url.searchParams.has('product')) {
+        url.searchParams.delete('sku');
+        url.searchParams.delete('product');
+        window.history.pushState({}, '', url.pathname + (url.search ? url.search : ''));
+      }
+    } catch {
+      // Ignorer
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -239,6 +346,16 @@ export default function App() {
     setSelectedCategory('all');
     setSelectedSubCategory(null);
     setSearchQuery('');
+    try {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('sku') || url.searchParams.has('product')) {
+        url.searchParams.delete('sku');
+        url.searchParams.delete('product');
+        window.history.pushState({}, '', url.pathname + (url.search ? url.search : ''));
+      }
+    } catch {
+      // Ignorer
+    }
     setTimeout(() => {
       const el = document.getElementById('catalogue');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -249,6 +366,16 @@ export default function App() {
     setCurrentView('main');
     setShowHome(true);
     setSelectedProduct(null);
+    try {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('sku') || url.searchParams.has('product')) {
+        url.searchParams.delete('sku');
+        url.searchParams.delete('product');
+        window.history.pushState({}, '', url.pathname + (url.search ? url.search : ''));
+      }
+    } catch {
+      // Ignorer
+    }
     setTimeout(() => {
       const el = document.getElementById(sectionId);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -337,6 +464,7 @@ export default function App() {
               onSelectProduct={handleSelectProduct}
               onAddToCart={handleAddToCart}
               lang={lang}
+              isStandaloneView={true}
             />
           </div>
         ) : (

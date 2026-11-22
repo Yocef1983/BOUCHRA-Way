@@ -34,7 +34,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const displayName = lang === 'fr' ? (product.nameFr || product.name) : (product.nameAr || product.name);
   const displayDescription = lang === 'fr' ? (product.descriptionFr || product.description) : (product.descriptionAr || product.description);
 
-  // Mise à jour dynamique du titre SEO et de la description lors de la consultation produit
+  // Mise à jour dynamique du titre SEO, de la meta description et du lien canonique lors de la consultation produit
   useEffect(() => {
     const previousTitle = document.title;
     document.title = `${displayName} | ${product.price} ${t.currency} - BOUCHRA WAY`;
@@ -45,10 +45,19 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
       metaDesc.setAttribute('content', `${displayName}: ${displayDescription}`);
     }
 
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    const previousCanonical = canonicalLink ? canonicalLink.getAttribute('href') : null;
+    if (canonicalLink) {
+      canonicalLink.setAttribute('href', `https://bouchra-way.vercel.app/?sku=${encodeURIComponent(product.sku)}`);
+    }
+
     return () => {
       document.title = previousTitle;
       if (metaDesc && previousDesc) {
         metaDesc.setAttribute('content', previousDesc);
+      }
+      if (canonicalLink && previousCanonical) {
+        canonicalLink.setAttribute('href', previousCanonical);
       }
     };
   }, [product, displayName, displayDescription, t]);

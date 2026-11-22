@@ -20,9 +20,9 @@ export default function HeroBanner({ onNavigateToCatalog }: HeroBannerProps) {
         </div>
 
         {/* Titre Principal */}
-        <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 leading-tight">
+        <h1 className="text-3xl md:text-5xl font-black tracking-tight mb-4 leading-tight">
           عالم الجمال والربح مع ماي واي المغرب
-        </h2>
+        </h1>
 
         {/* Sous-titre descriptif */}
         <p className="text-rose-100 text-sm md:text-base mb-8 leading-relaxed font-normal">

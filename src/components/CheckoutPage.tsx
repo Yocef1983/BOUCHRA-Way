@@ -312,9 +312,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       <header className="border-b border-gray-200 bg-white sticky top-0 z-30">
         <div className="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xl font-bold tracking-tight text-[#E6007E]">
+            <h1 className="text-xl font-bold tracking-tight text-[#E6007E]">
               BOUCHRA WAY
-            </span>
+            </h1>
             <span className="text-xs text-purple-900 font-semibold hidden sm:inline">
               • ماي واي المغرب
             </span>
