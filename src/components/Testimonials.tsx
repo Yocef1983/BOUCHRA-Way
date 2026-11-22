@@ -64,7 +64,7 @@ export const Testimonials: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold mb-3">
             <CheckCircle className="w-3.5 h-3.5" />
-            <span>ثقة أكثر من +500 عميل في المغرب</span>
+            <span>آراء وتجارب موثوقة في المغرب</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             آراء عميلاتنا و عملائنا <span className="text-emerald-600">التجارب الحقيقية</span>
@@ -73,15 +73,14 @@ export const Testimonials: React.FC = () => {
             Ce que disent nos clientes à propos de nos produits et de notre service de livraison rapide.
           </p>
 
-          {/* Note moyenne globale */}
+          {/* Avis clients */}
           <div className="mt-4 flex items-center justify-center gap-2">
             <div className="flex text-amber-400">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-5 h-5 fill-current" />
               ))}
             </div>
-            <span className="font-bold text-slate-800 text-sm">4.9 / 5.0</span>
-            <span className="text-xs text-slate-400">(تقييمات مأكدة)</span>
+            <span className="text-xs text-slate-500 font-medium">(تقييمات مؤكدة)</span>
           </div>
         </div>
 

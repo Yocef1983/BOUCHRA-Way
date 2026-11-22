@@ -147,7 +147,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             </div>
           ) : (
             items.map((item) => {
-              const originalPrice = Math.round(item.product.price * 1.33);
+              const hasDiscount = Boolean(item.product.compareAtPrice && item.product.compareAtPrice > item.product.price);
 
               return (
                 <div 
@@ -156,12 +156,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 >
                   {/* Miniature produit */}
                   <div className="w-20 h-20 bg-stone-50 rounded-lg p-1.5 flex items-center justify-center shrink-0 border border-gray-100">
-<img
-                       src={item.product.image}
-                       alt={lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name)}
-                       onError={(e) => handleImageError(e, item.product.name)}
-                       className="max-h-full max-w-full object-contain"
-                     />
+                    <img
+                      src={item.product.image}
+                      alt={lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name)}
+                      onError={(e) => handleImageError(e, item.product.name)}
+                      className="max-h-full max-w-full object-contain"
+                    />
                   </div>
 
                   {/* Détails & Quantité */}
@@ -213,9 +213,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           <span>{item.product.price * item.quantity}</span>
                           <span className="text-xs">MAD</span>
                         </div>
-                        <span className="text-[10px] text-gray-400 line-through">
-                          {originalPrice * item.quantity} MAD
-                        </span>
+                        {hasDiscount ? (
+                          <span className="text-[10px] text-gray-400 line-through">
+                            {item.product.compareAtPrice! * item.quantity} MAD
+                          </span>
+                        ) : null}
                       </div>
                     </div>
                   </div>

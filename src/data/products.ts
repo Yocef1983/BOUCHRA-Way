@@ -9,6 +9,10 @@ export interface Product {
   subCategory: string;
   subCategories: string[];
   price: number;
+  compareAtPrice?: number;
+  promoTag?: string;
+  rating?: number;
+  reviewCount?: number;
   points: number;
   image: string;
   altText?: string;
@@ -25,15 +29,18 @@ export const products: Product[] = [
     "nameAr": "باور-منظف الملابس الفاتحة 1 لتر",
     "nameFr": "Power-Lessive Linge clair  1L",
     "category": "منظفات المنزل",
-    "categories": ["منظفات المنزل"],
+    "categories": [
+      "منظفات المنزل"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 116.92,
+    "price": 88,
     "points": 35,
     "image": "/image/3285.webp",
     "description": "منظف الملابس الفاتحة تركيبة سائلة مصممة للحفاظ على نصاعة الألوان الفاتحة والبيضاء تساعد على إزالة البقع والأوساخ بعمق مع الحفاظ على إشراقة القماش ونعومته.",
     "descriptionAr": "منظف الملابس الفاتحة تركيبة سائلة مصممة للحفاظ على نصاعة الألوان الفاتحة والبيضاء تساعد على إزالة البقع والأوساخ بعمق مع الحفاظ على إشراقة القماش ونعومته.",
-    "descriptionFr": "Le détergent pour vêtements léger est une formule liquide conçue pour garder les couleurs claires et blanches vives, et aide à éliminer profondément les taches et la saleté tout en gardant le tissu éclatant et doux."
+    "descriptionFr": "Le détergent pour vêtements léger est une formule liquide conçue pour garder les couleurs claires et blanches vives, et aide à éliminer profondément les taches et la saleté tout en gardant le tissu éclatant et doux.",
+    "compareAtPrice": 175
   },
   {
     "id": "2",
@@ -42,15 +49,18 @@ export const products: Product[] = [
     "nameAr": "باور-منظف الملابس الداكنة 1 لتر",
     "nameFr": "Power-Lessive Linge sombre 1L",
     "category": "منظفات المنزل",
-    "categories": ["منظفات المنزل"],
+    "categories": [
+      "منظفات المنزل"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 116.92,
+    "price": 88,
     "points": 35,
     "image": "/image/3284.webp",
     "description": "منظف الملابس الداكنة تركيبة سائلة مخصصة للحفاظ على نضارة الألوان الداكنة ومنع بهتانها مع كل غسلة تساعد على تنظيف الملابس بعمق مع الحفاظ على نعومة القماش ولونه الأصلي.",
     "descriptionAr": "منظف الملابس الداكنة تركيبة سائلة مخصصة للحفاظ على نضارة الألوان الداكنة ومنع بهتانها مع كل غسلة تساعد على تنظيف الملابس بعمق مع الحفاظ على نعومة القماش ولونه الأصلي.",
-    "descriptionFr": "La lessive foncée est une formule liquide conçue pour préserver la fraîcheur des couleurs foncées et éviter qu’elles ne s’estompent à chaque lavage, qui aide à nettoyer profondément les vêtements tout en conservant la douceur et la couleur originale du tissu."
+    "descriptionFr": "La lessive foncée est une formule liquide conçue pour préserver la fraîcheur des couleurs foncées et éviter qu’elles ne s’estompent à chaque lavage, qui aide à nettoyer profondément les vêtements tout en conservant la douceur et la couleur originale du tissu.",
+    "compareAtPrice": 175
   },
   {
     "id": "3",
@@ -59,15 +69,18 @@ export const products: Product[] = [
     "nameAr": "اللهلوبة-معجون منظف ليمون 500 جم",
     "nameFr": "Hallouba-Pâte nettoyante au citron 500 g",
     "category": "منظفات المنزل",
-    "categories": ["منظفات المنزل"],
+    "categories": [
+      "منظفات المنزل"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 65.0,
+    "price": 60,
     "points": 24,
     "image": "/image/3335.webp",
     "description": "معجون اللهلوبة بخلاصة الليمون معجون تنظيف قوي يساعد على إزالة الدهون والأوساخ المتراكمة على الأواني والأسطح بسهولة مع ترك رائحة ليمون منعشة تمنح مطبخك نظافة ولمعانًا.",
     "descriptionAr": "معجون اللهلوبة بخلاصة الليمون معجون تنظيف قوي يساعد على إزالة الدهون والأوساخ المتراكمة على الأواني والأسطح بسهولة مع ترك رائحة ليمون منعشة تمنح مطبخك نظافة ولمعانًا.",
-    "descriptionFr": "La pâte de citron Lemon Hallouba, est une pâte nettoyante puissante qui aide à éliminer facilement la graisse et la saleté accumulées sur les ustensiles et les surfaces, tout en laissant un parfum de citron frais qui donne à votre cuisine une finition propre et brillante."
+    "descriptionFr": "La pâte de citron Lemon Hallouba, est une pâte nettoyante puissante qui aide à éliminer facilement la graisse et la saleté accumulées sur les ustensiles et les surfaces, tout en laissant un parfum de citron frais qui donne à votre cuisine une finition propre et brillante.",
+    "compareAtPrice": 120
   },
   {
     "id": "4",
@@ -76,15 +89,20 @@ export const products: Product[] = [
     "nameAr": "مزيل مكياج بجوز الهند 100 مل",
     "nameFr": "Démaquillant à la noix de coco 100 ml",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "البشرة",
-    "subCategories": ["البشرة"],
-    "price": 99.0,
+    "subCategories": [
+      "البشرة"
+    ],
+    "price": 50,
     "points": 20,
     "image": "/image/5527.webp",
     "description": "مزيل مكياج بجوز الهند 100 مل",
     "descriptionAr": "مزيل مكياج بجوز الهند 100 مل",
-    "descriptionFr": "Démaquillant à la noix de coco 100 ml"
+    "descriptionFr": "Démaquillant à la noix de coco 100 ml",
+    "compareAtPrice": 99
   },
   {
     "id": "5",
@@ -93,15 +111,18 @@ export const products: Product[] = [
     "nameAr": "باور-مذيب بقع الدهون من اواني الطهي  600 مل",
     "nameFr": "Power-Solvant de tâches de graisse Cookware 600ml",
     "category": "منظفات المنزل",
-    "categories": ["منظفات المنزل"],
+    "categories": [
+      "منظفات المنزل"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 120.0,
+    "price": 81,
     "points": 33,
     "image": "/image/4700.webp",
     "description": "مذيب بقع الدهون باور بتركيبة قوية ومركزة مصممة خصيصًا للتعامل مع بقع الدهون العنيدة في أواني الطهي يساعد على إذابتها بسهولة وسرعة ليمنحك أواني نظيفة ولامعة دون عناء الفرك المتكرر.",
     "descriptionAr": "مذيب بقع الدهون باور بتركيبة قوية ومركزة مصممة خصيصًا للتعامل مع بقع الدهون العنيدة في أواني الطهي يساعد على إذابتها بسهولة وسرعة ليمنحك أواني نظيفة ولامعة دون عناء الفرك المتكرر.",
-    "descriptionFr": "Le solvant Power Fat Stain, avec une formule puissante et concentrée, spécialement conçue pour traiter les taches de graisse tenaces dans les ustensiles de cuisine, aide à les faire fondre facilement et rapidement, vous offrant ainsi des ustensiles propres et brillants sans la gêne d’un frottage fréquent."
+    "descriptionFr": "Le solvant Power Fat Stain, avec une formule puissante et concentrée, spécialement conçue pour traiter les taches de graisse tenaces dans les ustensiles de cuisine, aide à les faire fondre facilement et rapidement, vous offrant ainsi des ustensiles propres et brillants sans la gêne d’un frottage fréquent.",
+    "compareAtPrice": 135
   },
   {
     "id": "6",
@@ -110,15 +131,20 @@ export const products: Product[] = [
     "nameAr": "ماسك اللؤلؤ للبشرة 100 مل",
     "nameFr": "PrettyBride-Masque pearl pour la peaux 100 ml",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه"],
+    "categories": [
+      "العناية بالوجه"
+    ],
     "subCategory": "ماسكات",
-    "subCategories": ["ماسكات"],
-    "price": 30.0,
+    "subCategories": [
+      "ماسكات"
+    ],
+    "price": 40,
     "points": 16,
     "image": "/image/4379.webp",
     "description": "امنحي بشرتك عناية مميزة مع ماسك اللؤلؤ للبشرة، بتركيبة غنية بالمكونات المرطبة والعناية الفعالة التي تساعد على تحسين مظهر البشرة ومنحها ملمسًا ناعمًا وإشراقة طبيعية.",
     "descriptionAr": "امنحي بشرتك عناية مميزة مع ماسك اللؤلؤ للبشرة، بتركيبة غنية بالمكونات المرطبة والعناية الفعالة التي تساعد على تحسين مظهر البشرة ومنحها ملمسًا ناعمًا وإشراقة طبيعية.",
-    "descriptionFr": "Apportez un soin particulier à votre peau avec le masque Pretty-Bride, enrichi en ingrédients hydratants et en soins efficaces qui aident à améliorer l’apparence de la peau et à lui donner une texture lisse et un éclat naturel."
+    "descriptionFr": "Apportez un soin particulier à votre peau avec le masque Pretty-Bride, enrichi en ingrédients hydratants et en soins efficaces qui aident à améliorer l’apparence de la peau et à lui donner une texture lisse et un éclat naturel.",
+    "compareAtPrice": 95
   },
   {
     "id": "7",
@@ -127,15 +153,20 @@ export const products: Product[] = [
     "nameAr": "ليب جلوس بفيتامين E نود  4 جم",
     "nameFr": "Pearly-Gloss à lèvres avec vitamine E-4 g",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 80.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 40,
     "points": 16,
     "image": "/image/8691.webp",
     "description": "ليب جلوس بفيتامين E نود  4 جم",
     "descriptionAr": "ليب جلوس بفيتامين E نود  4 جم",
-    "descriptionFr": "Gloss à la vitamine E – Teinte Nude – 4 g"
+    "descriptionFr": "Gloss à la vitamine E – Teinte Nude – 4 g",
+    "compareAtPrice": 80
   },
   {
     "id": "8",
@@ -144,15 +175,20 @@ export const products: Product[] = [
     "nameAr": "بيرلي-ليب جلوس بفيتامين E موف فوشيا  4 جم",
     "nameFr": "Pearly-Glosse à lèvres avec vitamine E Move Fuchsia 4 g",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 80.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 40,
     "points": 16,
     "image": "/image/8695.webp",
     "description": "ليب جلوس بفيتامين E موف فوشيا  4 جم",
     "descriptionAr": "ليب جلوس بفيتامين E موف فوشيا  4 جم",
-    "descriptionFr": "Gloss à la vitamine E – Mauve fuchsia – 4 g"
+    "descriptionFr": "Gloss à la vitamine E – Mauve fuchsia – 4 g",
+    "compareAtPrice": 80
   },
   {
     "id": "9",
@@ -161,15 +197,20 @@ export const products: Product[] = [
     "nameAr": "بيرلي-ليب جلوس بفيتامين E كاشمير  4 جم",
     "nameFr": "pearly-Glosse à lèvres avec Vitamine E Cashmire 4 g",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 80.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 40,
     "points": 16,
     "image": "/image/8692.webp",
     "description": "ليب جلوس بفيتامين E كاشمير  4 جم",
     "descriptionAr": "ليب جلوس بفيتامين E كاشمير  4 جم",
-    "descriptionFr": "Gloss à la vitamine E « Cashmere » – 4 g"
+    "descriptionFr": "Gloss à la vitamine E « Cashmere » – 4 g",
+    "compareAtPrice": 80
   },
   {
     "id": "10",
@@ -178,15 +219,20 @@ export const products: Product[] = [
     "nameAr": "بيرلي-ليب جلوس  بفيتامين E روز",
     "nameFr": "pearly-Glosse à lèvres avec de la rose à la vitamine E",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 80.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 40,
     "points": 16,
     "image": "/image/8690.webp",
     "description": "ليب جلوس  بفيتامين E روز",
     "descriptionAr": "ليب جلوس  بفيتامين E روز",
-    "descriptionFr": "Gloss à la vitamine E – Rose"
+    "descriptionFr": "Gloss à la vitamine E – Rose",
+    "compareAtPrice": 80
   },
   {
     "id": "11",
@@ -195,15 +241,18 @@ export const products: Product[] = [
     "nameAr": "كلين-منظف المفروشات والستائر بدون رغوة 500 مل",
     "nameFr": "Clean-Nettoyant pour matelas et rideaux propre sans mousse 500 ml",
     "category": "منظفات المنزل",
-    "categories": ["منظفات المنزل"],
+    "categories": [
+      "منظفات المنزل"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 75.0,
+    "price": 59,
     "points": 24,
     "image": "/image/3506.webp",
     "description": "منظف للمفروشات والستائر بدون رغوة، مناسب للاستخدام اليومي.",
     "descriptionAr": "منظف للمفروشات والستائر بدون رغوة، مناسب للاستخدام اليومي.",
-    "descriptionFr": "Nettoyant pour tissus d'ameublement et rideaux, sans mousse, adapté à un usage quotidien."
+    "descriptionFr": "Nettoyant pour tissus d'ameublement et rideaux, sans mousse, adapté à un usage quotidien.",
+    "compareAtPrice": 90
   },
   {
     "id": "12",
@@ -212,15 +261,18 @@ export const products: Product[] = [
     "nameAr": "كلين ملمع الاثاث برائحة البنفسج 500 مل",
     "nameFr": "Clean-Polisseur de meubles propres Violet 500 ml",
     "category": "منظفات المنزل",
-    "categories": ["منظفات المنزل"],
+    "categories": [
+      "منظفات المنزل"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 98.0,
+    "price": 55,
     "points": 22,
     "image": "/image/3319.webp",
     "description": "كلين ملمع الأثاث برائحة البنفسج يساعد على تنظيف وتلميع أسطح الأثاث الخشبي بسهولة تاركًا طبقة لامعة وحماية من الغبار مع رائحة البنفسج الفواحة التي تضفي أجواءً منعشة على منزلك.",
     "descriptionAr": "كلين ملمع الأثاث برائحة البنفسج يساعد على تنظيف وتلميع أسطح الأثاث الخشبي بسهولة تاركًا طبقة لامعة وحماية من الغبار مع رائحة البنفسج الفواحة التي تضفي أجواءً منعشة على منزلك.",
-    "descriptionFr": "Le lustrant pour meubles Clean, au parfum de violette, permet de nettoyer et de faire briller facilement les surfaces en bois."
+    "descriptionFr": "Le lustrant pour meubles Clean, au parfum de violette, permet de nettoyer et de faire briller facilement les surfaces en bois.",
+    "compareAtPrice": 110
   },
   {
     "id": "13",
@@ -229,15 +281,20 @@ export const products: Product[] = [
     "nameAr": "كلاسيك-رجالى 85 مل",
     "nameFr": "Classique-Homme 85ml",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر رجالي",
-    "subCategories": ["عطر رجالي"],
-    "price": 17.0,
+    "subCategories": [
+      "عطر رجالي"
+    ],
+    "price": 110,
     "points": 44,
     "image": "/image/5276.webp",
     "description": "عطر كلاسيك الرجالي اختيار الرجل الذي يقدّر الأصالة والرقي بتركيبة متزنة تجمع بين النفحات الدافئة والخشبية.",
     "descriptionAr": "عطر كلاسيك الرجالي اختيار الرجل الذي يقدّر الأصالة والرقي بتركيبة متزنة تجمع بين النفحات الدافئة والخشبية.",
-    "descriptionFr": "Le parfum pour Homme « Classic » est le choix de l'homme qui apprécie l'authenticité et le raffinement."
+    "descriptionFr": "Le parfum pour Homme « Classic » est le choix de l'homme qui apprécie l'authenticité et le raffinement.",
+    "compareAtPrice": 220
   },
   {
     "id": "14",
@@ -246,15 +303,20 @@ export const products: Product[] = [
     "nameAr": "كعب الغزال للون الوردي للكعبين 35 جم",
     "nameFr": "Talons de gazelle-Rosissement du Talons 35 g",
     "category": "العناية بالجسم",
-    "categories": ["العناية بالجسم"],
+    "categories": [
+      "العناية بالجسم"
+    ],
     "subCategory": "العناية بالقدمين",
-    "subCategories": ["العناية بالقدمين"],
-    "price": 21.75,
+    "subCategories": [
+      "العناية بالقدمين"
+    ],
+    "price": 29,
     "points": 12,
     "image": "/image/4353.webp",
     "description": "امنحي كعبيكِ مظهرًا أكثر نعومة وجاذبية مع كعب الغزال للون الوردي بتركيبة مميزة تساعد على تحسين مظهر الكعبين وإضفاء لون وردي طبيعي.",
     "descriptionAr": "امنحي كعبيكِ مظهرًا أكثر نعومة وجاذبية مع كعب الغزال للون الوردي بتركيبة مميزة تساعد على تحسين مظهر الكعبين وإضفاء لون وردي طبيعي.",
-    "descriptionFr": "Offrez à vos talons une apparence plus douce et plus séduisante grâce au soin « Talons de Gazelle »."
+    "descriptionFr": "Offrez à vos talons une apparence plus douce et plus séduisante grâce au soin « Talons de Gazelle ».",
+    "compareAtPrice": 57
   },
   {
     "id": "15",
@@ -263,15 +325,20 @@ export const products: Product[] = [
     "nameAr": "سبرانغ  ناتشورال -كريم مزيل العرق بالعنبر",
     "nameFr": "SpringNatural-Crème déodorante en ambre",
     "category": "العناية بالجسم",
-    "categories": ["العناية بالجسم"],
+    "categories": [
+      "العناية بالجسم"
+    ],
     "subCategory": "مستحضرات الحمام",
-    "subCategories": ["مستحضرات الحمام"],
-    "price": 32.5,
+    "subCategories": [
+      "مستحضرات الحمام"
+    ],
+    "price": 43,
     "points": 17,
     "image": "/image/4496.webp",
     "description": "استمتعي بالثقة والانتعاش طوال اليوم مع كريم مزيل العرق بالعنبر، بتركيبة مميزة تساعد على تقليل الروائح غير المرغوبة والعناية ببشرة منطقة تحت الإبط.",
     "descriptionAr": "استمتعي بالثقة والانتعاش طوال اليوم مع كريم مزيل العرق بالعنبر، بتركيبة مميزة تساعد على تقليل الروائح غير المرغوبة والعناية ببشرة منطقة تحت الإبط.",
-    "descriptionFr": "Profitez d'une sensation de confiance et de fraîcheur tout au long de la journée grâce à la crème déodorante à l'ambre."
+    "descriptionFr": "Profitez d'une sensation de confiance et de fraîcheur tout au long de la journée grâce à la crème déodorante à l'ambre.",
+    "compareAtPrice": 85
   },
   {
     "id": "16",
@@ -280,15 +347,20 @@ export const products: Product[] = [
     "nameAr": "سبرانغ  ناتشورال-كريم مزيل العرق بالزبادي",
     "nameFr": "SpringNatural-Crème déodorante au yaourt",
     "category": "العناية بالجسم",
-    "categories": ["العناية بالجسم"],
+    "categories": [
+      "العناية بالجسم"
+    ],
     "subCategory": "مستحضرات الحمام",
-    "subCategories": ["مستحضرات الحمام"],
-    "price": 64.0,
+    "subCategories": [
+      "مستحضرات الحمام"
+    ],
+    "price": 85,
     "points": 34,
     "image": "/image/4492.webp",
     "description": "استمتعي بالشعور بالانتعاش والثقة طوال اليوم مع كريم مزيل العرق بالزبادي، بتركيبة مميزة تساعد على تقليل الروائح غير المرغوبة والعناية ببشرة منطقة تحت الإبط.",
     "descriptionAr": "استمتعي بالشعور بالانتعاش والثقة طوال اليوم مع كريم مزيل العرق بالزبادي، بتركيبة مميزة تساعد على تقليل الروائح غير المرغوبة والعناية ببشرة منطقة تحت الإبط.",
-    "descriptionFr": "Profitez d'une sensation de confiance et de fraîcheur tout au long de la journée grâce à la crème déodorante au yaourt."
+    "descriptionFr": "Profitez d'une sensation de confiance et de fraîcheur tout au long de la journée grâce à la crème déodorante au yaourt.",
+    "promoTag": "1+1"
   },
   {
     "id": "17",
@@ -297,15 +369,20 @@ export const products: Product[] = [
     "nameAr": "ابن سينا-كريم تشققات الكعبين",
     "nameFr": "Ibn Sina-Crème pour les talons fissurés",
     "category": "العناية بالجسم",
-    "categories": ["العناية بالجسم"],
+    "categories": [
+      "العناية بالجسم"
+    ],
     "subCategory": "العناية بالقدمين",
-    "subCategories": ["العناية بالقدمين"],
-    "price": 32.5,
+    "subCategories": [
+      "العناية بالقدمين"
+    ],
+    "price": 43,
     "points": 17,
     "image": "/image/4115.webp",
     "description": "امنحي قدميكِ عناية متكاملة مع كريم تشققات الكعبين ابن سينا الغني بمزيج من المكونات الطبيعية المرطبة.",
     "descriptionAr": "امنحي قدميكِ عناية متكاملة مع كريم تشققات الكعبين ابن سينا الغني بمزيج من المكونات الطبيعية المرطبة.",
-    "descriptionFr": "Prenez soin de vos pieds avec la crème pour talons craqués Ibn Sina."
+    "descriptionFr": "Prenez soin de vos pieds avec la crème pour talons craqués Ibn Sina.",
+    "compareAtPrice": 65
   },
   {
     "id": "18",
@@ -314,15 +391,22 @@ export const products: Product[] = [
     "nameAr": "كريم بيرلى ميديام BB SPF 35",
     "nameFr": "Pearly-Crème BB Médium SPF 35",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه", "العناية بالجسم"],
+    "categories": [
+      "العناية بالوجه",
+      "العناية بالجسم"
+    ],
     "subCategory": "كريمات",
-    "subCategories": ["كريمات", "كريمات مرطبة"],
-    "price": 115.0,
+    "subCategories": [
+      "كريمات",
+      "كريمات مرطبة"
+    ],
+    "price": 65,
     "points": 26,
     "image": "/image/8864.webp",
     "description": "استمتعي ببشرة أكثر تجانسًا وإشراقًا مع MY WAY Pearly BB Cream SPF 35 – Medium.",
     "descriptionAr": "استمتعي ببشرة أكثر تجانسًا وإشراقًا مع MY WAY Pearly BB Cream SPF 35 – Medium.",
-    "descriptionFr": "Profitez d’un teint plus uniforme et radieux avec la BB Crème MY WAY Pearly SPF 35 – Medium."
+    "descriptionFr": "Profitez d’un teint plus uniforme et radieux avec la BB Crème MY WAY Pearly SPF 35 – Medium.",
+    "compareAtPrice": 130
   },
   {
     "id": "19",
@@ -331,15 +415,22 @@ export const products: Product[] = [
     "nameAr": "كريم بيرلى فاتح BB SPF 35",
     "nameFr": "Pearly-Light Cream BB SPF 35",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه", "العناية بالجسم"],
+    "categories": [
+      "العناية بالوجه",
+      "العناية بالجسم"
+    ],
     "subCategory": "كريمات",
-    "subCategories": ["كريمات", "كريمات مرطبة"],
-    "price": 115.0,
+    "subCategories": [
+      "كريمات",
+      "كريمات مرطبة"
+    ],
+    "price": 65,
     "points": 26,
     "image": "/image/8863.webp",
     "description": "استمتعي بإطلالة طبيعية ومشرقة مع كريم MY WAY Pearly BB Cream SPF 35.",
     "descriptionAr": "استمتعي بإطلالة طبيعية ومشرقة مع كريم MY WAY Pearly BB Cream SPF 35.",
-    "descriptionFr": "Profitez d’un look naturel et radieux avec la BB Cream SPF 35 de MY WAY."
+    "descriptionFr": "Profitez d’un look naturel et radieux avec la BB Cream SPF 35 de MY WAY.",
+    "compareAtPrice": 130
   },
   {
     "id": "20",
@@ -348,15 +439,22 @@ export const products: Product[] = [
     "nameAr": "كريم الأساس بيرلى بيج فاتح",
     "nameFr": "Pearly-Fond de teint beige clair et robuste",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه", "العناية بالجسم"],
+    "categories": [
+      "العناية بالوجه",
+      "العناية بالجسم"
+    ],
     "subCategory": "كريمات",
-    "subCategories": ["كريمات", "كريمات مرطبة"],
-    "price": 100.0,
+    "subCategories": [
+      "كريمات",
+      "كريمات مرطبة"
+    ],
+    "price": 58,
     "points": 23,
     "image": "/image/7119.webp",
     "description": "احصلي على بشرة متجانسة ومظهر أكثر إشراقًا مع كريم الأساس MY WAY Pearly Foundation – Beige Light.",
     "descriptionAr": "احصلي على بشرة متجانسة ومظهر أكثر إشراقًا مع كريم الأساس MY WAY Pearly Foundation – Beige Light.",
-    "descriptionFr": "Obtenez une peau uniforme et un aspect plus éclatant avec le fond de teint nacré MY WAY – Beige Light Foundation."
+    "descriptionFr": "Obtenez une peau uniforme et un aspect plus éclatant avec le fond de teint nacré MY WAY – Beige Light Foundation.",
+    "compareAtPrice": 115
   },
   {
     "id": "21",
@@ -365,15 +463,20 @@ export const products: Product[] = [
     "nameAr": "كريم اساس بيرلى بيج غامق",
     "nameFr": "Pearly-Fond de teint beige foncé et robuste",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "البشرة",
-    "subCategories": ["البشرة"],
-    "price": 115.0,
+    "subCategories": [
+      "البشرة"
+    ],
+    "price": 58,
     "points": 23,
     "image": "/image/7118.webp",
     "description": "كريم اساس بيرلى بيج غامق",
     "descriptionAr": "كريم اساس بيرلى بيج غامق",
-    "descriptionFr": "Fond de teint beige foncé et robuste"
+    "descriptionFr": "Fond de teint beige foncé et robuste",
+    "compareAtPrice": 115
   },
   {
     "id": "22",
@@ -382,15 +485,24 @@ export const products: Product[] = [
     "nameAr": "كريم Delicate بفيتامين B3 لتوحيد لون البشرة 150 جم",
     "nameFr": "Delicate-Crème de teint vitamine B3 150 g",
     "category": "ماكياج",
-    "categories": ["ماكياج", "العناية بالجسم", "العناية بالوجه"],
+    "categories": [
+      "ماكياج",
+      "العناية بالجسم",
+      "العناية بالوجه"
+    ],
     "subCategory": "البشرة",
-    "subCategories": ["البشرة", "كريمات مرطبة", "كريمات"],
-    "price": 58.75,
+    "subCategories": [
+      "البشرة",
+      "كريمات مرطبة",
+      "كريمات"
+    ],
+    "price": 78,
     "points": 31,
     "image": "/image/4123.webp",
     "description": "استمتعي ببشرة أكثر نعومة وحيوية مع كريم Delicate بفيتامين B3 بتركيبة غنية بالمكونات المرطبة.",
     "descriptionAr": "استمتعي ببشرة أكثر نعومة وحيوية مع كريم Delicate بفيتامين B3 بتركيبة غنية بالمكونات المرطبة.",
-    "descriptionFr": "Profitez d’une peau plus lisse et plus éclatante avec la crème délicate à la vitamine B3."
+    "descriptionFr": "Profitez d’une peau plus lisse et plus éclatante avec la crème délicate à la vitamine B3.",
+    "compareAtPrice": 130
   },
   {
     "id": "23",
@@ -399,15 +511,22 @@ export const products: Product[] = [
     "nameAr": "كريم Delicate بزبدة الكاكاو 50 جم",
     "nameFr": "Delicate-Crème au beurre de cacao 50 g",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه", "العناية بالجسم"],
+    "categories": [
+      "العناية بالوجه",
+      "العناية بالجسم"
+    ],
     "subCategory": "كريمات",
-    "subCategories": ["كريمات", "كريمات مرطبة"],
-    "price": 60.0,
+    "subCategories": [
+      "كريمات",
+      "كريمات مرطبة"
+    ],
+    "price": 30,
     "points": 12,
     "image": "/image/4250.webp",
     "description": "استمتعي ببشرة أكثر نعومة ومرونة مع كريم Delicate بزبدة الكاكاو.",
     "descriptionAr": "استمتعي ببشرة أكثر نعومة ومرونة مع كريم Delicate بزبدة الكاكاو.",
-    "descriptionFr": "Profitez d’une peau plus lisse et plus souple avec la crème au beurre de cacao délicate."
+    "descriptionFr": "Profitez d’une peau plus lisse et plus souple avec la crème au beurre de cacao délicate.",
+    "compareAtPrice": 69
   },
   {
     "id": "24",
@@ -416,15 +535,22 @@ export const products: Product[] = [
     "nameAr": "كريم Delicate بجوز الهند لتفتيح وترطيب البشرة 150جم",
     "nameFr": "Delicate-Crème pour la peau de coco éclaircissante et hydratante 150g",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه", "العناية بالجسم"],
+    "categories": [
+      "العناية بالوجه",
+      "العناية بالجسم"
+    ],
     "subCategory": "كريمات",
-    "subCategories": ["كريمات", "كريمات مرطبة"],
-    "price": 125.0,
+    "subCategories": [
+      "كريمات",
+      "كريمات مرطبة"
+    ],
+    "price": 50,
     "points": 20,
     "image": "/image/4421.webp",
     "description": "استمتعي بعناية متكاملة لبشرتك مع كريم Delicate بجوز الهند وزبدة الشيا.",
     "descriptionAr": "استمتعي بعناية متكاملة لبشرتك مع كريم Delicate بجوز الهند وزبدة الشيا.",
-    "descriptionFr": "Profitez d’une peau plus lisse et plus souple avec la crème de coco délicate."
+    "descriptionFr": "Profitez d’une peau plus lisse et plus souple avec la crème de coco délicate.",
+    "compareAtPrice": 130
   },
   {
     "id": "25",
@@ -433,15 +559,22 @@ export const products: Product[] = [
     "nameAr": "كريم Delicate باللبن والعسل لبشرة نضرة وناعمه ومشرقة للبشرة العادية 150جم",
     "nameFr": "Delicate-Crème avec lait et miel pour une peau fraîche, douce et radieuse pour une peau normale 150g",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه", "العناية بالجسم"],
+    "categories": [
+      "العناية بالوجه",
+      "العناية بالجسم"
+    ],
     "subCategory": "كريمات",
-    "subCategories": ["كريمات", "كريمات مرطبة"],
-    "price": 144.62,
+    "subCategories": [
+      "كريمات",
+      "كريمات مرطبة"
+    ],
+    "price": 78,
     "points": 31,
     "image": "/image/4588.webp",
     "description": "استمتعي بعناية متكاملة لبشرتك مع كريم Delicate بالحليب والعسل وزبدة الكاكاو.",
     "descriptionAr": "استمتعي بعناية متكاملة لبشرتك مع كريم Delicate بالحليب والعسل وزبدة الكاكاو.",
-    "descriptionFr": "Profitez d’un soin intégré pour votre peau avec la crème Delicate Milk, Honey and Cocoa Butter."
+    "descriptionFr": "Profitez d’un soin intégré pour votre peau avec la crème Delicate Milk, Honey and Cocoa Butter.",
+    "compareAtPrice": 130
   },
   {
     "id": "26",
@@ -450,15 +583,20 @@ export const products: Product[] = [
     "nameAr": "كريستال 50مل",
     "nameFr": "Crystal 50 ml",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر نسائي",
-    "subCategories": ["عطر نسائي"],
-    "price": 137.0,
+    "subCategories": [
+      "عطر نسائي"
+    ],
+    "price": 70,
     "points": 28,
     "image": "/image/5818.webp",
     "description": "عطر كريستال بحجمه 50 مل يجسد النقاء والرقي في تركيبة عطرية صافية ومنعشة.",
     "descriptionAr": "عطر كريستال بحجمه 50 مل يجسد النقاء والرقي في تركيبة عطرية صافية ومنعشة.",
-    "descriptionFr": "Crystal Perfume 50ml incarne pureté et sophistication."
+    "descriptionFr": "Crystal Perfume 50ml incarne pureté et sophistication.",
+    "compareAtPrice": 170
   },
   {
     "id": "27",
@@ -467,15 +605,20 @@ export const products: Product[] = [
     "nameAr": "كاجوال تصميم جديد",
     "nameFr": "Casual-Nouveau design décontracté",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر رجالي",
-    "subCategories": ["عطر رجالي"],
-    "price": 130.0,
+    "subCategories": [
+      "عطر رجالي"
+    ],
+    "price": 98,
     "points": 40,
     "image": "/image/5830.webp",
     "description": "عطر كاجوال بتصميمه الجديد يعكس روح البساطة والأناقة العصرية.",
     "descriptionAr": "عطر كاجوال بتصميمه الجديد يعكس روح البساطة والأناقة العصرية.",
-    "descriptionFr": "Le nouveau design de Casual Perfume reflète l’esprit de simplicité et d’élégance moderne."
+    "descriptionFr": "Le nouveau design de Casual Perfume reflète l’esprit de simplicité et d’élégance moderne.",
+    "compareAtPrice": 195
   },
   {
     "id": "28",
@@ -484,15 +627,20 @@ export const products: Product[] = [
     "nameAr": "فيحاء جديد 50مل",
     "nameFr": "Nouveau Fayhaa 50 Ml",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر نسائي",
-    "subCategories": ["عطر نسائي"],
-    "price": 168.0,
+    "subCategories": [
+      "عطر نسائي"
+    ],
+    "price": 126,
     "points": 51,
     "image": "/image/5374.webp",
     "description": "عطر فيحاء بطرحه الجديد وحجمه 50 مل يحتفي بالأنوثة الشرقية الأصيلة.",
     "descriptionAr": "عطر فيحاء بطرحه الجديد وحجمه 50 مل يحتفي بالأنوثة الشرقية الأصيلة.",
-    "descriptionFr": "Fayhaa Perfume, avec sa nouvelle offre et sa taille 50 ml, célèbre la féminité orientale."
+    "descriptionFr": "Fayhaa Perfume, avec sa nouvelle offre et sa taille 50 ml, célèbre la féminité orientale.",
+    "compareAtPrice": 210
   },
   {
     "id": "29",
@@ -501,15 +649,23 @@ export const products: Product[] = [
     "nameAr": "فازلين عنبر للشعر والبشرة",
     "nameFr": "Vaseline de l'ambre pour les cheveux et la peau",
     "category": "العناية بالشعر",
-    "categories": ["العناية بالشعر", "العناية بالجسم"],
+    "categories": [
+      "العناية بالشعر",
+      "العناية بالجسم"
+    ],
     "subCategory": "ماسكات",
-    "subCategories": ["ماسكات", "العناية باليدين", "العناية بالقدمين"],
-    "price": 70.0,
+    "subCategories": [
+      "ماسكات",
+      "العناية باليدين",
+      "العناية بالقدمين"
+    ],
+    "price": 38,
     "points": 15,
     "image": "/image/2003.webp",
     "description": "استمتعي بعناية متكاملة مع فازلين عنبر بتركيبة غنية بالفازلين وشمع البرافين.",
     "descriptionAr": "استمتعي بعناية متكاملة مع فازلين عنبر بتركيبة غنية بالفازلين وشمع البرافين.",
-    "descriptionFr": "Profitez d’un soin complet avec de la vaseline Amber."
+    "descriptionFr": "Profitez d’un soin complet avec de la vaseline Amber.",
+    "compareAtPrice": 75
   },
   {
     "id": "30",
@@ -518,15 +674,23 @@ export const products: Product[] = [
     "nameAr": "فازلين سهر الليالى للشعر والبشرة 70جم",
     "nameFr": "Vaseline Cheveux & Peau de Nuit 70 g",
     "category": "العناية بالشعر",
-    "categories": ["العناية بالشعر", "العناية بالجسم"],
+    "categories": [
+      "العناية بالشعر",
+      "العناية بالجسم"
+    ],
     "subCategory": "ماسكات",
-    "subCategories": ["ماسكات", "العناية باليدين", "العناية بالقدمين"],
-    "price": 0.0,
+    "subCategories": [
+      "ماسكات",
+      "العناية باليدين",
+      "العناية بالقدمين"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/2006.webp",
     "description": "فازلين سهر الليالى للشعر والبشرة 70جم",
     "descriptionAr": "فازلين سهر الليالى للشعر والبشرة 70جم",
-    "descriptionFr": "Vaseline Cheveux & Peau de Nuit 70 g"
+    "descriptionFr": "Vaseline Cheveux & Peau de Nuit 70 g",
+    "compareAtPrice": 75
   },
   {
     "id": "31",
@@ -535,15 +699,21 @@ export const products: Product[] = [
     "nameAr": "فازلين تندر 24 ساعة",
     "nameFr": "Tender-vaseline de 24 heures sur 24",
     "category": "العناية بالجسم",
-    "categories": ["العناية بالجسم"],
+    "categories": [
+      "العناية بالجسم"
+    ],
     "subCategory": "العناية باليدين",
-    "subCategories": ["العناية باليدين", "العناية بالقدمين"],
-    "price": 46.0,
+    "subCategories": [
+      "العناية باليدين",
+      "العناية بالقدمين"
+    ],
+    "price": 25,
     "points": 10,
     "image": "/image/7219.webp",
     "description": "امنحي بشرتك عناية يومية متكاملة مع فازلين تندر 24 ساعة من ماى واى.",
     "descriptionAr": "امنحي بشرتك عناية يومية متكاملة مع فازلين تندر 24 ساعة من ماى واى.",
-    "descriptionFr": "Prenez soin de votre peau au quotidien de My Way."
+    "descriptionFr": "Prenez soin de votre peau au quotidien de My Way.",
+    "compareAtPrice": 50
   },
   {
     "id": "32",
@@ -552,15 +722,20 @@ export const products: Product[] = [
     "nameAr": "غسول منظف للوجه غنى بخلاصة الليمون للبشرة الدهنية والمركبه 100مل",
     "nameFr": "Lotion nettoyant pour le visage enrichi en extrait de citron pour peau grasse et complexe 100 ml",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه"],
+    "categories": [
+      "العناية بالوجه"
+    ],
     "subCategory": "منظفات الوجه",
-    "subCategories": ["منظفات الوجه"],
-    "price": 27.0,
+    "subCategories": [
+      "منظفات الوجه"
+    ],
+    "price": 36,
     "points": 14,
     "image": "/image/4315.webp",
     "description": "استمتعي ببشرة أكثر نقاءً وانتعاشًا مع غسول الوجه بخلاصة الليمون للبشرة الدهنية والمختلطة.",
     "descriptionAr": "استمتعي ببشرة أكثر نقاءً وانتعاشًا مع غسول الوجه بخلاصة الليمون للبشرة الدهنية والمختلطة.",
-    "descriptionFr": "Profitez d’une peau plus claire et plus fraîche avec ce nettoyant visage à l’extrait de citron."
+    "descriptionFr": "Profitez d’une peau plus claire et plus fraîche avec ce nettoyant visage à l’extrait de citron.",
+    "compareAtPrice": 60
   },
   {
     "id": "33",
@@ -569,10 +744,14 @@ export const products: Product[] = [
     "nameAr": "اسبراى ريفيل",
     "nameFr": "RE-FILL spray anti chute de cheveux",
     "category": "العناية بالشعر",
-    "categories": ["العناية بالشعر"],
+    "categories": [
+      "العناية بالشعر"
+    ],
     "subCategory": "زيوت و سيرومات",
-    "subCategories": ["زيوت و سيرومات"],
-    "price": 199.0,
+    "subCategories": [
+      "زيوت و سيرومات"
+    ],
+    "price": 199,
     "points": 28,
     "image": "/image/9840.webp",
     "description": "اسبراى ريفيل لعناية فعالة بالشعر.",
@@ -586,15 +765,22 @@ export const products: Product[] = [
     "nameAr": "صن اوت واقى من اشعة الشمس 30 جرامSPF 50",
     "nameFr": "SunOut-Écran solaire S30g-SPF 50",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه", "العناية بالجسم"],
+    "categories": [
+      "العناية بالوجه",
+      "العناية بالجسم"
+    ],
     "subCategory": "حماية الوجه",
-    "subCategories": ["حماية الوجه", "كريمات مرطبة"],
-    "price": 55.0,
+    "subCategories": [
+      "حماية الوجه",
+      "كريمات مرطبة"
+    ],
+    "price": 32,
     "points": 13,
     "image": "/image/4296.webp",
     "description": "احصلي على حماية فعالة من أشعة الشمس مع صن أوت SPF 50 من ماي واي.",
     "descriptionAr": "احصلي على حماية فعالة من أشعة الشمس مع صن أوت SPF 50 من ماي واي.",
-    "descriptionFr": "Bénéficiez d’une protection solaire efficace avec My Way Sun Out SPF 50."
+    "descriptionFr": "Bénéficiez d’une protection solaire efficace avec My Way Sun Out SPF 50.",
+    "compareAtPrice": 63
   },
   {
     "id": "35",
@@ -603,15 +789,22 @@ export const products: Product[] = [
     "nameAr": "صن اوت كريم للبشرة بعد التعرض للشمس 30جم",
     "nameFr": "Crème pour la peau Sun Out après exposition au soleil 30g",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه", "العناية بالجسم"],
+    "categories": [
+      "العناية بالوجه",
+      "العناية بالجسم"
+    ],
     "subCategory": "حماية الوجه",
-    "subCategories": ["حماية الوجه", "كريمات مرطبة"],
-    "price": 55.0,
+    "subCategories": [
+      "حماية الوجه",
+      "كريمات مرطبة"
+    ],
+    "price": 41,
     "points": 17,
     "image": "/image/4297.webp",
     "description": "امنحي بشرتك العناية التي تحتاجها بعد التعرض لأشعة الشمس مع صن أوت كريم ما بعد التعرض للشمس.",
     "descriptionAr": "امنحي بشرتك العناية التي تحتاجها بعد التعرض لأشعة الشمس مع صن أوت كريم ما بعد التعرض للشمس.",
-    "descriptionFr": "Apportez à votre peau les soins nécessaires après exposition au soleil."
+    "descriptionFr": "Apportez à votre peau les soins nécessaires après exposition au soleil.",
+    "compareAtPrice": 63
   },
   {
     "id": "36",
@@ -620,15 +813,18 @@ export const products: Product[] = [
     "nameAr": "شامبو كيدى للقمل والصئبان 80 مل",
     "nameFr": "Shampooing pour enfants contre les poux et lentes 80 ml",
     "category": "أطفال",
-    "categories": ["أطفال"],
+    "categories": [
+      "أطفال"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 24.0,
+    "price": 32,
     "points": 13,
     "image": "/image/1574.webp",
     "description": "شامبو كيدي المخصص لمكافحة القمل والصئبان بتركيبة فعالة لطيفة على فروة الرأس الحساسة.",
     "descriptionAr": "شامبو كيدي المخصص لمكافحة القمل والصئبان بتركيبة فعالة لطيفة على فروة الرأس الحساسة.",
-    "descriptionFr": "Shampooing pour enfants contre les poux et lentes."
+    "descriptionFr": "Shampooing pour enfants contre les poux et lentes.",
+    "compareAtPrice": 64
   },
   {
     "id": "37",
@@ -637,15 +833,22 @@ export const products: Product[] = [
     "nameAr": "شامبو الثوم",
     "nameFr": "Shampooing à l’ail",
     "category": "العناية بالشعر",
-    "categories": ["العناية بالشعر", "العناية بالجسم"],
+    "categories": [
+      "العناية بالشعر",
+      "العناية بالجسم"
+    ],
     "subCategory": "شامبو",
-    "subCategories": ["شامبو", "مستحضرات الحمام"],
-    "price": 64.0,
+    "subCategories": [
+      "شامبو",
+      "مستحضرات الحمام"
+    ],
+    "price": 85,
     "points": 34,
     "image": "/image/1529.webp",
     "description": "شامبو الثوم بتركيبته الغنية للمساعدة في الحفاظ على صحة الشعر وفروة الرأس.",
     "descriptionAr": "شامبو الثوم بتركيبته الغنية للمساعدة في الحفاظ على صحة الشعر وفروة الرأس.",
-    "descriptionFr": "Shampooing à l’ail pour des soins capillaires."
+    "descriptionFr": "Shampooing à l’ail pour des soins capillaires.",
+    "compareAtPrice": 195
   },
   {
     "id": "38",
@@ -654,15 +857,20 @@ export const products: Product[] = [
     "nameAr": "سيلكشن 65 مل جديد",
     "nameFr": "Selection 65 ml-Nouveau",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر رجالي",
-    "subCategories": ["عطر رجالي"],
-    "price": 125.0,
+    "subCategories": [
+      "عطر رجالي"
+    ],
+    "price": 100,
     "points": 40,
     "image": "/image/5321.webp",
     "description": "عطر سيلكشن بطرحه الجديد وحجمه 65 مل يجمع بين النفحات المنعشة والدافئة.",
     "descriptionAr": "عطر سيلكشن بطرحه الجديد وحجمه 65 مل يجمع بين النفحات المنعشة والدافئة.",
-    "descriptionFr": "Selection 65 ml combine des notes fraîches et chaleureuses."
+    "descriptionFr": "Selection 65 ml combine des notes fraîches et chaleureuses.",
+    "compareAtPrice": 199
   },
   {
     "id": "39",
@@ -671,15 +879,20 @@ export const products: Product[] = [
     "nameAr": "سيروم مقوى للرموش والحواجب 9 مل",
     "nameFr": "Sérum fortifiant pour cils et sourcils 9 مل",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "العيون و الحواجب",
-    "subCategories": ["العيون و الحواجب"],
-    "price": 115.0,
+    "subCategories": [
+      "العيون و الحواجب"
+    ],
+    "price": 58,
     "points": 23,
     "image": "/image/8541.webp",
     "description": "سيرم مقوى للرموش والحواجب 9 مل",
     "descriptionAr": "سيرم مقوى للرموش والحواجب 9 مل",
-    "descriptionFr": "Sérum fortifiant pour cils et sourcils 9 ml"
+    "descriptionFr": "Sérum fortifiant pour cils et sourcils 9 ml",
+    "compareAtPrice": 115
   },
   {
     "id": "40",
@@ -688,15 +901,20 @@ export const products: Product[] = [
     "nameAr": "سوبرايت للبشرة العادية كريم تفتيح للأماكن الداكنة والحساسة 40جم",
     "nameFr": "Subright pour une crème éclairciante normale pour les zones foncées et sensibles 40 g",
     "category": "العناية بالجسم",
-    "categories": ["العناية بالجسم"],
+    "categories": [
+      "العناية بالجسم"
+    ],
     "subCategory": "كريمات مرطبة",
-    "subCategories": ["كريمات مرطبة"],
-    "price": 22.5,
+    "subCategories": [
+      "كريمات مرطبة"
+    ],
+    "price": 30,
     "points": 12,
     "image": "/image/4314.webp",
     "description": "سوبرايت كريم العناية بالمناطق الداكنة والحساسة بتركيبة متطورة تساعد على ترطيب البشرة.",
     "descriptionAr": "سوبرايت كريم العناية بالمناطق الداكنة والحساسة بتركيبة متطورة تساعد على ترطيب البشرة.",
-    "descriptionFr": "Crème Superite Dark & Sensitive Care."
+    "descriptionFr": "Crème Superite Dark & Sensitive Care.",
+    "compareAtPrice": 50
   },
   {
     "id": "41",
@@ -705,15 +923,20 @@ export const products: Product[] = [
     "nameAr": "سوبرايت كريم تفتيح البشرة بخلاصة الليمون 30جم",
     "nameFr": "Subright Crème éclairciante avec extrait de citron 30g",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه"],
+    "categories": [
+      "العناية بالوجه"
+    ],
     "subCategory": "كريمات",
-    "subCategories": ["كريمات"],
-    "price": 18.0,
+    "subCategories": [
+      "كريمات"
+    ],
+    "price": 24,
     "points": 10,
     "image": "/image/4316.webp",
     "description": "سوبرايت كريم تفتيح البشرة بخلاصة الليمون بتركيبة خفيفة مصممة خصيصًا للبشرة الدهنية والمختلطة.",
     "descriptionAr": "سوبرايت كريم تفتيح البشرة بخلاصة الليمون بتركيبة خفيفة مصممة خصيصًا للبشرة الدهنية والمختلطة.",
-    "descriptionFr": "Crème éclaircissante à l’extrait de citron."
+    "descriptionFr": "Crème éclaircissante à l’extrait de citron.",
+    "compareAtPrice": 54
   },
   {
     "id": "42",
@@ -722,15 +945,18 @@ export const products: Product[] = [
     "nameAr": "سوبر كلينتول انتعاش الغابات 600 مل جديد انتاج المغرب",
     "nameFr": "Super Clintol Forest Recovery 600ml neuf produit au Maroc",
     "category": "منظفات المنزل",
-    "categories": ["منظفات المنزل"],
+    "categories": [
+      "منظفات المنزل"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 100.0,
+    "price": 58,
     "points": 23,
     "image": "/image/3457.webp",
     "description": "سوبر كلينتول بخلاصة انتعاش الغابات وطرحه الجديد من إنتاج المغرب منظف أرضيات فعال.",
     "descriptionAr": "سوبر كلينتول بخلاصة انتعاش الغابات وطرحه الجديد من إنتاج المغرب منظف أرضيات فعال.",
-    "descriptionFr": "Super Clean't All avec Forest Recovery Essence."
+    "descriptionFr": "Super Clean't All avec Forest Recovery Essence.",
+    "compareAtPrice": 115
   },
   {
     "id": "43",
@@ -739,15 +965,20 @@ export const products: Product[] = [
     "nameAr": "سندباد جديد",
     "nameFr": "Sinbad-Nouveau",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر رجالي",
-    "subCategories": ["عطر رجالي"],
-    "price": 160.0,
+    "subCategories": [
+      "عطر رجالي"
+    ],
+    "price": 120,
     "points": 48,
     "image": "/image/5249.webp",
     "description": "عطر سندباد بطرحه الجديد رفيق الرجل المغامر الذي يعشق التميز.",
     "descriptionAr": "عطر سندباد بطرحه الجديد رفيق الرجل المغامر الذي يعشق التميز.",
-    "descriptionFr": "Sindibad est le compagnon de l’homme aventureux."
+    "descriptionFr": "Sindibad est le compagnon de l’homme aventureux.",
+    "compareAtPrice": 199
   },
   {
     "id": "44",
@@ -756,15 +987,18 @@ export const products: Product[] = [
     "nameAr": "سبراي منظف ومطهر الثلاجات و الميكروويف جديد 250مل",
     "nameFr": "Nettoyant et désinfectant pour réfrigérateur et micro-ondes Nouveau 250 ml",
     "category": "منظفات المنزل",
-    "categories": ["منظفات المنزل"],
+    "categories": [
+      "منظفات المنزل"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 55.0,
+    "price": 30,
     "points": 12,
     "image": "/image/4705.webp",
     "description": "سبراي منظف ومطهر الثلاجات والميكروويف بطرحه الجديد لتنظيف سريع وآمن.",
     "descriptionAr": "سبراي منظف ومطهر الثلاجات والميكروويف بطرحه الجديد لتنظيف سريع وآمن.",
-    "descriptionFr": "Spray nettoyant et désinfectant pour réfrigérateur et micro-ondes."
+    "descriptionFr": "Spray nettoyant et désinfectant pour réfrigérateur et micro-ondes.",
+    "compareAtPrice": 60
   },
   {
     "id": "45",
@@ -773,15 +1007,20 @@ export const products: Product[] = [
     "nameAr": "زيت ريفيل 50 مل",
     "nameFr": "Re-Fill Oil 50 ml",
     "category": "العناية بالشعر",
-    "categories": ["العناية بالشعر"],
+    "categories": [
+      "العناية بالشعر"
+    ],
     "subCategory": "زيوت و سيرومات",
-    "subCategories": ["زيوت و سيرومات"],
-    "price": 78.0,
+    "subCategories": [
+      "زيوت و سيرومات"
+    ],
+    "price": 44,
     "points": 18,
     "image": "/image/1838.webp",
     "description": "زيت ري فيل بتركيبة غنية بزيت الخروع وفيتامين E لتغذية الشعر.",
     "descriptionAr": "زيت ري فيل بتركيبة غنية بزيت الخروع وفيتامين E لتغذية الشعر.",
-    "descriptionFr": "Huile Re-Fill formulée avec de l’huile de ricin et de la vitamine E."
+    "descriptionFr": "Huile Re-Fill formulée avec de l’huile de ricin et de la vitamine E.",
+    "compareAtPrice": 88
   },
   {
     "id": "46",
@@ -790,15 +1029,22 @@ export const products: Product[] = [
     "nameAr": "زيت السمسم 50 مل",
     "nameFr": "Huile de sésame 50 ml",
     "category": "العناية بالشعر",
-    "categories": ["العناية بالشعر", "العناية بالجسم"],
+    "categories": [
+      "العناية بالشعر",
+      "العناية بالجسم"
+    ],
     "subCategory": "زيوت و سيرومات",
-    "subCategories": ["زيوت و سيرومات", "زيوت مغذية"],
-    "price": 78.0,
+    "subCategories": [
+      "زيوت و سيرومات",
+      "زيوت مغذية"
+    ],
+    "price": 58,
     "points": 23,
     "image": "/image/1837.webp",
     "description": "زيت السمسم بتركيبة غنية لترطيب البشرة والعناية بالشعر.",
     "descriptionAr": "زيت السمسم بتركيبة غنية لترطيب البشرة والعناية بالشعر.",
-    "descriptionFr": "Huile de sésame pour hydrater la peau et soigner les cheveux."
+    "descriptionFr": "Huile de sésame pour hydrater la peau et soigner les cheveux.",
+    "compareAtPrice": 88
   },
   {
     "id": "47",
@@ -807,15 +1053,20 @@ export const products: Product[] = [
     "nameAr": "زيت الثوم للعناية المكثفة بالشعر",
     "nameFr": "Huile d’ail pour les soins capillaires intensifs",
     "category": "العناية بالشعر",
-    "categories": ["العناية بالشعر"],
+    "categories": [
+      "العناية بالشعر"
+    ],
     "subCategory": "زيوت و سيرومات",
-    "subCategories": ["زيوت و سيرومات"],
-    "price": 43.75,
+    "subCategories": [
+      "زيوت و سيرومات"
+    ],
+    "price": 58,
     "points": 23,
     "image": "/image/1839.webp",
     "description": "زيت الثوم الغني بمزيج من الزيوت الطبيعية لتغذية متكاملة لشعرك.",
     "descriptionAr": "زيت الثوم الغني بمزيج من الزيوت الطبيعية لتغذية متكاملة لشعرك.",
-    "descriptionFr": "Huile d’ail enrichie d’un mélange d’huiles naturelles."
+    "descriptionFr": "Huile d’ail enrichie d’un mélange d’huiles naturelles.",
+    "compareAtPrice": 88
   },
   {
     "id": "48",
@@ -824,15 +1075,20 @@ export const products: Product[] = [
     "nameAr": "ريفاين تفتيح و اسمرار اليدين",
     "nameFr": "Refine-Éclairage et bronzage des mains",
     "category": "العناية بالجسم",
-    "categories": ["العناية بالجسم"],
+    "categories": [
+      "العناية بالجسم"
+    ],
     "subCategory": "العناية باليدين",
-    "subCategories": ["العناية باليدين"],
-    "price": 16.5,
+    "subCategories": [
+      "العناية باليدين"
+    ],
+    "price": 22,
     "points": 9,
     "image": "/image/4331.webp",
     "description": "ريفاين كريم العناية باليدين بتركيبة غنية للمحافظة على نعومة البشرة.",
     "descriptionAr": "ريفاين كريم العناية باليدين بتركيبة غنية للمحافظة على نعومة البشرة.",
-    "descriptionFr": "Crème Refine Hand Care."
+    "descriptionFr": "Crème Refine Hand Care.",
+    "compareAtPrice": 50
   },
   {
     "id": "49",
@@ -841,15 +1097,20 @@ export const products: Product[] = [
     "nameAr": "رول أون تندر مزيل العرق",
     "nameFr": "Tender-Déodorant Roll On",
     "category": "العناية بالجسم",
-    "categories": ["العناية بالجسم"],
+    "categories": [
+      "العناية بالجسم"
+    ],
     "subCategory": "مستحضرات الحمام",
-    "subCategories": ["مستحضرات الحمام"],
-    "price": 60.0,
+    "subCategories": [
+      "مستحضرات الحمام"
+    ],
+    "price": 35,
     "points": 14,
     "image": "/image/5679.webp",
     "description": "رول أون تندر لحماية فعالة من رائحة العرق وعناية لطيفة بالبشرة.",
     "descriptionAr": "رول أون تندر لحماية فعالة من رائحة العرق وعناية لطيفة بالبشرة.",
-    "descriptionFr": "Déodorant Roll On Tender pour une protection efficace."
+    "descriptionFr": "Déodorant Roll On Tender pour une protection efficace.",
+    "compareAtPrice": 70
   },
   {
     "id": "50",
@@ -858,15 +1119,20 @@ export const products: Product[] = [
     "nameAr": "روج فوشيا",
     "nameFr": "Rouge à lèvres Fuchsia",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 90.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8124.webp",
     "description": "روج فوشيا لإطلالة ساحرة.",
     "descriptionAr": "روج فوشيا لإطلالة ساحرة.",
-    "descriptionFr": "Rouge à lèvres Fuchsia."
+    "descriptionFr": "Rouge à lèvres Fuchsia.",
+    "compareAtPrice": 90
   },
   {
     "id": "51",
@@ -875,15 +1141,20 @@ export const products: Product[] = [
     "nameAr": "روج سيمون",
     "nameFr": "Rouge à lèvres simon",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 90.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8133.webp",
     "description": "روج سيمون",
     "descriptionAr": "روج سيمون",
-    "descriptionFr": "Rouge à lèvres simon"
+    "descriptionFr": "Rouge à lèvres simon",
+    "compareAtPrice": 90
   },
   {
     "id": "52",
@@ -892,15 +1163,20 @@ export const products: Product[] = [
     "nameAr": "روج ريد نبيتى",
     "nameFr": "Rouge à lèvres-Brownish-red",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 80.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8134.webp",
     "description": "روج ريد نبيتى",
     "descriptionAr": "روج ريد نبيتى",
-    "descriptionFr": "Rouge à lèvres-Brownish-red"
+    "descriptionFr": "Rouge à lèvres-Brownish-red",
+    "compareAtPrice": 90
   },
   {
     "id": "53",
@@ -909,15 +1185,20 @@ export const products: Product[] = [
     "nameAr": "روج ريد مط كاشمير 8080",
     "nameFr": "Rouge à lèvres rouge Matt Cashmere 8080",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 90.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8333.webp",
     "description": "روج ريد مط كاشمير 8080",
     "descriptionAr": "روج ريد مط كاشمير 8080",
-    "descriptionFr": "Rouge à lèvres rouge Matt Cashmere 8080"
+    "descriptionFr": "Rouge à lèvres rouge Matt Cashmere 8080",
+    "compareAtPrice": 90
   },
   {
     "id": "54",
@@ -926,15 +1207,20 @@ export const products: Product[] = [
     "nameAr": "روج بيج",
     "nameFr": "Rouge à levres Beige",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 90.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8129.webp",
     "description": "روج بيج",
     "descriptionAr": "روج بيج",
-    "descriptionFr": "Rouge à levres Beige"
+    "descriptionFr": "Rouge à levres Beige",
+    "compareAtPrice": 90
   },
   {
     "id": "55",
@@ -943,15 +1229,20 @@ export const products: Product[] = [
     "nameAr": "روج بطيخي",
     "nameFr": "Rouge à levres Melon Rouge",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 90.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8128.webp",
     "description": "روج بطيخي",
     "descriptionAr": "روج بطيخي",
-    "descriptionFr": "Rouge à levres Melon Rouge"
+    "descriptionFr": "Rouge à levres Melon Rouge",
+    "compareAtPrice": 90
   },
   {
     "id": "56",
@@ -960,15 +1251,20 @@ export const products: Product[] = [
     "nameAr": "روج بريتى كافية فاتح",
     "nameFr": "Rouge à levres-Café Rouge Preety claire",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 80.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8126.webp",
     "description": "روج بريتى كافية فاتح",
     "descriptionAr": "روج بريتى كافية فاتح",
-    "descriptionFr": "Rouge à levres-Café Rouge Preety claire"
+    "descriptionFr": "Rouge à levres-Café Rouge Preety claire",
+    "compareAtPrice": 90
   },
   {
     "id": "57",
@@ -977,15 +1273,20 @@ export const products: Product[] = [
     "nameAr": "روج برقوقي",
     "nameFr": "Rouge à levres-prune Rouge",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 90.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8130.webp",
     "description": "روج برقوقي",
     "descriptionAr": "روج برقوقي",
-    "descriptionFr": "Rouge à levres-prune Rouge"
+    "descriptionFr": "Rouge à levres-prune Rouge",
+    "compareAtPrice": 90
   },
   {
     "id": "58",
@@ -994,15 +1295,20 @@ export const products: Product[] = [
     "nameAr": "روج احمر كريز",
     "nameFr": "Rouge à levres-Rouge cerise",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 90.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8123.webp",
     "description": "روج احمر كريز",
     "descriptionAr": "روج احمر كريز",
-    "descriptionFr": "Rouge à levres-Rouge cerise"
+    "descriptionFr": "Rouge à levres-Rouge cerise",
+    "compareAtPrice": 90
   },
   {
     "id": "59",
@@ -1011,15 +1317,20 @@ export const products: Product[] = [
     "nameAr": "ديب لاينر اسود",
     "nameFr": "Liner profond noir",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "العيون و الحواجب",
-    "subCategories": ["العيون و الحواجب"],
-    "price": 90.0,
+    "subCategories": [
+      "العيون و الحواجب"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8808.webp",
     "description": "ديب لاينر اسود لإبراز جمال العين.",
     "descriptionAr": "ديب لاينر اسود لإبراز جمال العين.",
-    "descriptionFr": "Liner profond noir."
+    "descriptionFr": "Liner profond noir.",
+    "compareAtPrice": 90
   },
   {
     "id": "60",
@@ -1028,15 +1339,22 @@ export const products: Product[] = [
     "nameAr": "جيت فريش منظف ومزيل المكياج المقاوم للماء لجميع انواع البشرة 100مل",
     "nameFr": "Get Fresh-Nettoyant et démaquillant pour tous types de peau – 100 ml",
     "category": "ماكياج",
-    "categories": ["ماكياج", "العناية بالوجه"],
+    "categories": [
+      "ماكياج",
+      "العناية بالوجه"
+    ],
     "subCategory": "البشرة",
-    "subCategories": ["البشرة", "منظفات الوجه"],
-    "price": 34.5,
+    "subCategories": [
+      "البشرة",
+      "منظفات الوجه"
+    ],
+    "price": 46,
     "points": 18,
     "image": "/image/4132.webp",
     "description": "منظف ومزيل المكياج المقاوم للماء لجميع أنواع البشرة.",
     "descriptionAr": "منظف ومزيل المكياج المقاوم للماء لجميع أنواع البشرة.",
-    "descriptionFr": "Nettoyant et démaquillant pour tous types de peau."
+    "descriptionFr": "Nettoyant et démaquillant pour tous types de peau.",
+    "compareAtPrice": 92
   },
   {
     "id": "61",
@@ -1045,15 +1363,21 @@ export const products: Product[] = [
     "nameAr": "بيور سكين غسول يومي للبشرة المعرضة لحب الشباب 100 مل",
     "nameFr": "Pure Skin Nettoyant quotidien pour peaux à tendance acnéique-100 ml",
     "category": "العناية بالوجه",
-    "categories": ["العناية بالوجه"],
+    "categories": [
+      "العناية بالوجه"
+    ],
     "subCategory": "حماية الوجه",
-    "subCategories": ["حماية الوجه", "منظفات الوجه"],
-    "price": 39.0,
+    "subCategories": [
+      "حماية الوجه",
+      "منظفات الوجه"
+    ],
+    "price": 52,
     "points": 21,
     "image": "/image/4303.webp",
     "description": "بيور سكين الغسول اليومي للبشرة المعرضة لحب الشباب لتنظيف فعال.",
     "descriptionAr": "بيور سكين الغسول اليومي للبشرة المعرضة لحب الشباب لتنظيف فعال.",
-    "descriptionFr": "Pure Skin Daily Wash for Acne-Skin."
+    "descriptionFr": "Pure Skin Daily Wash for Acne-Skin.",
+    "compareAtPrice": 80
   },
   {
     "id": "62",
@@ -1062,15 +1386,22 @@ export const products: Product[] = [
     "nameAr": "بيلا مقشر للشفاه بالفراولة",
     "nameFr": "Bella-Gommage pour les lèvres à la fraise",
     "category": "ماكياج",
-    "categories": ["ماكياج", "العناية بالوجه"],
+    "categories": [
+      "ماكياج",
+      "العناية بالوجه"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف", "منظفات الوجه"],
-    "price": 75.0,
+    "subCategories": [
+      "الشفايف",
+      "منظفات الوجه"
+    ],
+    "price": 43,
     "points": 17,
     "image": "/image/4477.webp",
     "description": "بيلا مقشر الشفاه بالفراولة لإزالة الجلد الجاف ومنح الشفاه نعومة.",
     "descriptionAr": "بيلا مقشر الشفاه بالفراولة لإزالة الجلد الجاف ومنح الشفاه نعومة.",
-    "descriptionFr": "Gommage pour les lèvres Bella Strawberry."
+    "descriptionFr": "Gommage pour les lèvres Bella Strawberry.",
+    "compareAtPrice": 85
   },
   {
     "id": "63",
@@ -1079,15 +1410,20 @@ export const products: Product[] = [
     "nameAr": "بيلا مرطب شفاه برائحة الكريز",
     "nameFr": "Bella-Gommage pour les lèvres à la fraise",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 60.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 35,
     "points": 14,
     "image": "/image/4476.webp",
     "description": "بيلا مرطب الشفاه برائحة الكريز لحماية الشفاه من الجفاف.",
     "descriptionAr": "بيلا مرطب الشفاه برائحة الكريز لحماية الشفاه من الجفاف.",
-    "descriptionFr": "Baume à lèvres parfumé Bella Cherry."
+    "descriptionFr": "Baume à lèvres parfumé Bella Cherry.",
+    "compareAtPrice": 69
   },
   {
     "id": "64",
@@ -1096,15 +1432,18 @@ export const products: Product[] = [
     "nameAr": "بلسم شفاي كيدي بالكريز 4 جم",
     "nameFr": "Kiddy-Baume réparateur pour enfants à la cerise 4 g",
     "category": "أطفال",
-    "categories": ["أطفال"],
+    "categories": [
+      "أطفال"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 30.0,
+    "price": 15,
     "points": 6,
     "image": "/image/4282.webp",
     "description": "بلسم شفاه كيدي بالكريز مصمم خصيصًا لتناسب البشرة الرقيقة للأطفال.",
     "descriptionAr": "بلسم شفاه كيدي بالكريز مصمم خصيصًا لتناسب البشرة الرقيقة للأطفال.",
-    "descriptionFr": "Baume à lèvres cerise pour enfants."
+    "descriptionFr": "Baume à lèvres cerise pour enfants.",
+    "compareAtPrice": 34
   },
   {
     "id": "65",
@@ -1113,10 +1452,14 @@ export const products: Product[] = [
     "nameAr": "بلسم شفاه جوز الهند",
     "nameFr": "Baume à lèvres à la noix de coco",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 69.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 35,
     "points": 14,
     "image": "/image/4402.webp",
     "description": "بلسم شفاة جوز الهند المرطب.",
@@ -1130,10 +1473,14 @@ export const products: Product[] = [
     "nameAr": "بلسم شفاه الخوخ",
     "nameFr": "Baume à lèvres à la pêche",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 69.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 35,
     "points": 14,
     "image": "/image/4404.webp",
     "description": "بلسم شفاة الخوخ المغذي.",
@@ -1147,10 +1494,14 @@ export const products: Product[] = [
     "nameAr": "بلسم الشفاه ليب كير فراولة",
     "nameFr": "Lip Care-Baume à lèvres  Fraise",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 60.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 35,
     "points": 14,
     "image": "/image/4400.webp",
     "description": "بلسم الشفاه ليب كير فراولة.",
@@ -1164,10 +1515,14 @@ export const products: Product[] = [
     "nameAr": "بلسم الشفاه ليب كير توت",
     "nameFr": "Lip Care –Baume à lèvres  Baies",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 60.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 35,
     "points": 14,
     "image": "/image/4401.webp",
     "description": "بلسم الشفاة ليب كير توت.",
@@ -1181,15 +1536,20 @@ export const products: Product[] = [
     "nameAr": "بلاشر بيرلى جديد",
     "nameFr": "Pearly-Nouveau blush",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "العيون و الحواجب",
-    "subCategories": ["العيون و الحواجب"],
-    "price": 92.0,
+    "subCategories": [
+      "العيون و الحواجب"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8407.webp",
     "description": "بلاشر بيرلى الجديد لإطلالة حيوية.",
     "descriptionAr": "بلاشر بيرلى الجديد لإطلالة حيوية.",
-    "descriptionFr": "Pearly Nouveau blush."
+    "descriptionFr": "Pearly Nouveau blush.",
+    "compareAtPrice": 90
   },
   {
     "id": "70",
@@ -1198,15 +1558,20 @@ export const products: Product[] = [
     "nameAr": "برفان ويسبر حريمى",
     "nameFr": "Whisper-Parfum pour femme",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر نسائي",
-    "subCategories": ["عطر نسائي"],
-    "price": 130.0,
+    "subCategories": [
+      "عطر نسائي"
+    ],
+    "price": 99,
     "points": 40,
     "image": "/image/5914.webp",
     "description": "برفان ويسبر الحريمي يجسد الأنوثة الرقيقة بتركيبة زهرية ناعمة.",
     "descriptionAr": "برفان ويسبر الحريمي يجسد الأنوثة الرقيقة بتركيبة زهرية ناعمة.",
-    "descriptionFr": "Le parfum Whisper pour femmes incarne une féminité délicate."
+    "descriptionFr": "Le parfum Whisper pour femmes incarne une féminité délicate.",
+    "compareAtPrice": 165
   },
   {
     "id": "71",
@@ -1215,15 +1580,20 @@ export const products: Product[] = [
     "nameAr": "برفان ون 40 مل",
     "nameFr": "On-parfum 40 ml",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر رجالي",
-    "subCategories": ["عطر رجالي"],
-    "price": 130.0,
+    "subCategories": [
+      "عطر رجالي"
+    ],
+    "price": 70,
     "points": 28,
     "image": "/image/5833.webp",
     "description": "برفان ون بحجمه العملي 40 مل يمنحك بصمة عطرية فريدة.",
     "descriptionAr": "برفان ون بحجمه العملي 40 مل يمنحك بصمة عطرية فريدة.",
-    "descriptionFr": "Parfum One 40 ml vous offre une empreinte aromatique unique."
+    "descriptionFr": "Parfum One 40 ml vous offre une empreinte aromatique unique.",
+    "compareAtPrice": 165
   },
   {
     "id": "72",
@@ -1232,15 +1602,20 @@ export const products: Product[] = [
     "nameAr": "برفان همسات 50 مل حريمى",
     "nameFr": "Hamsat-Parfum pour femme, 50 ml",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر نسائي",
-    "subCategories": ["عطر نسائي"],
-    "price": 150.0,
+    "subCategories": [
+      "عطر نسائي"
+    ],
+    "price": 114,
     "points": 46,
     "image": "/image/5384.webp",
     "description": "برفان همسات الحريمي بحجمه 50 مل يعبّر عن الأنوثة الهادئة والرقيقة.",
     "descriptionAr": "برفان همسات الحريمي بحجمه 50 مل يعبّر عن الأنوثة الهادئة والرقيقة.",
-    "descriptionFr": "Le parfum Women’s Hamasat 50ml exprime une féminité calme."
+    "descriptionFr": "Le parfum Women’s Hamasat 50ml exprime une féminité calme.",
+    "compareAtPrice": 189
   },
   {
     "id": "73",
@@ -1249,15 +1624,20 @@ export const products: Product[] = [
     "nameAr": "برفان نغم 55 مل",
     "nameFr": "Nagham-Parfum 55 ml",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر نسائي",
-    "subCategories": ["عطر نسائي"],
-    "price": 160.0,
+    "subCategories": [
+      "عطر نسائي"
+    ],
+    "price": 95,
     "points": 38,
     "image": "/image/5858.webp",
     "description": "برفان نغم بحجمه 55 مل يمزج بين النفحات الزهرية والحلوة.",
     "descriptionAr": "برفان نغم بحجمه 55 مل يمزج بين النفحات الزهرية والحلوة.",
-    "descriptionFr": "Le parfum Nagham, en flacon de 55 ml."
+    "descriptionFr": "Le parfum Nagham, en flacon de 55 ml.",
+    "compareAtPrice": 189
   },
   {
     "id": "74",
@@ -1266,15 +1646,20 @@ export const products: Product[] = [
     "nameAr": "برفان ليتيه 40 مل",
     "nameFr": "l'été-parfum 40 ml",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر نسائي",
-    "subCategories": ["عطر نسائي"],
-    "price": 145.0,
+    "subCategories": [
+      "عطر نسائي"
+    ],
+    "price": 104,
     "points": 42,
     "image": "/image/5899.webp",
     "description": "برفان ليتيه بحجمه العملي 40 مل يمنحك عبيرًا خفيفًا ومنعشًا.",
     "descriptionAr": "برفان ليتيه بحجمه العملي 40 مل يمنحك عبيرًا خفيفًا ومنعشًا.",
-    "descriptionFr": "Le parfum l'Eté, avec son format pratique de 40 ml."
+    "descriptionFr": "Le parfum l'Eté, avec son format pratique de 40 ml.",
+    "compareAtPrice": 180
   },
   {
     "id": "75",
@@ -1283,15 +1668,20 @@ export const products: Product[] = [
     "nameAr": "برفان كروز رجالى",
     "nameFr": "Cruise-Parfum pour homme",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر رجالي",
-    "subCategories": ["عطر رجالي"],
-    "price": 128.46,
+    "subCategories": [
+      "عطر رجالي"
+    ],
+    "price": 117,
     "points": 47,
     "image": "/image/5398.webp",
     "description": "برفان كروز الرجالي يأخذك في تجربة عطرية منعشة تحاكي أجواء الرحلات البحرية.",
     "descriptionAr": "برفان كروز الرجالي يأخذك في تجربة عطرية منعشة تحاكي أجواء الرحلات البحرية.",
-    "descriptionFr": "Le parfum pour homme CRUISE."
+    "descriptionFr": "Le parfum pour homme CRUISE.",
+    "compareAtPrice": 195
   },
   {
     "id": "76",
@@ -1300,15 +1690,20 @@ export const products: Product[] = [
     "nameAr": "برفان زد 100مل",
     "nameFr": "Z-parfum 100 ml",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر رجالي",
-    "subCategories": ["عطر رجالي"],
-    "price": 150.5,
+    "subCategories": [
+      "عطر رجالي"
+    ],
+    "price": 125,
     "points": 50,
     "image": "/image/5824.webp",
     "description": "برفان زد بحجمه الكبير 100 مل مصمم للرجل الذي يريد حضورًا عطريًا قويًا.",
     "descriptionAr": "برفان زد بحجمه الكبير 100 مل مصمم للرجل الذي يريد حضورًا عطريًا قويًا.",
-    "descriptionFr": "Le parfum Z, avec son grand format de 100 ml."
+    "descriptionFr": "Le parfum Z, avec son grand format de 100 ml.",
+    "compareAtPrice": 249
   },
   {
     "id": "77",
@@ -1317,15 +1712,20 @@ export const products: Product[] = [
     "nameAr": "برفان تندر",
     "nameFr": "Tender-parfum pour femme",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر نسائي",
-    "subCategories": ["عطر نسائي"],
-    "price": 131.67,
+    "subCategories": [
+      "عطر نسائي"
+    ],
+    "price": 138,
     "points": 56,
     "image": "/image/5854.webp",
     "description": "برفان تندر توقيع أنثوي ناعم يعبّر عن حضورك بأسلوب راقٍ وهادئ.",
     "descriptionAr": "برفان تندر توقيع أنثوي ناعم يعبّر عن حضورك بأسلوب راقٍ وهادئ.",
-    "descriptionFr": "Parfum Tender est une signature féminine et délicate."
+    "descriptionFr": "Parfum Tender est une signature féminine et délicate.",
+    "compareAtPrice": 229
   },
   {
     "id": "78",
@@ -1334,15 +1734,20 @@ export const products: Product[] = [
     "nameAr": "برفان ايموشن 50 مل",
     "nameFr": "Emotion-parfum 50 ml",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر رجالي",
-    "subCategories": ["عطر رجالي"],
-    "price": 150.0,
+    "subCategories": [
+      "عطر رجالي"
+    ],
+    "price": 70,
     "points": 28,
     "image": "/image/5915.webp",
     "description": "برفان ايموشن بحجمه 50 مل يعبّر عن الجانب العاطفي والحسي.",
     "descriptionAr": "برفان ايموشن بحجمه 50 مل يعبّر عن الجانب العاطفي والحسي.",
-    "descriptionFr": "Le parfum Emotion, en flacon de 50 ml."
+    "descriptionFr": "Le parfum Emotion, en flacon de 50 ml.",
+    "compareAtPrice": 189
   },
   {
     "id": "79",
@@ -1351,15 +1756,20 @@ export const products: Product[] = [
     "nameAr": "اى لاينر بيرلى جديد",
     "nameFr": "Pearly-Eyeliner nouveau",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "العيون و الحواجب",
-    "subCategories": ["العيون و الحواجب"],
-    "price": 57.5,
+    "subCategories": [
+      "العيون و الحواجب"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8806.webp",
     "description": "اى لاينر بيرلى جديد لتحديد العينين بدقة.",
     "descriptionAr": "اى لاينر بيرلى جديد لتحديد العينين بدقة.",
-    "descriptionFr": "Pearly Eyeliner nouveau."
+    "descriptionFr": "Pearly Eyeliner nouveau.",
+    "compareAtPrice": 90
   },
   {
     "id": "80",
@@ -1368,15 +1778,20 @@ export const products: Product[] = [
     "nameAr": "اى لاينر بيرلى اسود",
     "nameFr": "Pearly-Eyeliner noir",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "العيون و الحواجب",
-    "subCategories": ["العيون و الحواجب"],
-    "price": 80.0,
+    "subCategories": [
+      "العيون و الحواجب"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8805.webp",
     "description": "آيلاينر MY WAY Pearly – Black لخط دقيق ولون أسود عميق.",
     "descriptionAr": "آيلاينر MY WAY Pearly – Black لخط دقيق ولون أسود عميق.",
-    "descriptionFr": "Eyeliner MY WAY Pearly – Black."
+    "descriptionFr": "Eyeliner MY WAY Pearly – Black.",
+    "compareAtPrice": 90
   },
   {
     "id": "81",
@@ -1385,15 +1800,20 @@ export const products: Product[] = [
     "nameAr": "اى شادو ريد - نبيتى * ذهبى كافيه",
     "nameFr": "Ombre à paupières rouge-bordeaux et doré café",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 90.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8323.webp",
     "description": "اى شادو ريد – نبيتى * ذهبى كافيه.",
     "descriptionAr": "اى شادو ريد – نبيتى * ذهبى كافيه.",
-    "descriptionFr": "Eye Shadow Red."
+    "descriptionFr": "Eye Shadow Red.",
+    "compareAtPrice": 90
   },
   {
     "id": "82",
@@ -1402,15 +1822,24 @@ export const products: Product[] = [
     "nameAr": "العروسة مخمرية الجسم لنعومة وتفتيح وتعطير تدوم طويلاً 45 جم",
     "nameFr": "La Mariée Elmakhmria-pour le corps-adoucir, éclaircir et parfumer durablement – ​​45 g",
     "category": "العناية بالجسم",
-    "categories": ["العناية بالجسم", "العناية بالوجه"],
+    "categories": [
+      "العناية بالجسم",
+      "العناية بالوجه"
+    ],
     "subCategory": "كريمات مرطبة",
-    "subCategories": ["كريمات مرطبة", "العناية باليدين", "العناية بالقدمين", "كريمات"],
-    "price": 18.75,
+    "subCategories": [
+      "كريمات مرطبة",
+      "العناية باليدين",
+      "العناية بالقدمين",
+      "كريمات"
+    ],
+    "price": 25,
     "points": 10,
     "image": "/image/4358.webp",
     "description": "مخمرية الجسم العروسة بتركيبة مميزة تساعد على ترطيب البشرة وتعطيرها.",
     "descriptionAr": "مخمرية الجسم العروسة بتركيبة مميزة تساعد على ترطيب البشرة وتعطيرها.",
-    "descriptionFr": "Lait corporel « Al-Arousa » pour adoucir, éclaircir et parfumer."
+    "descriptionFr": "Lait corporel « Al-Arousa » pour adoucir, éclaircir et parfumer.",
+    "compareAtPrice": 50
   },
   {
     "id": "83",
@@ -1419,15 +1848,22 @@ export const products: Product[] = [
     "nameAr": "العروسة كريم مرطب ومهدئ للبشرة 20 جم",
     "nameFr": "Al-Arousa – Crème hydratante et apaisante pour la peau, 20 g",
     "category": "العناية بالجسم",
-    "categories": ["العناية بالجسم", "العناية بالوجه"],
+    "categories": [
+      "العناية بالجسم",
+      "العناية بالوجه"
+    ],
     "subCategory": "كريمات مرطبة",
-    "subCategories": ["كريمات مرطبة", "كريمات"],
-    "price": 18.75,
+    "subCategories": [
+      "كريمات مرطبة",
+      "كريمات"
+    ],
+    "price": 25,
     "points": 10,
     "image": "/image/4354.webp",
     "description": "كريم العروسة المرطب والمهدئ بتركيبة غنية بزيت الجوجوبا والفازلين.",
     "descriptionAr": "كريم العروسة المرطب والمهدئ بتركيبة غنية بزيت الجوجوبا والفازلين.",
-    "descriptionFr": "Crème hydratante et apaisante Al-Arousa."
+    "descriptionFr": "Crème hydratante et apaisante Al-Arousa.",
+    "compareAtPrice": 54
   },
   {
     "id": "84",
@@ -1436,15 +1872,21 @@ export const products: Product[] = [
     "nameAr": "العروسة كريم للعناية بالمناطق الداكنة والحساسة 40 جم",
     "nameFr": "Al-Arousa-Crème pour le soin des zones sombres et sensibles – 40 g",
     "category": "العناية بالجسم",
-    "categories": ["العناية بالجسم"],
+    "categories": [
+      "العناية بالجسم"
+    ],
     "subCategory": "كريمات مرطبة",
-    "subCategories": ["كريمات مرطبة", "مستحضرات الحمام"],
-    "price": 18.75,
+    "subCategories": [
+      "كريمات مرطبة",
+      "مستحضرات الحمام"
+    ],
+    "price": 25,
     "points": 10,
     "image": "/image/4355.webp",
     "description": "كريم العروسة للمناطق الداكنة والحساسة بتركيبة مميزة لتحسين مظهر البشرة.",
     "descriptionAr": "كريم العروسة للمناطق الداكنة والحساسة بتركيبة مميزة لتحسين مظهر البشرة.",
-    "descriptionFr": "Crème Al-Arousa pour les zones sombres et sensibles."
+    "descriptionFr": "Crème Al-Arousa pour les zones sombres et sensibles.",
+    "compareAtPrice": 57
   },
   {
     "id": "85",
@@ -1453,15 +1895,20 @@ export const products: Product[] = [
     "nameAr": "اسبراى رى فيل لاعادة نمو الشعر 190 مل",
     "nameFr": "Refill-Spray pour la repousse des cheveux 190 ml",
     "category": "العناية بالشعر",
-    "categories": ["العناية بالشعر"],
+    "categories": [
+      "العناية بالشعر"
+    ],
     "subCategory": "زيوت و سيرومات",
-    "subCategories": ["زيوت و سيرومات"],
-    "price": 180.0,
+    "subCategories": [
+      "زيوت و سيرومات"
+    ],
+    "price": 130,
     "points": 52,
     "image": "/image/1430.webp",
     "description": "اسبراى رى فيل لاعادة نمو الشعر بتركيبة متطورة للعناية بفروة الرأس.",
     "descriptionAr": "اسبراى رى فيل لاعادة نمو الشعر بتركيبة متطورة للعناية بفروة الرأس.",
-    "descriptionFr": "Spray Re-Fill pour la repousse des cheveux."
+    "descriptionFr": "Spray Re-Fill pour la repousse des cheveux.",
+    "compareAtPrice": 199
   },
   {
     "id": "86",
@@ -1470,15 +1917,20 @@ export const products: Product[] = [
     "nameAr": "سبورتي داي - أو دو تواليت للرجال",
     "nameFr": "Sporty Day-Edt pour homme",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر رجالي",
-    "subCategories": ["عطر رجالي"],
-    "price": 145.0,
+    "subCategories": [
+      "عطر رجالي"
+    ],
+    "price": 70,
     "points": 28,
     "image": "/image/5827.webp",
     "description": "عطر Sporty Day بتركيبة منعشة وخفيفة تمنحك إحساسًا بالحيوية والطاقة.",
     "descriptionAr": "عطر Sporty Day بتركيبة منعشة وخفيفة تمنحك إحساسًا بالحيوية والطاقة.",
-    "descriptionFr": "Parfum Sporty Day pour homme."
+    "descriptionFr": "Parfum Sporty Day pour homme.",
+    "compareAtPrice": 165
   },
   {
     "id": "87",
@@ -1487,15 +1939,20 @@ export const products: Product[] = [
     "nameAr": "عطر بريسيس للنساء",
     "nameFr": "Pricesse-edt pour femme",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر نسائي",
-    "subCategories": ["عطر نسائي"],
-    "price": 82.86,
+    "subCategories": [
+      "عطر نسائي"
+    ],
+    "price": 70,
     "points": 28,
     "image": "/image/5871.webp",
     "description": "عطر Princesse للنساء يمنحك إحساسًا بالفخامة والأنوثة الملكية.",
     "descriptionAr": "عطر Princesse للنساء يمنحك إحساسًا بالفخامة والأنوثة الملكية.",
-    "descriptionFr": "Parfum Princesse pour femme."
+    "descriptionFr": "Parfum Princesse pour femme.",
+    "compareAtPrice": 165
   },
   {
     "id": "88",
@@ -1504,15 +1961,18 @@ export const products: Product[] = [
     "nameAr": "باور- 7 في1-منظف ​​متعدد الأغراض فائق القوة- 500 مل",
     "nameFr": "POWER 7*1 Nettoyant multi-usages ultra puissant 500 mL",
     "category": "منظفات المنزل",
-    "categories": ["منظفات المنزل"],
+    "categories": [
+      "منظفات المنزل"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 88.0,
+    "price": 82,
     "points": 33,
     "image": "/image/3467.webp",
     "description": "باور 7*1 منظف متعدد الأغراض بقوة فائقة لتنظيف مختلف أسطح المنزل.",
     "descriptionAr": "باور 7*1 منظف متعدد الأغراض بقوة فائقة لتنظيف مختلف أسطح المنزل.",
-    "descriptionFr": "Power 7*1 Nettoyant multi-usages ultra puissant."
+    "descriptionFr": "Power 7*1 Nettoyant multi-usages ultra puissant.",
+    "compareAtPrice": 125
   },
   {
     "id": "89",
@@ -1521,15 +1981,20 @@ export const products: Product[] = [
     "nameAr": "دون ستوب - عطر للرجال 55 مل",
     "nameFr": "Don't Stop-Perfum pour homme 55 ML",
     "category": "عطور",
-    "categories": ["عطور"],
+    "categories": [
+      "عطور"
+    ],
     "subCategory": "عطر نسائي",
-    "subCategories": ["عطر نسائي"],
-    "price": 130.0,
+    "subCategories": [
+      "عطر نسائي"
+    ],
+    "price": 70,
     "points": 28,
     "image": "/image/5866.webp",
     "description": "عطر Don’t Stop بحجمه 55 مل مصمم لمن لا يتوقف عن السعي والتميز.",
     "descriptionAr": "عطر Don’t Stop بحجمه 55 مل مصمم لمن لا يتوقف عن السعي والتميز.",
-    "descriptionFr": "Parfum Don't Stop pour homme."
+    "descriptionFr": "Parfum Don't Stop pour homme.",
+    "compareAtPrice": 155
   },
   {
     "id": "90",
@@ -1538,10 +2003,14 @@ export const products: Product[] = [
     "nameAr": "بيرلي-مخفي العيوب بيج فاتح",
     "nameFr": "Pearl-Correcteur beige clair",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "البشرة",
-    "subCategories": ["البشرة"],
-    "price": 42.5,
+    "subCategories": [
+      "البشرة"
+    ],
+    "price": 40,
     "points": 16,
     "image": "/image/8654.webp",
     "description": "بيرلي مخفي العيوب بيج فاتح.",
@@ -1555,15 +2024,18 @@ export const products: Product[] = [
     "nameAr": "كلين أول-منظف ​​عام لجميع أنواع الأرضيات، 500 مل",
     "nameFr": "Clean All-Nettoyant multi-usages pour tous types de sols 500 ml",
     "category": "منظفات المنزل",
-    "categories": ["منظفات المنزل"],
+    "categories": [
+      "منظفات المنزل"
+    ],
     "subCategory": "",
     "subCategories": [],
-    "price": 68.0,
+    "price": 38,
     "points": 15,
     "image": "/image/3510.webp",
     "description": "كلين منظف الأرضيات متعدد الاستخدامات بتركيبة فعالة تناسب مختلف أنواع الأرضيات.",
     "descriptionAr": "كلين منظف الأرضيات متعدد الاستخدامات بتركيبة فعالة تناسب مختلف أنواع الأرضيات.",
-    "descriptionFr": "Clean All Nettoyant multi-usages pour tous types de sols."
+    "descriptionFr": "Clean All Nettoyant multi-usages pour tous types de sols.",
+    "compareAtPrice": 75
   },
   {
     "id": "92",
@@ -1572,15 +2044,20 @@ export const products: Product[] = [
     "nameAr": "بيلا-مرطب شفاه بنكهة الفراولة مع فيتامينE  غرام10",
     "nameFr": "Bella-Baume à lèvres à la fraise, enrichi en vitamine E, 10 g",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 69.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 35,
     "points": 14,
     "image": "/image/4711.webp",
     "description": "مرطب الشفاه «بيلا» بنكهة الفراولة وفيتامين E.",
     "descriptionAr": "مرطب الشفاه «بيلا» بنكهة الفراولة وفيتامين E.",
-    "descriptionFr": "Baume à lèvres Bella à la fraise et à la vitamine E."
+    "descriptionFr": "Baume à lèvres Bella à la fraise et à la vitamine E.",
+    "compareAtPrice": 69
   },
   {
     "id": "93",
@@ -1589,15 +2066,22 @@ export const products: Product[] = [
     "nameAr": "بيلا-لون كريمي - أحمر 20 غ",
     "nameFr": "Bella-Teinte crème - Rouge 20 g",
     "category": "ماكياج",
-    "categories": ["ماكياج", "العناية بالوجه"],
+    "categories": [
+      "ماكياج",
+      "العناية بالوجه"
+    ],
     "subCategory": "البشرة",
-    "subCategories": ["البشرة", "كريمات"],
-    "price": 90.0,
+    "subCategories": [
+      "البشرة",
+      "كريمات"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8148.webp",
     "description": "كريم تينت بيلا – أحمر 20 غرام.",
     "descriptionAr": "كريم تينت بيلا – أحمر 20 غرام.",
-    "descriptionFr": "Bella Cream Tint – Rouge."
+    "descriptionFr": "Bella Cream Tint – Rouge.",
+    "compareAtPrice": 90
   },
   {
     "id": "94",
@@ -1606,15 +2090,22 @@ export const products: Product[] = [
     "nameAr": "بيلا كريم-تينت خوخ 20 جم",
     "nameFr": "Bella-Teinte crèm-pêche 20 gm",
     "category": "ماكياج",
-    "categories": ["ماكياج", "العناية بالوجه"],
+    "categories": [
+      "ماكياج",
+      "العناية بالوجه"
+    ],
     "subCategory": "البشرة",
-    "subCategories": ["البشرة", "كريمات"],
-    "price": 90.0,
+    "subCategories": [
+      "البشرة",
+      "كريمات"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8147.webp",
     "description": "كريم تينت بيلا – لون الخوخ 20 غرام.",
     "descriptionAr": "كريم تينت بيلا – لون الخوخ 20 غرام.",
-    "descriptionFr": "Bella Cream Tint – Pêche."
+    "descriptionFr": "Bella Cream Tint – Pêche.",
+    "compareAtPrice": 90
   },
   {
     "id": "95",
@@ -1623,15 +2114,22 @@ export const products: Product[] = [
     "nameAr": "بيلا كريم تينت-بامبي- 20 جم",
     "nameFr": "Bella-Cream Tint - BAMBI 20 g",
     "category": "ماكياج",
-    "categories": ["ماكياج", "العناية بالوجه"],
+    "categories": [
+      "ماكياج",
+      "العناية بالوجه"
+    ],
     "subCategory": "البشرة",
-    "subCategories": ["البشرة", "كريمات"],
-    "price": 90.0,
+    "subCategories": [
+      "البشرة",
+      "كريمات"
+    ],
+    "price": 45,
     "points": 18,
     "image": "/image/8146.webp",
     "description": "كريم تينت بيلا – بامبي 20 غرام.",
     "descriptionAr": "كريم تينت بيلا – بامبي 20 غرام.",
-    "descriptionFr": "Bella Cream Tint – BAMBI."
+    "descriptionFr": "Bella Cream Tint – BAMBI.",
+    "compareAtPrice": 90
   },
   {
     "id": "96",
@@ -1640,15 +2138,20 @@ export const products: Product[] = [
     "nameAr": "بيوتيفول-ملمع شفاه براق",
     "nameFr": "Beautifull- gloss à lèvres brillant",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 80.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 40,
     "points": 16,
     "image": "/image/8682.webp",
     "description": "ملمع شفاه لون فوشيا من بيوتيفول.",
     "descriptionAr": "ملمع شفاه لون فوشيا من بيوتيفول.",
-    "descriptionFr": "Beautifull gloss à lèvres brillant."
+    "descriptionFr": "Beautifull gloss à lèvres brillant.",
+    "compareAtPrice": 80
   },
   {
     "id": "97",
@@ -1657,15 +2160,20 @@ export const products: Product[] = [
     "nameAr": "بيوتيفول-باربي رائعة وفخمة باللون الفوشيا رقم 46",
     "nameFr": "Beautifull-riche 46 barby foushia",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 80.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 40,
     "points": 16,
     "image": "/image/8685.webp",
     "description": "Beautifull باربي فوشيا رقم 46.",
     "descriptionAr": "Beautifull باربي فوشيا رقم 46.",
-    "descriptionFr": "Beautifull riche 46 barby fuchsia."
+    "descriptionFr": "Beautifull riche 46 barby fuchsia.",
+    "compareAtPrice": 80
   },
   {
     "id": "98",
@@ -1674,15 +2182,20 @@ export const products: Product[] = [
     "nameAr": "بيوتيفول-ريتش 44 غابة الورود",
     "nameFr": "Beautifull-riche 44 bois de rose",
     "category": "ماكياج",
-    "categories": ["ماكياج"],
+    "categories": [
+      "ماكياج"
+    ],
     "subCategory": "الشفايف",
-    "subCategories": ["الشفايف"],
-    "price": 80.0,
+    "subCategories": [
+      "الشفايف"
+    ],
+    "price": 40,
     "points": 16,
     "image": "/image/8689.webp",
     "description": "Beautifull ريتش 44 غابة الورود.",
     "descriptionAr": "Beautifull ريتش 44 غابة الورود.",
-    "descriptionFr": "Beautifull riche 44 bois de rose."
+    "descriptionFr": "Beautifull riche 44 bois de rose.",
+    "compareAtPrice": 80
   }
 ];
 

@@ -145,9 +145,14 @@ export const RegistrationForm: React.FC = () => {
       </div>
 
       {isSuccess && (
-        <div className="mb-6 p-4 bg-emerald-50 border border-emerald-300 rounded-xl flex items-center gap-3 text-emerald-800">
-          <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
-          <p className="text-sm">تم تجهيز طلبك بنجاح. جاري تحويلك بأمان إلى الواتساب...</p>
+        <div className="mb-6 p-4 bg-emerald-50 border border-emerald-300 rounded-xl space-y-2 text-emerald-900">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-600" />
+            <p className="text-sm font-bold">تم تجهيز طلبك بنجاح. جاري تحويلك بأمان إلى الواتساب...</p>
+          </div>
+          <p className="text-xs text-emerald-800 leading-relaxed pr-8">
+            بعد تأكيد تسجيلك الرسمي لدى ماي واي المغرب، ستتوصلين برقم عضويتك ورمزك المالي (المكون من 6 إلى 8 أرقام) مباشرة عبر الواتساب للاستفادة من خصم الأعضاء الحصري بقيمة <strong>-25%</strong> إضافية على أسعار البيع العمومية عند كل طلبية.
+          </p>
         </div>
       )}
 

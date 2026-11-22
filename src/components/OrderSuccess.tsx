@@ -67,6 +67,12 @@ export const OrderSuccess: React.FC<OrderSuccessProps> = ({
             <span className="text-stone-500">Mode de paiement :</span>
             <span className="font-semibold text-emerald-700">الدفع عند الاستلام بدون أي مصاريف إضافية (COD)</span>
           </div>
+          {order.discount !== undefined && order.discount > 0 && (
+            <div className="flex justify-between text-emerald-700 font-semibold">
+              <span>Remise Membre Bouchra Way (-25%) :</span>
+              <span>- {order.discount} MAD</span>
+            </div>
+          )}
           <div className="flex justify-between pt-2 border-t border-stone-200 text-sm font-bold">
             <span>Montant à régler :</span>
             <span className="text-[#E6007E]">{order.total} MAD</span>

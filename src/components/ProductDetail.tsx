@@ -53,8 +53,11 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     };
   }, [product, displayName, displayDescription, t]);
 
-  // Prix calculés selon la maquette
-  const originalPrice = Math.round(product.price * 1.33);
+  // Promotion officielle du catalogue
+  const hasDiscount = Boolean(product.compareAtPrice && product.compareAtPrice > product.price);
+  const discountPercent = hasDiscount
+    ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)
+    : null;
 
   // Gestion anti-images brisées intelligente
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -127,14 +130,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
           {/* Section Image Produit */}
           <div className="flex flex-col gap-4">
             <div className="w-full bg-white rounded-3xl border border-gray-200 p-6 sm:p-10 flex items-center justify-center min-h-[380px] sm:min-h-[460px] shadow-xs relative overflow-hidden group">
-              <div className="absolute top-4 left-4 z-10 flex flex-col gap-1.5">
-                <span className="bg-[#E6007E] text-white text-xs font-bold px-3 py-1 rounded-full shadow-xs">
-                  PROMO -25%
-                </span>
-                <span className="bg-black text-white text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-md uppercase">
-                  OUTLET
-                </span>
-              </div>
+              {(hasDiscount || product.promoTag) && (
+                <div className="absolute top-4 left-4 z-10 flex flex-col gap-1.5">
+                  {hasDiscount && (
+                    <span className="bg-[#E6007E] text-white text-xs font-bold px-3 py-1 rounded-full shadow-xs">
+                      -{discountPercent}%
+                    </span>
+                  )}
+                  {product.promoTag && (
+                    <span className="bg-emerald-600 text-white text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-md uppercase">
+                      {product.promoTag}
+                    </span>
+                  )}
+                </div>
+              )}
 
               <img
                 src={product.image}
@@ -153,14 +162,20 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               <span className="text-xs uppercase tracking-widest text-[#E6007E] font-bold">
                 MY WAY • BOUCHRA WAY
               </span>
-              <div className="flex items-center gap-1 text-amber-500 text-xs font-semibold">
-                <div className="flex text-amber-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
-                  ))}
+              {product.rating !== undefined && (
+                <div className="flex items-center gap-1 text-amber-500 text-xs font-semibold">
+                  <div className="flex text-amber-400">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={13}
+                        className={i < Math.round(product.rating!) ? "fill-amber-400 text-amber-400" : "text-gray-300"}
+                      />
+                    ))}
+                  </div>
+                  <span>{product.rating} {product.reviewCount !== undefined ? `(${product.reviewCount})` : ''}</span>
                 </div>
-                <span>4.8 (120)</span>
-              </div>
+              )}
             </div>
 
             {/* Titre du produit & SKU */}
@@ -182,17 +197,18 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             {/* Bannière Prix Final */}
             <div className="bg-gradient-to-r from-[#E6007E] to-[#c9006e] text-white rounded-2xl p-4 sm:p-5 shadow-sm mb-4">
               <div className="flex items-center justify-between text-xs font-medium opacity-90 mb-1">
-                <span>✦ PRIX BOUCHRA WAY</span>
-                <span className="bg-black/25 text-white px-2 py-0.5 rounded text-[10px] uppercase font-bold">OUTLET</span>
+                <span>✦ PRIX PUBLIC OFFICIEL</span>
               </div>
 
               <div className="flex items-baseline gap-3 my-1">
                 <span className="text-3xl sm:text-4xl font-extrabold tracking-tight">
                   {product.price} {t.currency}
                 </span>
-                <span className="text-sm sm:text-base line-through opacity-75">
-                  {originalPrice} {t.currency}
-                </span>
+                {hasDiscount && (
+                  <span className="text-sm sm:text-base line-through opacity-75">
+                    {product.compareAtPrice} {t.currency}
+                  </span>
+                )}
               </div>
             </div>
 

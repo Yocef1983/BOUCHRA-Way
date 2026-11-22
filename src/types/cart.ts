@@ -21,6 +21,8 @@ export interface CompletedOrder {
   items: CartItem[];
   customer: CustomerOrderInfo;
   subtotal: number;
+  discount?: number;
+  memberCode?: string;
   shipping: number;
   total: number;
   createdAt: string;

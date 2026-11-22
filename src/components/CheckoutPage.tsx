@@ -13,7 +13,7 @@ import {
   Info
 } from 'lucide-react';
 import { CartItem, CompletedOrder, CustomerOrderInfo } from '../types/cart';
-import { SITE, computeShipping } from '../config/site';
+import { SITE, computeShipping, MEMBER_DISCOUNT_RATE, isValidMemberCode } from '../config/site';
 import { MOROCCAN_PHONE_REGEX, normalizeMaPhone } from '../config/validation';
 import { Language } from '../i18n/translations';
 import { LegalModal } from './LegalModal';
@@ -80,18 +80,27 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [promoCode, setPromoCode] = useState('');
-  const [showPromoInput, setShowPromoInput] = useState(false);
-  const [promoStatus, setPromoStatus] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [memberCodeInput, setMemberCodeInput] = useState('');
+  const [appliedMemberCode, setAppliedMemberCode] = useState<string | null>(null);
+  const [showMemberInput, setShowMemberInput] = useState(false);
+  const [memberStatus, setMemberStatus] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
   const [activeLegalTab, setActiveLegalTab] = useState<'shipping' | 'returns' | 'terms' | 'privacy'>('privacy');
 
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const totalOriginal = items.reduce((sum, item) => sum + Math.round(item.product.price * 1.33) * item.quantity, 0);
-  const totalSavings = totalOriginal - subtotal;
-  const shipping = computeShipping(subtotal, formData.city);
+  const memberDiscount = appliedMemberCode ? Math.round(subtotal * MEMBER_DISCOUNT_RATE) : 0;
+  const discountedSubtotal = subtotal - memberDiscount;
 
-  const finalTotal = subtotal + shipping;
+  // Calcul des économies catalogue officielles par rapport aux anciens prix barrés
+  const catalogSavings = items.reduce((sum, item) => {
+    if (item.product.compareAtPrice && item.product.compareAtPrice > item.product.price) {
+      return sum + (item.product.compareAtPrice - item.product.price) * item.quantity;
+    }
+    return sum;
+  }, 0);
+
+  const shipping = computeShipping(discountedSubtotal, formData.city);
+  const finalTotal = discountedSubtotal + shipping;
 
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, productName: string) => {
@@ -107,17 +116,34 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     `)}`;
   };
 
-  const handleApplyPromo = () => {
-    const cleaned = sanitizeInput(promoCode).trim().toUpperCase();
+  const handleApplyMemberCode = () => {
+    const cleaned = sanitizeInput(memberCodeInput).trim();
     if (!cleaned) {
-      setPromoStatus({
-        message: 'يرجى إدخال رمز القسيمة / Veuillez saisir un code valide.',
+      setMemberStatus({
+        message: lang === 'fr' 
+          ? 'Veuillez saisir votre code membre (6 à 8 chiffres).' 
+          : 'يرجى إدخال رمز العضوية الخاص بكم (6 إلى 8 أرقام).',
         type: 'error'
       });
       return;
     }
-    setPromoStatus({
-      message: `تم تطبيق الرمز ${cleaned} بنجاح! التخفيض مُدرج في السلة.`,
+
+    if (!isValidMemberCode(cleaned)) {
+      setAppliedMemberCode(null);
+      setMemberStatus({
+        message: lang === 'fr'
+          ? 'Code membre invalide ou inactif. Veuillez vérifier les 6 à 8 chiffres ou contacter Bouchra Way sur WhatsApp.'
+          : 'رمز العضوية غير صحيح أو غير مفعل. يرجى التأكد من الأرقام (6 إلى 8 أرقام) أو التواصل مع بوشرى واي عبر الواتساب.',
+        type: 'error'
+      });
+      return;
+    }
+
+    setAppliedMemberCode(cleaned);
+    setMemberStatus({
+      message: lang === 'fr'
+        ? `Code membre ${cleaned} validé ! Remise officielle de -25% appliquée sur les prix publics.`
+        : `تم تفعيل رمز العضوية ${cleaned} بنجاح! تم تطبيق خصم -25% الحصري على أسعار البيع العمومية.`,
       type: 'success'
     });
   };
@@ -198,6 +224,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         .join('\n');
 
       // Construction du message WhatsApp bilingue structuré
+      const memberDiscountLine = appliedMemberCode && memberDiscount > 0
+        ? `🎁 *خصم عضوية بوشرى واي (-25%):* -${memberDiscount} MAD (رمز العضو: ${appliedMemberCode})\n`
+        : '';
+
       const waMessage = 
         `*طلب شراء جديد عبر الموقع - ${orderRef}* 🛍️\n` +
         `*(خدمة الدفع عند الاستلام بدون أي مصاريف إضافية)* 🇲🇦\n\n` +
@@ -207,9 +237,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         `📍 *المدينة:* ${sanitizedCity}\n` +
         `🏠 *عنوان التوصيل:* ${sanitizedAddress}\n` +
         (sanitizedEmail ? `📧 *البريد الإلكتروني:* ${sanitizedEmail}\n` : '') +
+        (appliedMemberCode ? `⭐ *رمز العضوية Bouchra Way:* ${appliedMemberCode} (-25% sur prix public)\n` : '') +
         `✅ *الموافقة على معالجة البيانات:* معتمدة (القانون 09-08 - CNDP)\n` +
         `\n📦 *المنتجات المطلوبة / Articles:*\n${itemsListText}\n\n` +
-        `💰 *المجموع الجزئي:* ${subtotal} MAD\n` +
+        `💰 *المجموع الجزئي (أسعار العموم):* ${subtotal} MAD\n` +
+        memberDiscountLine +
         `🚚 *مصاريف التوصيل:* ${shipping === 0 ? 'مجاناً (Offerte)' : `${shipping} MAD`}\n` +
         `💵 *المبلغ الإجمالي المستحق عند الاستلام:* *${finalTotal} MAD*\n` +
         `*(الدفع عند الاستلام بدون أي مصاريف إضافية مخفية)*\n\n` +
@@ -232,6 +264,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
           cndpConsent: formData.cndpConsent
         },
         subtotal,
+        discount: memberDiscount,
+        memberCode: appliedMemberCode || undefined,
         shipping,
         total: finalTotal,
         createdAt: new Date().toISOString()
@@ -579,58 +613,72 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                           <span className="text-xs font-bold text-[#E6007E]">
                             {item.product.price * item.quantity} MAD
                           </span>
-                          <span className="text-[10px] text-gray-400 line-through">
-                            {Math.round(item.product.price * 1.33) * item.quantity} MAD
-                          </span>
+                          {item.product.compareAtPrice && item.product.compareAtPrice > item.product.price ? (
+                            <span className="text-[10px] text-gray-400 line-through">
+                              {item.product.compareAtPrice * item.quantity} MAD
+                            </span>
+                          ) : null}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                {/* Section Code promo élégante (sans alert popup) */}
+                {/* Section Code Membre Bouchra Way (-25% sur prix public) */}
                 <div className="pt-2 border-t border-gray-100">
-                  {!showPromoInput ? (
+                  {!showMemberInput ? (
                     <button
                       type="button"
-                      onClick={() => setShowPromoInput(true)}
+                      onClick={() => setShowMemberInput(true)}
                       className="text-xs text-gray-700 hover:text-[#E6007E] font-medium flex items-center gap-2 cursor-pointer transition"
                     >
-                      <Gift size={14} className="text-amber-600" />
-                      <span>هل لديك رمز قسيمة أو كود تخفيض ؟</span>
+                      <Gift size={14} className="text-[#E6007E]" />
+                      <span>
+                        {lang === 'fr' 
+                          ? 'Vous êtes membre Bouchra Way ? Entrez votre code (-25%)'
+                          : 'هل أنت عضو في شبكة بوشرى واي؟ أدخل رقم العضوية (-25%)'}
+                      </span>
                     </button>
                   ) : (
                     <div className="space-y-2">
+                      <label className="block text-[11px] font-semibold text-gray-700">
+                        {lang === 'fr'
+                          ? 'Code membre Bouchra Way (6 à 8 chiffres) :'
+                          : 'رمز العضوية Bouchra Way (6 إلى 8 أرقام) :'}
+                      </label>
                       <div className="flex gap-2">
                         <input
                           type="text"
-                          value={promoCode}
-                          onChange={(e) => setPromoCode(e.target.value)}
-                          placeholder="أدخل رمز القسيمة..."
-                          className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-gray-300 outline-none uppercase font-mono"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          maxLength={8}
+                          value={memberCodeInput}
+                          onChange={(e) => setMemberCodeInput(e.target.value.replace(/\D/g, ''))}
+                          placeholder="12345678"
+                          className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-gray-300 outline-none font-mono tracking-wider focus:border-[#E6007E]"
                         />
                         <button
                           type="button"
-                          onClick={handleApplyPromo}
-                          className="px-3.5 py-1.5 bg-gray-900 text-white text-xs font-semibold rounded-lg hover:bg-black transition cursor-pointer"
+                          onClick={handleApplyMemberCode}
+                          className="px-3.5 py-1.5 bg-[#E6007E] hover:bg-[#c9006e] text-white text-xs font-semibold rounded-lg transition cursor-pointer"
                         >
-                          تفعيل
+                          {lang === 'fr' ? 'Appliquer' : 'تفعيل'}
                         </button>
                       </div>
 
                       {/* Retour visuel élégant inline */}
-                      {promoStatus && (
+                      {memberStatus && (
                         <div className={`p-2.5 rounded-lg text-xs flex items-center gap-1.5 ${
-                          promoStatus.type === 'success' 
+                          memberStatus.type === 'success' 
                             ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
                             : 'bg-rose-50 text-rose-800 border border-rose-200'
                         }`}>
-                          {promoStatus.type === 'success' ? (
+                          {memberStatus.type === 'success' ? (
                             <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
                           ) : (
                             <AlertCircle size={14} className="text-rose-600 shrink-0" />
                           )}
-                          <span className="leading-snug">{promoStatus.message}</span>
+                          <span className="leading-snug">{memberStatus.message}</span>
                         </div>
                       )}
                     </div>
@@ -639,21 +687,34 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
                 {/* Calculs financiers */}
                 <div className="space-y-2 pt-3 border-t border-gray-100 text-xs text-gray-600">
-                  <div className="flex items-center justify-between text-emerald-700 font-semibold">
-                    <span>التوفير المحقق (Économie) :</span>
-                    <span dir="ltr">- {totalSavings} MAD</span>
-                  </div>
+                  {catalogSavings > 0 && (
+                    <div className="flex items-center justify-between text-emerald-700 font-semibold">
+                      <span>{lang === 'fr' ? 'Économie catalogue :' : 'توفير تخفيضات الكتالوج :'}</span>
+                      <span dir="ltr">- {catalogSavings} MAD</span>
+                    </div>
+                  )}
 
                   <div className="flex items-center justify-between">
-                    <span>المجموع الجزئي (Sous-total) :</span>
+                    <span>{lang === 'fr' ? 'Sous-total (Prix publics) :' : 'المجموع الجزئي (أسعار العموم) :'}</span>
                     <span className="font-semibold text-gray-800" dir="ltr">{subtotal} MAD</span>
                   </div>
 
+                  {memberDiscount > 0 && (
+                    <div className="flex items-center justify-between text-emerald-700 font-bold bg-emerald-50/70 p-1.5 rounded-lg border border-emerald-200">
+                      <span>
+                        {lang === 'fr'
+                          ? `Remise Membre Bouchra Way (-25%) [${appliedMemberCode}] :`
+                          : `خصم عضوية بوشرى واي (-25%) [${appliedMemberCode}] :`}
+                      </span>
+                      <span dir="ltr">- {memberDiscount} MAD</span>
+                    </div>
+                  )}
+
                   <div className="flex items-center justify-between">
-                    <span>مصاريف التوصيل :</span>
+                    <span>{lang === 'fr' ? 'Frais de livraison :' : 'مصاريف التوصيل :'}</span>
                     {shipping === 0 ? (
                       <span className="font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
-                        مجاناً (Offerte)
+                        {lang === 'fr' ? 'Offerte (Gratuite)' : 'مجاناً (Offerte)'}
                       </span>
                     ) : (
                       <span className="font-semibold text-gray-800" dir="ltr">{shipping} MAD</span>
@@ -663,8 +724,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                   {/* Total général */}
                   <div className="flex items-baseline justify-between pt-3 border-t border-gray-200">
                     <div>
-                      <span className="text-base font-bold text-gray-900 block">المبلغ الإجمالي المستحق :</span>
-                      <span className="text-[11px] text-emerald-700 font-medium">الدفع نقداً عند استلام الطرد</span>
+                      <span className="text-base font-bold text-gray-900 block">
+                        {lang === 'fr' ? 'Montant net à régler :' : 'المبلغ الإجمالي المستحق :'}
+                      </span>
+                      <span className="text-[11px] text-emerald-700 font-medium">
+                        {lang === 'fr' ? 'Paiement à la livraison en espèces' : 'الدفع نقداً عند استلام الطرد'}
+                      </span>
                     </div>
                     <span className="text-2xl font-extrabold text-[#E6007E]" dir="ltr">
                       {finalTotal} MAD

@@ -244,10 +244,13 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           </div>
         )}
 
-        {/* Grille des cartes produits (Design conforme à la maquette - Badges, Favoris, Prix barré, Bouton + PANIER) */}
+        {/* Grille des cartes produits (Design conforme à la maquette - Badges catalogue réels, Favoris, Prix barré officiel, Bouton + PANIER) */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {filteredProducts.map((product) => {
-            const originalPrice = Math.round(product.price * 1.33);
+            const hasDiscount = product.compareAtPrice && product.compareAtPrice > product.price;
+            const discountPercent = hasDiscount
+              ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)
+              : null;
             const isFav = !!favorites[product.id];
             const productName = lang === 'fr' ? (product.nameFr || product.name) : (product.nameAr || product.name);
 
@@ -256,15 +259,21 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 key={product.id}
                 className="group relative flex flex-col bg-white p-3.5 sm:p-4 rounded-2xl border border-gray-100 shadow-xs hover:shadow-lg transition-all duration-300"
               >
-                {/* Badges superposés en haut à gauche (-25%, OUTLET) */}
-                <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1 pointer-events-none">
-                  <span className="bg-[#E6007E] text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs">
-                    -25%
-                  </span>
-                  <span className="bg-black text-white text-[9px] sm:text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded-sm uppercase">
-                    OUTLET
-                  </span>
-                </div>
+                {/* Badges catalogue réels si promotion ou tag officiel */}
+                {(hasDiscount || product.promoTag) && (
+                  <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1 pointer-events-none">
+                    {hasDiscount && (
+                      <span className="bg-[#E6007E] text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+                        -{discountPercent}%
+                      </span>
+                    )}
+                    {product.promoTag && (
+                      <span className="bg-emerald-600 text-white text-[9px] sm:text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded-sm uppercase">
+                        {product.promoTag}
+                      </span>
+                    )}
+                  </div>
+                )}
 
                 {/* Bouton Favoris en haut à droite */}
                 <button
@@ -325,28 +334,38 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   </div>
                 </button>
 
-                {/* Avis & Étoiles */}
-                <div className="flex items-center gap-1 mb-3 text-amber-500">
-                  <div className="flex text-amber-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={11} className="fill-amber-400 text-amber-400" />
-                    ))}
+                {/* Avis & Étoiles réels si présents */}
+                {product.rating !== undefined ? (
+                  <div className="flex items-center gap-1 mb-3 text-amber-500">
+                    <div className="flex text-amber-400">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          size={11}
+                          className={i < Math.round(product.rating!) ? "fill-amber-400 text-amber-400" : "text-gray-300"}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-[11px] font-bold text-gray-600 mr-1">{product.rating}</span>
+                    {product.reviewCount !== undefined && (
+                      <span className="text-[10px] text-gray-400">({product.reviewCount})</span>
+                    )}
                   </div>
-                  <span className="text-[11px] font-bold text-gray-600 mr-1">4.8</span>
-                  <span className="text-[10px] text-gray-400">(120)</span>
-                </div>
+                ) : null}
 
                 {/* Ligne Prix & Bouton + PANIER */}
                 <div className="mt-auto pt-2.5 border-t border-gray-100 flex items-center justify-between gap-2">
-                  {/* Prix actuel en rose vif & Prix barré */}
+                  {/* Prix actuel en rose vif & Prix barré réel si existant */}
                   <div className="flex flex-col text-right">
                     <div className="flex items-baseline gap-1 text-[#E6007E] font-bold">
                       <span className="text-base sm:text-lg leading-none">{product.price}</span>
                       <span className="text-xs font-bold">MAD</span>
                     </div>
-                    <span className="text-[11px] text-gray-400 line-through">
-                      {originalPrice} MAD
-                    </span>
+                    {product.compareAtPrice && product.compareAtPrice > product.price ? (
+                      <span className="text-[11px] text-gray-400 line-through">
+                        {product.compareAtPrice} MAD
+                      </span>
+                    ) : null}
                   </div>
 
                   {/* Bouton "+ PANIER" */}
