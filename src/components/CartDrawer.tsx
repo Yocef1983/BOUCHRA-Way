@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowLeft, Truck, Banknote, ShieldCheck } from 'lucide-react';
 import { CartItem } from '../types/cart';
-import { SITE, computeShipping } from '../config/site';
+import { SITE, getFreeShippingProgress } from '../config/site';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -49,10 +49,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   const totalItemsCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const freeShippingThreshold = SITE.freeShippingThreshold;
-  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
-  const progressPercent = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
-  const shippingCost = items.length === 0 ? 0 : computeShipping(subtotal);
+  
+  // Utiliser les fonctions centralisées pour l'affichage cohérent
+  const freeShippingProgress = getFreeShippingProgress(subtotal, lang);
+  const remainingForFreeShipping = freeShippingProgress.remaining;
+  const progressPercent = freeShippingProgress.percent;
+  
+  // Le tiroir panier n'a pas de ville sélectionnée, on utilise computeShipping sans ville
+  // (seuil de gratuité seulement, pas d'exemption par ville)
+  const shippingCost = items.length === 0 ? 0 : (subtotal >= SITE.freeShippingThreshold ? 0 : SITE.shippingFee);
 
   const finalTotal = subtotal + shippingCost;
 
@@ -244,7 +249,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   مجاناً / Offerte
                 </span>
               ) : (
-                <span className="font-medium text-gray-700">20 MAD</span>
+                <span className="font-medium text-gray-700">{SITE.shippingFee} MAD</span>
               )}
             </div>
 

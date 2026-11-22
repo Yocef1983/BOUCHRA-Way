@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { CartItem, CompletedOrder, CustomerOrderInfo } from '../types/cart';
 import { SITE, computeShipping, MEMBER_DISCOUNT_RATE, isValidMemberCode } from '../config/site';
-import { MOROCCAN_PHONE_REGEX, normalizeMaPhone, sanitizeInput } from '../config/validation';
+import { normalizeMoroccanPhone, isValidMoroccanPhone, sanitizeInput } from '../config/validation';
 import { Language } from '../i18n/translations';
 import { LegalModal } from './LegalModal';
 
@@ -153,25 +153,26 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       newErrors.lastName = 'يرجى إدخال الاسم العائلي / Veuillez saisir votre nom.';
     }
 
-    const cleanPhone = formData.phone.replace(/[\s.-]/g, '');
-    if (!MOROCCAN_PHONE_REGEX.test(cleanPhone)) {
-      newErrors.phone = 'رقم الهاتف غير صحيح. الصيغ المقبولة: 06XXXXXXXX أو 07XXXXXXXX أو +2126XXXXXXXX.';
+    if (!isValidMoroccanPhone(formData.phone)) {
+      newErrors.phone = lang === 'fr'
+        ? 'Numéro de téléphone invalide. Formats acceptés: 06XXXXXXXX, 07XXXXXXXX, +2126XXXXXXXX, +2127XXXXXXXX.'
+        : 'رقم الهاتف غير صحيح. الصيغ المقبولة: 06XXXXXXXX، 07XXXXXXXX، +2126XXXXXXXX، +2127XXXXXXXX.';
     }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'يرجى إدخال بريد إلكتروني صحيح.';
+      newErrors.email = 'يرجى إدخال بريد إلكتروني صحيح / Veuillez saisir un email valide.';
     }
 
     if (!formData.city.trim()) {
-      newErrors.city = 'يرجى اختيار مدينة الإقامة.';
+      newErrors.city = 'يرجى اختيار مدينة الإقامة / Veuillez sélectionner votre ville.';
     }
 
     if (!formData.address.trim() || formData.address.length < 5) {
-      newErrors.address = 'يرجى كتابة عنوان التوصيل بالتفصيل (الحي، الزنقة، رقم المنزل).';
+      newErrors.address = 'يرجى كتابة عنوان التوصيل بالتفصيل (الحي، الزنقة، رقم المنزل) / Veuillez indiquer votre adresse complète.';
     }
 
     if (!formData.cndpConsent) {
-      newErrors.cndpConsent = 'يجب الموافقة على معالجة البيانات الشخصية وفقاً للقانون 09-08 للمتابعة.';
+      newErrors.cndpConsent = 'يجب الموافقة على معالجة البيانات الشخصية وفقاً للقانون 09-08 للمتابعة / Vous devez accepter le traitement des données (Loi 09-08).';
     }
 
     setErrors(newErrors);
@@ -207,7 +208,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       const sanitizedCity = sanitizeInput(formData.city, 50);
       const sanitizedAddress = sanitizeInput(formData.address, 150);
       const sanitizedEmail = formData.email ? sanitizeInput(formData.email, 80) : '';
-      const sanitizedPhone = normalizeMaPhone(formData.phone);
+      const sanitizedPhone = normalizeMoroccanPhone(formData.phone);
       
       const randomRef = Math.floor(10000 + Math.random() * 90000);
       const orderRef = `#BW-${randomRef}`;

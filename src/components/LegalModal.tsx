@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { X, ShieldCheck, Truck, RotateCcw, Lock, FileText, Info } from 'lucide-react';
+import { SITE } from '../config/site';
 
 interface LegalModalProps {
   isOpen: boolean;
@@ -151,7 +152,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                 شروط الشحن والتوصيل في المغرب
               </h3>
               <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-emerald-900 font-medium">
-                {parseMarkdownBold('🚚 **تعرفة التوصيل موحدة:** 20 درهم مغربي (20 MAD) فقط لجميع الطلبيات نحو جميع المدن المغربية.')}
+                {parseMarkdownBold(`🚚 **تعرفة التوصيل موحدة:** ${SITE.shippingFee} درهم مغربي (${SITE.shippingFee} MAD) فقط لجميع الطلبيات نحو جميع المدن المغربية.`)}
               </div>
               
               <h4 className="font-semibold text-slate-800 mt-2">معلومات ما قبل التعاقد (المادة 7 من القانون 31-08)</h4>
@@ -159,7 +160,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
                 <li>{parseMarkdownBold('**آجال التسليم:** يتم توصيل الطلبيات في غضون 24 إلى 48 ساعة بالنسبة للمدن الكبرى (الدار البيضاء، الرباط، سلا، القنيطرة، فاس، مكناس، مراكش، أقاليم الشمال والجنوب). وباقي المدن في غضون 48 إلى 72 ساعة كحد أقصى.')}</li>
                 <li>{parseMarkdownBold('**طريقة الدفع:** الدفع عند الاستلام نقداً (Cash on Delivery) بعد معاينة الطرد مع موزع التوصيل. لا توجد رسوم خفية إضافية.')}</li>
                 <li>{parseMarkdownBold('**التتبع والتواصل:** يتم التواصل معكم مباشرة عبر الواتساب أو الهاتف لتأكيد موعد ومكان التسليم المناسب لكم. رقم الدعم: +212 6 34 48 64 94.')}</li>
-                <li>{parseMarkdownBold('**مصاريف إضافية:** لا توجد أي مصاريف إضافية غير المعلن عنها (20 MAD فقط للتوصيل، أو مجاناً للطلبيات ≥ 400 MAD أو للدار البيضاء).')}</li>
+                <li>{parseMarkdownBold(`**مصاريف إضافية:** لا توجد أي مصاريف إضافية غير المعلن عنها (${SITE.shippingFee} MAD فقط للتوصيل، أو مجاناً للطلبيات ≥ ${SITE.freeShippingThreshold} MAD أو للدار البيضاء).`)}</li>
                 <li>{parseMarkdownBold('**مناطق التغطية:** التوصيل متاح لجميع المدن والمناطق المغربية عبر شركاء لوجستيين معتمدين.')}</li>
               </ul>
 

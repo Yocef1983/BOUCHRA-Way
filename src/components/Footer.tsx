@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Truck, ShieldCheck, RotateCcw, Headphones, Lock, FileText } from 'lucide-react';
 import { LegalModal } from './LegalModal';
 import { Language } from '../i18n/translations';
+import { SITE } from '../config/site';
 
 const FOOTER_YEAR = new Date().getFullYear();
 
@@ -32,7 +33,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToCatalog, lang = 'ar'
               <Truck className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-white text-sm">توصيل بـ 20 درهم</h4>
+              <h4 className="font-bold text-white text-sm">توصيل بـ {SITE.shippingFee} درهم</h4>
               <p className="text-xs text-slate-400">لكافة المدن المغربية (24h/48h)</p>
             </div>
           </div>
@@ -136,7 +137,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToCatalog, lang = 'ar'
         </div>
 
         {/* Mentions légales - Informations éditeur */}
-        <div className="mt-6 pt-4 border-t border-slate-800 text-center text-[11px] text-slate-500 space-y-1">
+        <div id="contact" className="mt-6 pt-4 border-t border-slate-800 text-center text-[11px] text-slate-500 space-y-1">
           <p><strong>BOUCHRA Way</strong> - علامة تجارية مغربية لتوزيع منتجات <strong>MyWay</strong> الأصلية.</p>
           <p>
             <span className="text-rose-600">[À compléter : raison sociale / الشكل القانوني]</span> •

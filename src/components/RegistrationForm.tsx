@@ -1,6 +1,6 @@
 import React, { useState, useId } from 'react';
 import { ShieldCheck, Phone, User, Mail, MapPin, AlertCircle, CheckCircle2, FileText, Info } from 'lucide-react';
-import { MOROCCAN_PHONE_REGEX, normalizeMaPhone, sanitizeInput } from '../config/validation';
+import { normalizeMoroccanPhone, isValidMoroccanPhone, sanitizeInput } from '../config/validation';
 import { SITE } from '../config/site';
 import { LegalModal } from './LegalModal';
 
@@ -47,9 +47,8 @@ export const RegistrationForm: React.FC = () => {
       newErrors.fullName = 'يرجى إدخال الاسم الكامل (3 أحرف على الأقل).';
     }
 
-    const cleanPhone = formData.phone.replace(/[\s.-]/g, '');
-    if (!MOROCCAN_PHONE_REGEX.test(cleanPhone)) {
-      newErrors.phone = 'رقم هاتف غير صحيح. الصيغ المقبولة: 06XXXXXXXX أو 07XXXXXXXX أو +2126XXXXXXXX.';
+    if (!isValidMoroccanPhone(formData.phone)) {
+      newErrors.phone = 'رقم هاتف غير صحيح. الصيغ المقبولة: 06XXXXXXXX، 07XXXXXXXX، +2126XXXXXXXX، +2127XXXXXXXX، 002126XXXXXXXX.';
     }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -102,7 +101,7 @@ export const RegistrationForm: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const sanitizedPhone = normalizeMaPhone(formData.phone);
+      const sanitizedPhone = normalizeMoroccanPhone(formData.phone);
       const sanitizedFullName = sanitizeInput(formData.fullName, 60);
       const sanitizedCity = sanitizeInput(formData.city, 40);
       const sanitizedEmail = formData.email ? sanitizeInput(formData.email, 80) : '';
