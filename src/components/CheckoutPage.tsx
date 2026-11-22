@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { CartItem, CompletedOrder, CustomerOrderInfo } from '../types/cart';
 import { SITE, computeShipping, MEMBER_DISCOUNT_RATE, isValidMemberCode } from '../config/site';
-import { MOROCCAN_PHONE_REGEX, normalizeMaPhone } from '../config/validation';
+import { MOROCCAN_PHONE_REGEX, normalizeMaPhone, sanitizeInput } from '../config/validation';
 import { Language } from '../i18n/translations';
 import { LegalModal } from './LegalModal';
 
@@ -34,12 +34,6 @@ interface FormErrors {
   address?: string;
   cndpConsent?: string;
 }
-
-// Nettoyage anti-XSS préventif (stripping des balises < > et trim)
-const sanitizeInput = (input: string): string => {
-  return input.replace(/[<>]/g, '').trim();
-};
-
 
 const MOROCCAN_CITIES = [
   'الدار البيضاء (Casablanca)',
@@ -117,7 +111,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   };
 
   const handleApplyMemberCode = () => {
-    const cleaned = sanitizeInput(memberCodeInput).trim();
+    const cleaned = sanitizeInput(memberCodeInput, 8);
     if (!cleaned) {
       setMemberStatus({
         message: lang === 'fr' 
@@ -208,11 +202,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
     try {
       // Application rigoureuse de la sanitisation anti-XSS
-      const sanitizedFirstName = sanitizeInput(formData.firstName);
-      const sanitizedLastName = sanitizeInput(formData.lastName);
-      const sanitizedCity = sanitizeInput(formData.city);
-      const sanitizedAddress = sanitizeInput(formData.address);
-      const sanitizedEmail = formData.email ? sanitizeInput(formData.email) : '';
+      const sanitizedFirstName = sanitizeInput(formData.firstName, 50);
+      const sanitizedLastName = sanitizeInput(formData.lastName, 50);
+      const sanitizedCity = sanitizeInput(formData.city, 50);
+      const sanitizedAddress = sanitizeInput(formData.address, 150);
+      const sanitizedEmail = formData.email ? sanitizeInput(formData.email, 80) : '';
       const sanitizedPhone = normalizeMaPhone(formData.phone);
       
       const randomRef = Math.floor(10000 + Math.random() * 90000);
@@ -220,7 +214,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
       // Récapitulatif des articles pour le message WhatsApp
       const itemsListText = items
-        .map((item, idx) => `▪ ${idx + 1}. *${sanitizeInput(lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name))}* (x${item.quantity}) = ${item.product.price * item.quantity} MAD`)
+        .map((item, idx) => `▪ ${idx + 1}. *${sanitizeInput(lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name), 100)}* (x${item.quantity}) = ${item.product.price * item.quantity} MAD`)
         .join('\n');
 
       // Construction du message WhatsApp bilingue structuré

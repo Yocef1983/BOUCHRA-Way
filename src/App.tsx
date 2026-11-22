@@ -393,15 +393,15 @@ export default function App() {
                 <div className="bg-white rounded-3xl p-6 sm:p-8 border border-pink-100 shadow-sm text-right">
                   <div className="mb-4">
                     <h3 className="text-lg font-bold text-gray-800 mb-2">من نحن - مشاهدة الفيديو</h3>
-                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-gray-100">
-                      <iframe
-                        className="w-full h-full"
-                        src="https://www.youtube-nocookie.com/embed/KNtRghtkl9w"
-                        title="من نحن - ماي واي"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen
-                      ></iframe>
-                    </div>
+<div className="aspect-video w-full rounded-2xl overflow-hidden bg-gray-100">
+                        <iframe
+                          className="w-full h-full"
+                          src="https://www.youtube-nocookie.com/embed/KNtRghtkl9w?rel=0&modestbranding=1&playsinline=1"
+                          title="من نحن - ماي واي"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                        ></iframe>
+                      </div>
                   </div>
                   <div className="space-y-2">
                     <details className="group border border-gray-100 rounded-xl overflow-hidden">

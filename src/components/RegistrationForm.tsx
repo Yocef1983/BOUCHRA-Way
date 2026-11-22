@@ -1,6 +1,6 @@
 import React, { useState, useId } from 'react';
 import { ShieldCheck, Phone, User, Mail, MapPin, AlertCircle, CheckCircle2, FileText, Info } from 'lucide-react';
-import { MOROCCAN_PHONE_REGEX, normalizeMaPhone } from '../config/validation';
+import { MOROCCAN_PHONE_REGEX, normalizeMaPhone, sanitizeInput } from '../config/validation';
 import { SITE } from '../config/site';
 import { LegalModal } from './LegalModal';
 
@@ -20,14 +20,6 @@ interface FormErrors {
   city?: string;
   cndpConsent?: string;
 }
-
-// Nettoyage anti-XSS préventif (suppression des chevrons HTML et trim)
-const sanitizeInput = (input: string): string => {
-  return input
-    .replace(/[<>]/g, '')
-    .trim();
-};
-
 
 export const RegistrationForm: React.FC = () => {
   const formId = useId();
@@ -78,9 +70,16 @@ export const RegistrationForm: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
+    // Field-specific maxLength limits matching the input attributes
+    const maxLengthMap: Record<string, number> = {
+      fullName: 60,
+      email: 80,
+      city: 40,
+    };
+    const maxLen = maxLengthMap[name] ?? 200;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : sanitizeInput(value),
+      [name]: type === 'checkbox' ? checked : sanitizeInput(value, maxLen),
     }));
 
     // Réinitialiser l'erreur correspondante au champ
@@ -104,14 +103,17 @@ export const RegistrationForm: React.FC = () => {
 
     try {
       const sanitizedPhone = normalizeMaPhone(formData.phone);
+      const sanitizedFullName = sanitizeInput(formData.fullName, 60);
+      const sanitizedCity = sanitizeInput(formData.city, 40);
+      const sanitizedEmail = formData.email ? sanitizeInput(formData.email, 80) : '';
       
       // Construction du message WhatsApp sécurisé et encodé en UTF-8
       const message = `*طلب انضمام جديد - شبكة بوشرى واي*\n\n` +
         `❓ *عضوية سابقة في ماي واي:* ${formData.hasMembership}\n` +
-        `👤 *الاسم الكامل:* ${formData.fullName}\n` +
+        `👤 *الاسم الكامل:* ${sanitizedFullName}\n` +
         `📱 *رقم الهاتف:* +${sanitizedPhone}\n` +
-        `📍 *مدينة الإقامة:* ${formData.city}\n` +
-        (formData.email ? `📧 *البريد الإلكتروني:* ${formData.email}\n` : '') +
+        `📍 *مدينة الإقامة:* ${sanitizedCity}\n` +
+        (sanitizedEmail ? `📧 *البريد الإلكتروني:* ${sanitizedEmail}\n` : '') +
         `✅ *الموافقة على معالجة البيانات:* معتمدة (القانون 09-08)\n` +
         `⏱️ *التاريخ:* ${new Date().toLocaleString('ar-MA', { timeZone: 'Africa/Casablanca' })}`;
 
