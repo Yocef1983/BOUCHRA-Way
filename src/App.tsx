@@ -326,7 +326,6 @@ export default function App() {
             product={selectedProduct} 
             onBack={handleBackToCatalog}
             onAddToCart={handleAddToCart}
-            onOpenCart={() => setIsCartOpen(true)}
             lang={lang} /* <--- ICI : Passage de la langue active au composant ProductDetail */
           />
         ) : !isHomeView ? (

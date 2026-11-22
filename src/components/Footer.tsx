@@ -3,6 +3,8 @@ import { Truck, ShieldCheck, RotateCcw, Headphones, Lock, FileText } from 'lucid
 import { LegalModal } from './LegalModal';
 import { Language } from '../i18n/translations';
 
+const FOOTER_YEAR = new Date().getFullYear();
+
 interface FooterProps {
   onNavigateToCatalog: () => void;
   onNavigateSection: (sectionId: string) => void;
@@ -130,7 +132,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToCatalog, lang = 'ar'
 
         {/* Copyright */}
         <div className="mt-8 pt-6 border-t border-slate-800 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} BOUCHRA Way. جميع الحقوق محفوظة.
+          © {FOOTER_YEAR} BOUCHRA Way. جميع الحقوق محفوظة.
         </div>
 
         {/* Mentions légales - Informations éditeur */}

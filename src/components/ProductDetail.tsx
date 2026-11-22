@@ -14,7 +14,6 @@ interface ProductDetailProps {
   product: Product;
   onBack: () => void;
   onAddToCart?: (product: Product, quantity: number) => void;
-  onOpenCart?: () => void;
   lang?: Language; // Ajout de la prop pour gérer la langue
 }
 
@@ -22,7 +21,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   product, 
   onBack, 
   onAddToCart,
-  onOpenCart,
   lang = 'ar' // Arabe par défaut
 }) => {
   const [quantity, setQuantity] = useState<number>(1);
@@ -57,9 +55,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 
   // Prix calculés selon la maquette
   const originalPrice = Math.round(product.price * 1.33);
-  const pharmacyPrice = Math.round(product.price * 1.8);
-  const pharmacySavings = pharmacyPrice - product.price;
-  const initialSavings = originalPrice - product.price;
 
   // Gestion anti-images brisées intelligente
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {

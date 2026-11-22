@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, ShieldCheck, Truck, RotateCcw, Lock, FileText, Gavel, Info, AlertCircle } from 'lucide-react';
+import { X, ShieldCheck, Truck, RotateCcw, Lock, FileText, Info } from 'lucide-react';
 
 interface LegalModalProps {
   isOpen: boolean;
