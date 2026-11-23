@@ -1,27 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { Product } from '../data/products';
 import { SITE } from '../config/site';
-import { Language, translations } from '../i18n/translations';
+import { Language, translations, categoryHierarchy } from '../i18n/translations';
 import { 
+  ArrowLeft,
   ArrowRight, 
   ChevronLeft, 
+  ChevronRight,
   CheckCircle2, 
   ShoppingBag, 
-  Star 
+  Star,
+  Heart
 } from 'lucide-react';
 
 interface ProductDetailProps {
   product: Product;
   onBack: () => void;
   onAddToCart?: (product: Product, quantity: number) => void;
-  lang?: Language; // Ajout de la prop pour gérer la langue
+  lang?: Language;
+  isFavorite?: boolean;
+  onToggleFavorite?: (productId: string) => void;
 }
+
+const getCategoryLabel = (category: string, currentLang: Language): string => {
+  if (currentLang !== 'fr') return category;
+  for (const catKey of Object.keys(categoryHierarchy) as Array<keyof typeof categoryHierarchy>) {
+    const item = categoryHierarchy[catKey];
+    if ('categoryId' in item && (item.categoryId === category || item.label === category)) {
+      return item.labelFr || item.label;
+    }
+    if (item.label === category) {
+      return item.labelFr || item.label;
+    }
+  }
+  return category;
+};
 
 export const ProductDetail: React.FC<ProductDetailProps> = ({ 
   product, 
   onBack, 
   onAddToCart,
-  lang = 'ar' // Arabe par défaut
+  lang = 'ar',
+  isFavorite = false,
+  onToggleFavorite
 }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [isAdded, setIsAdded] = useState<boolean>(false);
@@ -60,7 +81,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
         canonicalLink.setAttribute('href', previousCanonical);
       }
     };
-  }, [product, displayName, displayDescription, t]);
+  }, [product, displayName, displayDescription, t, lang]);
 
   // Promotion officielle du catalogue
   const hasDiscount = Boolean(product.compareAtPrice && product.compareAtPrice > product.price);
@@ -89,17 +110,23 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     const phoneNumber = SITE.whatsapp;
     const total = product.price * quantity;
     const message = encodeURIComponent(
-      `*طلب جديد عبر الموقع - Bouchra Way* 🛍️\n\n` +
-      `▪ ${isAr ? '*المنتج:*' : '*Produit:*'} ${displayName}\n` +
-      `▪ *SKU:* ${product.sku}\n` +
-      `▪ ${isAr ? '*الكمية:*' : '*Quantité:*'} ${quantity}\n` +
-      `▪ ${isAr ? '*المجموع:*' : '*Total:*'} ${total} ${t.currency}\n`
+      lang === 'fr'
+        ? `*Nouvelle commande via le site - Bouchra Way* 🛍️\n\n` +
+          `▪ *Produit :* ${displayName}\n` +
+          `▪ *SKU :* ${product.sku}\n` +
+          `▪ *Quantité :* ${quantity}\n` +
+          `▪ *Total :* ${total} ${t.currency}\n`
+        : `*طلب جديد عبر الموقع - Bouchra Way* 🛍️\n\n` +
+          `▪ *المنتج :* ${displayName}\n` +
+          `▪ *SKU :* ${product.sku}\n` +
+          `▪ *الكمية :* ${quantity}\n` +
+          `▪ *المجموع :* ${total} ${t.currency}\n`
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
   return (
-    <div className={`py-6 md:py-10 bg-[#FDFCFB] text-gray-800 min-h-screen`} dir={t.dir}>
+    <div className="py-6 md:py-10 bg-[#FDFCFB] text-gray-800 min-h-screen" dir={t.dir}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Fil d'Ariane & Bouton retour */}
@@ -111,14 +138,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             >
               {isAr ? 'الرئيسية' : 'Accueil'}
             </button>
-            <ChevronLeft size={14} className="text-gray-400" />
+            {isAr ? <ChevronLeft size={14} className="text-gray-400" /> : <ChevronRight size={14} className="text-gray-400" />}
             <button 
               onClick={onBack} 
               className="hover:text-[#E6007E] transition-colors capitalize font-normal cursor-pointer"
             >
-              {product.category}
+              {getCategoryLabel(product.category, lang)}
             </button>
-            <ChevronLeft size={14} className="text-gray-400" />
+            {isAr ? <ChevronLeft size={14} className="text-gray-400" /> : <ChevronRight size={14} className="text-gray-400" />}
             <span className="text-gray-800 font-normal truncate max-w-[180px] sm:max-w-none">
               {displayName}
             </span>
@@ -128,7 +155,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             onClick={onBack}
             className="inline-flex items-center gap-1.5 text-xs md:text-sm text-gray-600 hover:text-[#E6007E] transition-colors py-1.5 px-3.5 rounded-full border border-gray-200 hover:border-pink-200 bg-white cursor-pointer shadow-xs"
           >
-            <ArrowRight size={14} />
+            {isAr ? <ArrowRight size={14} /> : <ArrowLeft size={14} />}
             <span>{isAr ? 'العودة للمنتجات' : 'Retour au catalogue'}</span>
           </button>
         </nav>
@@ -140,7 +167,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
           <div className="flex flex-col gap-4">
             <div className="w-full bg-white rounded-3xl border border-gray-200 p-6 sm:p-10 flex items-center justify-center min-h-[380px] sm:min-h-[460px] shadow-xs relative overflow-hidden group">
               {(hasDiscount || product.promoTag) && (
-                <div className="absolute top-4 left-4 z-10 flex flex-col gap-1.5">
+                <div className="absolute top-4 start-4 z-10 flex flex-col gap-1.5">
                   {hasDiscount && (
                     <span className="bg-[#E6007E] text-white text-xs font-bold px-3 py-1 rounded-full shadow-xs">
                       -{discountPercent}%
@@ -153,6 +180,29 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                   )}
                 </div>
               )}
+
+              {/* Bouton Favoris Fiche Produit */}
+              <button
+                type="button"
+                onClick={() => onToggleFavorite?.(product.id)}
+                aria-pressed={isFavorite}
+                aria-label={
+                  lang === 'fr'
+                    ? (isFavorite ? `Retirer ${displayName} des favoris` : `Ajouter ${displayName} aux favoris`)
+                    : (isFavorite ? `إزالة ${displayName} من المفضلة` : `إضافة ${displayName} إلى المفضلة`)
+                }
+                title={
+                  lang === 'fr'
+                    ? (isFavorite ? `Retirer ${displayName} des favoris` : `Ajouter ${displayName} aux favoris`)
+                    : (isFavorite ? `إزالة ${displayName} من المفضلة` : `إضافة ${displayName} إلى المفضلة`)
+                }
+                className="absolute top-4 end-4 z-10 p-2.5 rounded-full bg-white/90 backdrop-blur-xs hover:bg-white text-gray-400 hover:text-[#E6007E] transition-all shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E6007E]"
+              >
+                <Heart
+                  size={22}
+                  className={isFavorite ? "fill-[#E6007E] text-[#E6007E]" : "transition-transform hover:scale-110"}
+                />
+              </button>
 
               <img
                 src={product.image}
@@ -206,7 +256,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             {/* Bannière Prix Final */}
             <div className="bg-gradient-to-r from-[#E6007E] to-[#c9006e] text-white rounded-2xl p-4 sm:p-5 shadow-sm mb-4">
               <div className="flex items-center justify-between text-xs font-medium opacity-90 mb-1">
-                <span>✦ PRIX PUBLIC OFFICIEL</span>
+                <span>{isAr ? '✦ السعر الرسمي للكتالوج' : '✦ PRIX PUBLIC OFFICIEL'}</span>
               </div>
 
               <div className="flex items-baseline gap-3 my-1">

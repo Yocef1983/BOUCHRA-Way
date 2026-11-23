@@ -14,6 +14,8 @@ interface ProductCatalogProps {
   onAddToCart?: (product: Product, quantity?: number) => void;
   lang?: 'ar' | 'fr';
   isStandaloneView?: boolean;
+  favorites?: Record<string, boolean>;
+  onToggleFavorite?: (productId: string) => void;
 }
 
 export const ProductCatalog: React.FC<ProductCatalogProps> = ({ 
@@ -26,14 +28,50 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   setSearchQuery,
   onAddToCart,
   lang = 'ar',
-  isStandaloneView = false
+  isStandaloneView = false,
+  favorites: controlledFavorites,
+  onToggleFavorite
 }) => {
   const [internalCategory, setInternalCategory] = useState<string>('all');
-  const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+  const [internalFavorites, setInternalFavorites] = useState<Record<string, boolean>>(() => {
+    try {
+      const saved = localStorage.getItem('bw_favorites');
+      if (!saved) return {};
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) {
+        const map: Record<string, boolean> = {};
+        for (const id of parsed) {
+          if (typeof id === 'string') map[id] = true;
+        }
+        return map;
+      }
+      if (parsed && typeof parsed === 'object') {
+        return parsed;
+      }
+    } catch {
+      // Ignorer si stockage non disponible
+    }
+    return {};
+  });
+
+  const favorites = controlledFavorites !== undefined ? controlledFavorites : internalFavorites;
 
   const toggleFavorite = (productId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setFavorites(prev => ({ ...prev, [productId]: !prev[productId] }));
+    if (onToggleFavorite) {
+      onToggleFavorite(productId);
+    } else {
+      setInternalFavorites(prev => {
+        const updated = { ...prev, [productId]: !prev[productId] };
+        try {
+          const activeIds = Object.keys(updated).filter(id => updated[id]);
+          localStorage.setItem('bw_favorites', JSON.stringify(activeIds));
+        } catch {
+          // Ignorer si stockage non disponible
+        }
+        return updated;
+      });
+    }
   };
 
   const selectedCategory = controlledCategory !== undefined ? controlledCategory : internalCategory;
@@ -182,21 +220,25 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   };
 
   return (
-    <section className="py-10 bg-[#FDFCFB] dir-rtl relative scroll-mt-20" id="catalogue" dir="rtl">
+    <section 
+      className="py-10 bg-[#FDFCFB] relative scroll-mt-20 text-start" 
+      id="catalogue" 
+      dir={lang === 'fr' ? 'ltr' : 'rtl'}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* En-tête épuré moderne */}
         <div className="text-center mb-8">
           <span className="text-xs uppercase tracking-widest text-[#A8948D] font-normal block mb-1">
-            NOTRE SÉLECTION OFFICIELLE • BOUCHRA WAY MAROC
+            {lang === 'fr' ? 'NOTRE SÉLECTION OFFICIELLE • BOUCHRA WAY MAROC' : 'تشكيلتنا الرسمية • بوشرى واي المغرب'}
           </span>
           {isStandaloneView ? (
             <h1 className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">
-              تشكيلة المنتجات المميزة
+              {lang === 'fr' ? 'Sélection de Produits Officiels' : 'تشكيلة المنتجات المميزة'}
             </h1>
           ) : (
             <h2 className="text-2xl sm:text-3xl font-light text-gray-900 tracking-wide">
-              تشكيلة المنتجات المميزة
+              {lang === 'fr' ? 'Sélection de Produits Officiels' : 'تشكيلة المنتجات المميزة'}
             </h2>
           )}
           <div className="w-12 h-0.5 bg-[#E6007E] mx-auto mt-3 rounded-full"></div>
@@ -207,19 +249,19 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           <div className="mb-6 max-w-3xl mx-auto flex flex-wrap items-center justify-between gap-3 p-3 sm:p-3.5 bg-pink-50/80 border border-pink-200 rounded-2xl text-xs sm:text-sm text-pink-950">
             <div className="flex items-center gap-2 flex-wrap">
               <Filter size={15} className="text-[#E6007E] shrink-0" />
-              <span className="text-gray-500 font-normal">القسم المختار:</span>
+              <span className="text-gray-500 font-normal">{lang === 'fr' ? 'Catégorie :' : 'القسم المختار:'}</span>
               <span className="font-bold text-[#E6007E]">
                 {getCategoryLabel(normalizedCategory)}
               </span>
               {selectedSubCategory && (
                 <>
-                  <ChevronLeft size={13} className="text-gray-400" />
+                  <ChevronLeft size={13} className={`text-gray-400 ${lang === 'fr' ? 'rotate-180' : ''}`} />
                   <span className="font-bold text-pink-900 bg-white px-2.5 py-0.5 rounded-full border border-pink-200">
                     {selectedSubCategory}
                   </span>
                 </>
               )}
-              <span className="text-[#E6007E] text-xs">({filteredProducts.length} منتج متوفر)</span>
+              <span className="text-[#E6007E] text-xs">({filteredProducts.length} {lang === 'fr' ? 'produits disponibles' : 'منتج متوفر'})</span>
             </div>
 
             <button
@@ -227,7 +269,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               className="inline-flex items-center gap-1 text-xs text-[#E6007E] hover:text-pink-950 bg-white hover:bg-pink-100/60 px-3 py-1 rounded-full border border-pink-200 transition cursor-pointer shrink-0"
             >
               <X size={12} />
-              <span>إلغاء التصفية</span>
+              <span>{lang === 'fr' ? 'Réinitialiser' : 'إلغاء التصفية'}</span>
             </button>
           </div>
         )}
@@ -238,8 +280,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             <div className="flex items-center gap-2 truncate">
               <Search size={16} className="text-[#E6007E] shrink-0" />
               <span>
-                نتائج البحث عن: <strong className="font-semibold text-pink-950">«{searchQuery}»</strong>
-                <span className="text-[#E6007E] mr-2">({filteredProducts.length} منتج)</span>
+                {lang === 'fr' ? 'Résultats pour :' : 'نتائج البحث عن:'} <strong className="font-semibold text-pink-950">«{searchQuery}»</strong>
+                <span className="text-[#E6007E] mx-2">({filteredProducts.length} {lang === 'fr' ? 'produits' : 'منتج'})</span>
               </span>
             </div>
             <button
@@ -247,7 +289,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               className="inline-flex items-center gap-1 text-xs text-[#E6007E] hover:text-pink-950 bg-white hover:bg-pink-100/50 px-2.5 py-1 rounded-full border border-pink-200 transition cursor-pointer shrink-0"
             >
               <X size={12} />
-              <span>إلغاء البحث</span>
+              <span>{lang === 'fr' ? 'Effacer la recherche' : 'إلغاء البحث'}</span>
             </button>
           </div>
         )}
@@ -269,7 +311,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               >
                 {/* Badges catalogue réels si promotion ou tag officiel */}
                 {(hasDiscount || product.promoTag) && (
-                  <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-1 pointer-events-none">
+                  <div className="absolute top-3 start-3 z-10 flex flex-col items-start gap-1 pointer-events-none">
                     {hasDiscount && (
                       <span className="bg-[#E6007E] text-white text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs">
                         -{discountPercent}%
@@ -283,16 +325,22 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   </div>
                 )}
 
-                {/* Bouton Favoris en haut à droite */}
+                {/* Bouton Favoris en haut à droite (end-3) */}
                 <button
                   type="button"
                   onClick={(e) => toggleFavorite(product.id, e)}
+                  aria-pressed={isFav}
                   aria-label={
                     lang === 'fr'
                       ? (isFav ? `Retirer ${productName} des favoris` : `Ajouter ${productName} aux favoris`)
                       : (isFav ? `إزالة ${productName} من المفضلة` : `إضافة ${productName} إلى المفضلة`)
                   }
-                  className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-white/80 backdrop-blur-xs hover:bg-white text-gray-400 hover:text-[#E6007E] transition-colors shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E6007E]"
+                  title={
+                    lang === 'fr'
+                      ? (isFav ? `Retirer ${productName} des favoris` : `Ajouter ${productName} aux favoris`)
+                      : (isFav ? `إزالة ${productName} من المفضلة` : `إضافة ${productName} إلى المفضلة`)
+                  }
+                  className="absolute top-3 end-3 z-10 p-1.5 rounded-full bg-white/80 backdrop-blur-xs hover:bg-white text-gray-400 hover:text-[#E6007E] transition-colors shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E6007E]"
                 >
                   <Heart 
                     size={17} 
@@ -309,7 +357,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       ? `Voir les détails de ${productName}`
                       : `عرض تفاصيل ${productName}`
                   }
-                  className="w-full text-right cursor-pointer bg-transparent border-0 p-0 flex flex-col flex-1 focus:outline-none focus:ring-2 focus:ring-[#E6007E] focus:ring-offset-2 rounded-xl group/cardbtn"
+                  className="w-full text-start cursor-pointer bg-transparent border-0 p-0 flex flex-col flex-1 focus:outline-none focus:ring-2 focus:ring-[#E6007E] focus:ring-offset-2 rounded-xl group/cardbtn"
                 >
                   {/* Cadre Image */}
                   <div className="w-full h-44 sm:h-52 bg-[#FAF7F5] rounded-xl flex items-center justify-center p-3 overflow-hidden relative mb-3">
@@ -331,7 +379,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   </div>
 
                   {/* Marque & Titre */}
-                  <div className="flex flex-col flex-1 text-right w-full">
+                  <div className="flex flex-col flex-1 text-start w-full">
                     <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-400 font-semibold mb-1 block">
                       BOUCHRA WAY • MY WAY
                     </span>
@@ -364,7 +412,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 {/* Ligne Prix & Bouton + PANIER */}
                 <div className="mt-auto pt-2.5 border-t border-gray-100 flex items-center justify-between gap-2">
                   {/* Prix actuel en rose vif & Prix barré réel si existant */}
-                  <div className="flex flex-col text-right">
+                  <div className="flex flex-col text-start">
                     <div className="flex items-baseline gap-1 text-[#E6007E] font-bold">
                       <span className="text-base sm:text-lg leading-none">{product.price}</span>
                       <span className="text-xs font-bold">MAD</span>
@@ -408,21 +456,21 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-gray-200 p-8 max-w-lg mx-auto">
             <Search size={40} className="text-gray-300 mx-auto mb-4" />
             <h4 className="text-base font-semibold text-gray-800 mb-2">
-              لم يتم العثور على أي منتج
+              {lang === 'fr' ? 'Aucun produit trouvé' : 'لم يتم العثور على أي منتج'}
             </h4>
             <p className="text-xs text-gray-500 mb-6 leading-relaxed">
               {selectedSubCategory
-                ? `لا توجد منتجات مسجلة حالياً في قسم «${selectedSubCategory}». سيتم توفيرها قريباً!`
+                ? (lang === 'fr' ? `Aucun produit disponible actuellement dans « ${selectedSubCategory} ». Disponibilité prochaine !` : `لا توجد منتجات مسجلة حالياً في قسم «${selectedSubCategory}». سيتم توفيرها قريباً!`)
                 : trimmedSearch !== '' 
-                  ? `لا توجد نتائج مطابقة لبحثك «${searchQuery}» في هذا القسم.`
-                  : 'لا توجد منتجات متوفرة حالياً في هذا القسم.'}
+                  ? (lang === 'fr' ? `Aucun résultat correspondant à votre recherche « ${searchQuery} » dans cette catégorie.` : `لا توجد نتائج مطابقة لبحثك «${searchQuery}» في هذا القسم.`)
+                  : (lang === 'fr' ? 'Aucun produit disponible dans cette catégorie.' : 'لا توجد منتجات متوفرة حالياً في هذا القسم.')}
             </p>
             <button
               onClick={handleResetAll}
               className="inline-flex items-center gap-2 bg-[#E6007E] hover:bg-[#c9006e] text-white text-xs font-bold px-5 py-2.5 rounded-full transition cursor-pointer shadow-xs"
             >
               <RotateCcw size={14} />
-              <span>عرض جميع المنتجات</span>
+              <span>{lang === 'fr' ? 'Afficher tous les produits' : 'عرض جميع المنتجات'}</span>
             </button>
           </div>
         )}

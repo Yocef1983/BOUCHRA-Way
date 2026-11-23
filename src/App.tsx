@@ -105,6 +105,45 @@ export default function App() {
     }
   });
 
+  // État des favoris persisté dans localStorage
+  const [favorites, setFavorites] = useState<Record<string, boolean>>(() => {
+    try {
+      const saved = localStorage.getItem('bw_favorites');
+      if (!saved) return {};
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) {
+        const map: Record<string, boolean> = {};
+        for (const id of parsed) {
+          if (typeof id === 'string') map[id] = true;
+        }
+        return map;
+      }
+      if (parsed && typeof parsed === 'object') {
+        return parsed;
+      }
+    } catch {
+      // Ignorer si stockage non disponible
+    }
+    return {};
+  });
+
+  // Sauvegarde automatique des favoris dans localStorage
+  useEffect(() => {
+    try {
+      const activeIds = Object.keys(favorites).filter((id) => favorites[id]);
+      localStorage.setItem('bw_favorites', JSON.stringify(activeIds));
+    } catch {
+      // Ignorer si stockage non disponible
+    }
+  }, [favorites]);
+
+  const handleToggleFavorite = (productId: string) => {
+    setFavorites((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
+  };
+
   // Sauvegarde automatique du panier dans le stockage local
   useEffect(() => {
     try {
@@ -418,6 +457,7 @@ export default function App() {
           order={completedOrder}
           onContinueShopping={handleContinueShopping}
           onOrderConfirmed={handleConfirmOrderSent}
+          lang={lang}
         />
       </div>
     );
@@ -453,7 +493,9 @@ export default function App() {
             product={selectedProduct} 
             onBack={handleBackToCatalog}
             onAddToCart={handleAddToCart}
-            lang={lang} /* <--- ICI : Passage de la langue active au composant ProductDetail */
+            lang={lang}
+            isFavorite={!!favorites[selectedProduct.id]}
+            onToggleFavorite={handleToggleFavorite}
           />
         ) : !isHomeView ? (
           <div id="catalogue" className="scroll-mt-24">
@@ -465,11 +507,13 @@ export default function App() {
               onAddToCart={handleAddToCart}
               lang={lang}
               isStandaloneView={true}
+              favorites={favorites}
+              onToggleFavorite={handleToggleFavorite}
             />
           </div>
         ) : (
           <>
-            <HeroBanner onNavigateToCatalog={handleNavigateToCatalog} />
+            <HeroBanner onNavigateToCatalog={handleNavigateToCatalog} lang={lang} />
             
             {/* Section Supérieure Asymétrique */}
             <section className="max-w-7xl mx-auto px-4 py-8">
@@ -701,11 +745,16 @@ export default function App() {
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveFromCart}
         onCheckout={handleProceedToCheckout}
+        lang={lang}
       />
 
       <FloatingWhatsApp />
 
-      <Footer onNavigateToCatalog={handleNavigateToCatalog} onNavigateSection={handleNavigateSection} />
+      <Footer 
+        onNavigateToCatalog={handleNavigateToCatalog} 
+        onNavigateSection={handleNavigateSection} 
+        lang={lang}
+      />
     </div>
   );
 }
