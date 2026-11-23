@@ -38,7 +38,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateToCatalog, lang = 'ar'
                 {isAr ? `توصيل بـ ${SITE.shippingFee} درهم` : `Livraison à ${SITE.shippingFee} MAD`}
               </h4>
               <p className="text-xs text-slate-400">
-                {isAr ? 'لكافة المدن المغربية (24h/48h)' : 'Partout au Maroc (24h/48h)'}
+                {isAr ? 'لكافة المدن المغربية (24 إلى 48 ساعة)' : 'Partout au Maroc (24h à 48h)'}
               </p>
             </div>
           </div>

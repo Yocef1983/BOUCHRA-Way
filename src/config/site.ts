@@ -59,5 +59,5 @@ export const getShippingLabel = (
   return { label, isFree, amount };
 };
 
-export const toWhatsApp = (message: string): string =>
-  `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(message)}`;
+export const SHIPPING_DELAY_FR = '24h à 48h';
+export const SHIPPING_DELAY_AR = '24 إلى 48 ساعة';

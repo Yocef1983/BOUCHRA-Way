@@ -152,6 +152,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     <img
                       src={item.product.image}
                       alt={productName}
+                      width={80}
+                      height={80}
+                      decoding="async"
                       onError={(e) => handleImageError(e, item.product.name)}
                       className="max-h-full max-w-full object-contain"
                     />
@@ -271,7 +274,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </span>
               <span className="flex items-center gap-1">
                 <Truck size={12} className="text-blue-600" />
-                {isAr ? '24 إلى 72 ساعة' : '24h à 72h'}
+                {isAr ? '24 إلى 48 ساعة' : '24h à 48h'}
               </span>
               <span className="flex items-center gap-1">
                 <ShieldCheck size={12} className="text-[#E6007E]" />

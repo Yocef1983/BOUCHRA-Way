@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import HeroBanner from './components/HeroBanner';
 import { ProductCatalog } from './components/ProductCatalog';
-import { ProductDetail } from './components/ProductDetail';
-import { CartDrawer } from './components/CartDrawer';
-import { CheckoutPage } from './components/CheckoutPage';
-import { OrderSuccess } from './components/OrderSuccess';
-import { FloatingWhatsApp } from './components/FloatingWhatsApp';
-import RegistrationForm from './components/RegistrationForm';
+const ProductDetail = lazy(() => import('./components/ProductDetail').then(m => ({ default: m.ProductDetail })));
+const CartDrawer = lazy(() => import('./components/CartDrawer').then(m => ({ default: m.CartDrawer })));
+const CheckoutPage = lazy(() => import('./components/CheckoutPage').then(m => ({ default: m.CheckoutPage })));
+const OrderSuccess = lazy(() => import('./components/OrderSuccess').then(m => ({ default: m.OrderSuccess })));
+const RegistrationForm = lazy(() => import('./components/RegistrationForm').then(m => ({ default: m.default || (m as any).RegistrationForm })));
+const FloatingWhatsApp = lazy(() => import('./components/FloatingWhatsApp').then(m => ({ default: m.FloatingWhatsApp })));
 import Footer from './components/Footer';
-import { Testimonials } from './components/Testimonials';
+const Testimonials = lazy(() => import('./components/Testimonials').then(m => ({ default: m.Testimonials })));
 import { Product, PRODUCTS } from './data/products';
 import { CartItem, CompletedOrder } from './types/cart';
 import { CheckCircle2, Gift, Users, BookOpen, Sparkles } from 'lucide-react';
@@ -427,24 +427,28 @@ export default function App() {
   if (currentView === 'checkout') {
     return (
       <div className="min-h-screen bg-[#FDFCFB] flex flex-col" dir={t.dir}>
-        <CheckoutPage
-          items={cartItems}
-          onBackToCart={() => {
-            setCurrentView('main');
-            setIsCartOpen(true);
-          }}
-          onOrderSuccess={handleOrderSuccess}
-          lang={lang}
-        />
-        <CartDrawer
-          isOpen={isCartOpen}
-          onClose={() => setIsCartOpen(false)}
-          items={cartItems}
-          onUpdateQuantity={handleUpdateQuantity}
-          onRemoveItem={handleRemoveFromCart}
-          onCheckout={handleProceedToCheckout}
-          lang={lang}
-        />
+        <Suspense fallback={<div className="p-8 text-center">{lang === 'fr' ? 'Chargement…' : '...جارٍ التحميل'}</div>}>
+          <CheckoutPage
+            items={cartItems}
+            onBackToCart={() => {
+              setCurrentView('main');
+              setIsCartOpen(true);
+            }}
+            onOrderSuccess={handleOrderSuccess}
+            lang={lang}
+          />
+        </Suspense>
+        <Suspense fallback={null}>
+          <CartDrawer
+            isOpen={isCartOpen}
+            onClose={() => setIsCartOpen(false)}
+            items={cartItems}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveItem={handleRemoveFromCart}
+            onCheckout={handleProceedToCheckout}
+            lang={lang}
+          />
+        </Suspense>
       </div>
     );
   }
@@ -453,12 +457,14 @@ export default function App() {
   if (currentView === 'success' && completedOrder) {
     return (
       <div className="min-h-screen bg-[#FDFCFB] flex flex-col" dir={t.dir}>
-        <OrderSuccess
-          order={completedOrder}
-          onContinueShopping={handleContinueShopping}
-          onOrderConfirmed={handleConfirmOrderSent}
-          lang={lang}
-        />
+        <Suspense fallback={<div className="p-8 text-center">{lang === 'fr' ? 'Chargement…' : '...جارٍ التحميل'}</div>}>
+          <OrderSuccess
+            order={completedOrder}
+            onContinueShopping={handleContinueShopping}
+            onOrderConfirmed={handleConfirmOrderSent}
+            lang={lang}
+          />
+        </Suspense>
       </div>
     );
   }
@@ -489,14 +495,16 @@ export default function App() {
       {/* Contenu principal : alternance entre Catalogue, Fiche Produit et Accueil */}
       <main className="flex-1">
         {selectedProduct ? (
-          <ProductDetail 
-            product={selectedProduct} 
-            onBack={handleBackToCatalog}
-            onAddToCart={handleAddToCart}
-            lang={lang}
-            isFavorite={!!favorites[selectedProduct.id]}
-            onToggleFavorite={handleToggleFavorite}
-          />
+          <Suspense fallback={<div className="p-8 text-center">{lang === 'fr' ? 'Chargement…' : '...جارٍ التحميل'}</div>}>
+            <ProductDetail
+              product={selectedProduct}
+              onBack={handleBackToCatalog}
+              onAddToCart={handleAddToCart}
+              lang={lang}
+              isFavorite={!!favorites[selectedProduct.id]}
+              onToggleFavorite={handleToggleFavorite}
+            />
+          </Suspense>
         ) : !isHomeView ? (
           <div id="catalogue" className="scroll-mt-24">
             <ProductCatalog
@@ -551,7 +559,9 @@ export default function App() {
                   </a>
                 </div>
 
-                <RegistrationForm />
+                <Suspense fallback={null}>
+                  <RegistrationForm />
+                </Suspense>
               </div>
             </section>
 
@@ -684,7 +694,9 @@ export default function App() {
               </div>
             </section>
 
-            <Testimonials />
+            <Suspense fallback={null}>
+              <Testimonials />
+            </Suspense>
 
             {/* Section Institutionnelle */}
             <section className="max-w-7xl mx-auto px-4 py-10 mb-6">
@@ -738,17 +750,21 @@ export default function App() {
         )}
       </main>
 
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        items={cartItems}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemoveItem={handleRemoveFromCart}
-        onCheckout={handleProceedToCheckout}
-        lang={lang}
-      />
+      <Suspense fallback={null}>
+        <CartDrawer
+          isOpen={isCartOpen}
+          onClose={() => setIsCartOpen(false)}
+          items={cartItems}
+          onUpdateQuantity={handleUpdateQuantity}
+          onRemoveItem={handleRemoveFromCart}
+          onCheckout={handleProceedToCheckout}
+          lang={lang}
+        />
+      </Suspense>
 
-      <FloatingWhatsApp />
+      <Suspense fallback={null}>
+        <FloatingWhatsApp />
+      </Suspense>
 
       <Footer 
         onNavigateToCatalog={handleNavigateToCatalog} 

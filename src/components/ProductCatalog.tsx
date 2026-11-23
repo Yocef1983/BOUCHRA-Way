@@ -364,6 +364,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     <img
                       src={product.image}
                       alt={product.altText || productName}
+                      width={200}
+                      height={200}
+                      decoding="async"
                       loading="lazy"
                       onError={(e) => handleImageError(e, product.name)}
                       className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"

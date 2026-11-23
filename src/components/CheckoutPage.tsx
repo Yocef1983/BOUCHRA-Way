@@ -594,11 +594,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     <div key={item.product.id} className="flex items-center gap-3">
                       <div className="relative w-14 h-14 bg-stone-50 rounded-lg p-1 border border-gray-100 shrink-0 flex items-center justify-center">
 <img
-                           src={item.product.image}
-                           alt={lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name)}
-                           onError={(e) => handleImageError(e, item.product.name)}
-                           className="max-h-full max-w-full object-contain"
-                         />
+                            src={item.product.image}
+                            alt={lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name)}
+                            width={56}
+                            height={56}
+                            decoding="async"
+                            onError={(e) => handleImageError(e, item.product.name)}
+                            className="max-h-full max-w-full object-contain"
+                          />
                         <span className="absolute -top-1.5 -left-1.5 bg-black text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
                           {item.quantity}
                         </span>

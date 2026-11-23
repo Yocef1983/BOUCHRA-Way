@@ -92,8 +92,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   // Gestion anti-images brisées intelligente
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const target = e.currentTarget;
-    if (target.src.startsWith('data:image')) return;
-    target.src = `/image/placeholder.webp`;
+    if (target.dataset.fallbackApplied === '1') return;
+    target.dataset.fallbackApplied = '1';
+    target.src = `/image/5818.webp`;
   };
 
   const handleAddToCartClick = () => {
@@ -207,6 +208,9 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
               <img
                 src={product.image}
                 alt={displayName}
+                width={400}
+                height={400}
+                decoding="async"
                 loading="eager"
                 onError={handleImageError}
                 className="max-h-[320px] sm:max-h-[380px] w-auto max-w-full object-contain transition-transform duration-500 group-hover:scale-105"
