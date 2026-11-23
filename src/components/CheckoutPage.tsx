@@ -237,7 +237,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         `\n📦 *المنتجات المطلوبة / Articles:*\n${itemsListText}\n\n` +
         `💰 *المجموع الجزئي (أسعار العموم):* ${subtotal} MAD\n` +
         memberDiscountLine +
-        `🚚 *مصاريف التوصيل:* ${shipping === 0 ? 'مجاناً (Offerte)' : `${shipping} MAD`}\n` +
+        `🚚 *مصاريف التوصيل:* ${shipping} MAD\n` +
         `💵 *المبلغ الإجمالي المستحق عند الاستلام:* *${finalTotal} MAD*\n` +
         `*(الدفع عند الاستلام بدون أي مصاريف إضافية مخفية)*\n\n` +
         `⏱️ *التاريخ:* ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Casablanca' })}\n` +
@@ -707,13 +707,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
                   <div className="flex items-center justify-between">
                     <span>{lang === 'fr' ? 'Frais de livraison :' : 'مصاريف التوصيل :'}</span>
-                    {shipping === 0 ? (
-                      <span className="font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
-                        {lang === 'fr' ? 'Offerte (Gratuite)' : 'مجاناً (Offerte)'}
-                      </span>
-                    ) : (
-                      <span className="font-semibold text-gray-800" dir="ltr">{shipping} MAD</span>
-                    )}
+                    <span className="font-semibold text-gray-800" dir="ltr">{shipping} MAD</span>
                   </div>
 
                   {/* Total général */}

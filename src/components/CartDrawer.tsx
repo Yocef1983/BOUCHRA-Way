@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowLeft, Truck, Banknote, ShieldCheck } from 'lucide-react';
 import { CartItem } from '../types/cart';
-import { SITE, getFreeShippingProgress } from '../config/site';
+import { SITE, computeShipping } from '../config/site';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -50,14 +50,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const totalItemsCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   
-  // Utiliser les fonctions centralisées pour l'affichage cohérent
-  const freeShippingProgress = getFreeShippingProgress(subtotal, lang);
-  const remainingForFreeShipping = freeShippingProgress.remaining;
-  const progressPercent = freeShippingProgress.percent;
-  
-  // Le tiroir panier n'a pas de ville sélectionnée, on utilise computeShipping sans ville
-  // (seuil de gratuité seulement, pas d'exemption par ville)
-  const shippingCost = items.length === 0 ? 0 : (subtotal >= SITE.freeShippingThreshold ? 0 : SITE.shippingFee);
+  // Frais de livraison fixes 20 MAD pour toute commande
+  const shippingCost = items.length === 0 ? 0 : computeShipping(subtotal);
 
   const finalTotal = subtotal + shippingCost;
 
@@ -104,27 +98,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           </button>
         </div>
 
-        {/* Barre de progression livraison offerte */}
-        <div className="bg-pink-50/70 px-5 py-3 border-b border-pink-100">
-          {remainingForFreeShipping > 0 ? (
-            <p className="text-xs text-gray-700 mb-1.5 leading-relaxed">
-              باقي <strong className="text-[#E6007E] font-bold">{remainingForFreeShipping} MAD</strong> للاستفادة من <strong>التوصيل المجاني</strong> بالمغرب
-            </p>
-          ) : (
-            <p className="text-xs text-emerald-800 font-bold mb-1.5 flex items-center gap-1">
-              <span>🎉 هنيئاً لك ! استفدت من التوصيل المجاني بالمغرب !</span>
-            </p>
-          )}
-          <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
-            <div 
-              className="bg-[#E6007E] h-full rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${progressPercent}%` }}
-            />
+        {/* Frais de livraison fixes et réassurance COD marocain */}
+        <div className="px-5 pt-3 pb-1 space-y-2">
+          <div className="p-2.5 bg-pink-50/70 border border-pink-100 rounded-xl flex items-center justify-between text-xs text-gray-800 font-medium">
+            <span className="flex items-center gap-1.5">
+              <Truck size={15} className="text-[#E6007E] shrink-0" />
+              <span>{lang === 'fr' ? 'Livraison partout au Maroc :' : 'توصيل لجميع مدن المغرب :'}</span>
+            </span>
+            <span className="font-bold text-[#E6007E]" dir="ltr">{SITE.shippingFee} MAD</span>
           </div>
-        </div>
-
-        {/* Badge réassurance COD marocain */}
-        <div className="px-5 pt-3 pb-1">
           <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-xs text-emerald-900 font-medium">
             <Banknote size={16} className="text-emerald-600 shrink-0" />
             <span>الدفع عند الاستلام بدون أي مصاريف إضافية (COD)</span>
@@ -243,14 +225,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
             {/* Livraison */}
             <div className="flex items-center justify-between text-xs text-gray-500">
-              <span>مصاريف التوصيل / Livraison</span>
-              {shippingCost === 0 ? (
-                <span className="text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded">
-                  مجاناً / Offerte
-                </span>
-              ) : (
-                <span className="font-medium text-gray-700">{SITE.shippingFee} MAD</span>
-              )}
+              <span>{lang === 'fr' ? 'Frais de livraison :' : 'مصاريف التوصيل :'}</span>
+              <span className="font-semibold text-gray-800" dir="ltr">{shippingCost} MAD</span>
             </div>
 
             {/* Total général */}
