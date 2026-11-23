@@ -225,7 +225,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
       const waMessage = 
         `*طلب شراء جديد عبر الموقع - ${orderRef}* 🛍️\n` +
-        `*(خدمة الدفع عند الاستلام بدون أي مصاريف إضافية)* 🇲🇦\n\n` +
+        `*(خدمة الدفع عند الاستلام - توصيل سريع لجميع المدن)* 🇲🇦\n\n` +
         `👤 *معلومات الزبون / Client:*\n` +
         `▪ *الاسم الكامل:* ${sanitizedFirstName} ${sanitizedLastName}\n` +
         `▪ *رقم الهاتف:* +${sanitizedPhone}\n` +
@@ -239,7 +239,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         memberDiscountLine +
         `🚚 *مصاريف التوصيل:* ${shipping} MAD\n` +
         `💵 *المبلغ الإجمالي المستحق عند الاستلام:* *${finalTotal} MAD*\n` +
-        `*(الدفع عند الاستلام بدون أي مصاريف إضافية مخفية)*\n\n` +
+        `*(المبلغ الإجمالي يشمل ${shipping} MAD مصاريف التوصيل)*\n\n` +
         `⏱️ *التاريخ:* ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Casablanca' })}\n` +
         `المرجو تأكيد موعد التوصيل. شكراً!`;
 
@@ -339,7 +339,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         {/* Bandeau de réassurance COD supérieur */}
         <div className="bg-emerald-50 border-t border-emerald-100 py-1.5 px-4 text-center text-xs text-emerald-900 font-bold flex items-center justify-center gap-2">
           <Banknote size={15} className="text-emerald-700" />
-          <span>الدفع عند الاستلام بدون أي مصاريف إضافية (0 درهم مصاريف مخفية)</span>
+          <span>
+            {lang === 'fr'
+              ? `Paiement en espèces à la livraison — Livraison partout au Maroc (${SITE.shippingFee} MAD)`
+              : `الدفع نقداً عند الاستلام — توصيل سريع لجميع المدن (${SITE.shippingFee} درهم)`}
+          </span>
         </div>
       </header>
 
@@ -726,11 +730,19 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                   </div>
                 </div>
 
-                {/* Encart réassurance COD sans frais cachés */}
+                {/* Encart réassurance COD transparent avec frais de livraison inclus */}
                 <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-950 flex items-start gap-2">
                   <Banknote size={16} className="text-emerald-700 shrink-0 mt-0.5" />
                   <p className="leading-relaxed">
-                    <strong>الدفع عند الاستلام بدون أي مصاريف إضافية</strong> (0 درهم مصاريف مخفية). تأكد من طلبيتك قبل الدفع نقداً للموزع.
+                    {lang === 'fr' ? (
+                      <>
+                        <strong>Paiement en espèces à la livraison</strong> (total incluant {shipping} MAD de frais de livraison). Vérifiez votre commande à la réception.
+                      </>
+                    ) : (
+                      <>
+                        <strong>الدفع نقداً عند الاستلام</strong> (المبلغ الإجمالي يشمل {shipping} درهم مصاريف التوصيل). تأكد من طلبيتك قبل التسليم.
+                      </>
+                    )}
                   </p>
                 </div>
 
