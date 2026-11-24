@@ -117,16 +117,20 @@ export default function Navbar({
     },
     {
       id: 'menage',
-      label: 'منظفات المنزل',
-      labelFr: 'Entretien ménager',
-      categoryId: 'منظفات المنزل',
-      isDirectLink: true
+      label: 'العناية المنزلية',
+      labelFr: 'Maison & Entretien',
+      categoryId: 'العناية المنزلية',
+      subCategories: [
+        { label: 'منظفات الملابس', labelFr: 'Lessive et soin du linge', categoryId: 'العناية المنزلية' },
+        { label: 'الأرضيات والأسطح', labelFr: 'Sols et surfaces', categoryId: 'العناية المنزلية' },
+        { label: 'مزيلات البقع متعدد الاستخدامات', labelFr: 'Détachants / Solvants multi-usages', categoryId: 'العناية المنزلية' },
+      ]
     },
     {
       id: 'enfants',
-      label: 'أطفال',
-      labelFr: 'Enfants',
-      categoryId: 'أطفال',
+      label: 'الأطفال والرضع',
+      labelFr: 'Enfants & Bébé',
+      categoryId: 'الأطفال والرضع',
       isDirectLink: true
     }
   ];
@@ -260,8 +264,8 @@ export default function Navbar({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="ابحثي عن منتجات العناية، المكياج، أو المنظفات..."
-            className="w-full pl-9 pr-10 py-2 border border-pink-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 bg-pink-50/30 text-right transition"
+            placeholder={lang === 'fr' ? 'Rechercher un produit, soin, maquillage, maison...' : 'ابحثي عن منتجات العناية، المكياج، أو المنظفات...'}
+            className="w-full pl-9 pr-10 py-2 border border-pink-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 bg-pink-50/30 text-start transition"
           />
           <Search className="absolute right-3.5 top-2.5 text-pink-400 w-4 h-4 pointer-events-none" />
           {searchQuery && (
@@ -316,8 +320,8 @@ export default function Navbar({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="ابحثي عن منتج بالاسم أو القسم..."
-            className="w-full pl-8 pr-9 py-1.5 border border-pink-200 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-pink-500 bg-pink-50/40 text-right"
+            placeholder={lang === 'fr' ? 'Rechercher un produit...' : 'ابحثي عن منتج بالاسم أو القسم...'}
+            className="w-full pl-8 pr-9 py-1.5 border border-pink-200 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-pink-500 bg-pink-50/40 text-start"
           />
           <Search className="absolute right-3 top-2 text-pink-400 w-3.5 h-3.5 pointer-events-none" />
           {searchQuery && (
@@ -345,7 +349,7 @@ export default function Navbar({
                 className={`px-2.5 py-2 rounded-lg hover:text-pink-700 hover:bg-pink-100/60 transition flex items-center gap-1 cursor-pointer ${selectedCategory === 'all' && !searchQuery && !selectedSubCategory ? 'text-pink-700 font-bold bg-pink-100/40' : ''}`}
               >
                 <Home className="w-3.5 h-3.5" />
-                <span>الصفحة الرئيسية</span>
+                <span>{lang === 'fr' ? 'Accueil' : 'الصفحة الرئيسية'}</span>
               </button>
             </li>
 
@@ -356,7 +360,7 @@ export default function Navbar({
                 className="px-2.5 py-2 rounded-lg hover:text-pink-700 hover:bg-pink-100/60 transition flex items-center gap-1 cursor-pointer"
               >
                 <Layers className="w-3.5 h-3.5" />
-                <span>كل المنتجات</span>
+                <span>{lang === 'fr' ? 'Tous les produits' : 'كل المنتجات'}</span>
               </button>
             </li>
 
@@ -364,11 +368,15 @@ export default function Navbar({
             {menuCategories.map((category) => {
               const hasSubCategories = category.subCategories && category.subCategories.length > 0;
               const isHovered = hoveredCategory === category.id;
-              const isCategoryActive = selectedCategory === category.categoryId || selectedCategory === category.id;
+              const isCategoryActive = 
+                selectedCategory === category.categoryId || 
+                selectedCategory === category.id ||
+                (category.id === 'menage' && (selectedCategory === 'منظفات المنزل' || selectedCategory === 'العناية المنزلية' || selectedCategory === 'Maison & Entretien')) ||
+                (category.id === 'enfants' && (selectedCategory === 'أطفال' || selectedCategory === 'الأطفال والرضع' || selectedCategory === 'Enfants & Bébé'));
               const displayLabel = (lang === 'fr' && category.labelFr) ? category.labelFr : category.label;
 
               if (category.isDirectLink || !hasSubCategories) {
-                // أقسام مباشرة بدون قائمة منسدلة (منظفات المنزل، أطفال)
+                // أقسام مباشرة بدون قائمة منسدلة (الأطفال والرضع)
                 return (
                   <li key={category.id}>
                     <button
@@ -418,7 +426,7 @@ export default function Navbar({
                   {/* القائمة المنسدلة المنبثقة (Dropdown Desktop) */}
                   <div 
                     id={`dropdown-${category.id}`}
-                    className={`absolute top-full right-0 pt-1.5 min-w-[210px] z-50 transition-all duration-200 ease-out origin-top-right ${
+                    className={`absolute top-full ${lang === 'fr' ? 'left-0 origin-top-left' : 'right-0 origin-top-right'} pt-1.5 min-w-[220px] z-50 transition-all duration-200 ease-out ${
                       isHovered 
                         ? 'opacity-100 visible translate-y-0 pointer-events-auto' 
                         : 'opacity-0 invisible -translate-y-1 pointer-events-none'
@@ -426,26 +434,35 @@ export default function Navbar({
                     role="menu"
                     aria-label={displayLabel}
                   >
-                    <div className="bg-white rounded-2xl shadow-xl shadow-pink-950/10 border border-pink-100 p-2 text-right overflow-hidden">
+                    <div className="bg-white rounded-2xl shadow-xl shadow-pink-950/10 border border-pink-100 p-2 text-start overflow-hidden">
                       {/* رأس القائمة */}
-                      <div className="px-3 py-1.5 mb-1 border-b border-gray-100 flex items-center justify-between text-[11px] text-pink-700 font-bold bg-pink-50/60 rounded-lg">
-                        <span>{displayLabel}</span>
-                        <Sparkles size={12} className="text-pink-500" />
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleMainCategoryClick(category.categoryId)}
+                        className="w-full px-3 py-1.5 mb-1 border-b border-gray-100 flex items-center justify-between text-[11px] text-pink-700 font-bold bg-pink-50/60 hover:bg-pink-100/60 rounded-lg transition cursor-pointer text-start"
+                      >
+                        <span>{lang === 'fr' ? `Tous les produits (${displayLabel})` : `عرض الكل (${displayLabel})`}</span>
+                        <Sparkles size={12} className="text-pink-500 shrink-0" />
+                      </button>
 
                       {/* عناصر القائمة المنسدلة (الفرعية) */}
                       <div className="space-y-0.5">
                         {category.subCategories.map((subItem, idx) => {
                           const subDisplayLabel = (lang === 'fr' && subItem.labelFr) ? subItem.labelFr : subItem.label;
+                          const isSubActive = selectedSubCategory === subItem.label || (subItem.labelFr !== undefined && selectedSubCategory === subItem.labelFr);
                           return (
                             <button
                               key={idx}
                               type="button"
                               onClick={() => handleSubCategorySelect(subItem.categoryId, subItem.label)}
-                              className="w-full text-right px-3 py-2 rounded-xl text-xs text-gray-700 hover:text-pink-700 hover:bg-pink-50 transition flex items-center justify-between group/sub cursor-pointer"
+                              className={`w-full text-start px-3 py-2 rounded-xl text-xs transition flex items-center justify-between group/sub cursor-pointer ${
+                                isSubActive
+                                  ? 'text-pink-700 font-bold bg-pink-100/70'
+                                  : 'text-gray-700 hover:text-pink-700 hover:bg-pink-50'
+                              }`}
                             >
                               <span>{subDisplayLabel}</span>
-                              <ChevronLeft size={13} className="text-gray-300 group-hover/sub:text-pink-600 transition-transform group-hover/sub:-translate-x-0.5" />
+                              <ChevronLeft size={13} className={`text-gray-300 group-hover/sub:text-pink-600 transition-transform ${lang === 'fr' ? 'rotate-180 group-hover/sub:translate-x-0.5' : 'group-hover/sub:-translate-x-0.5'}`} />
                             </button>
                           );
                         })}
@@ -463,8 +480,8 @@ export default function Navbar({
                 onClick={(e) => handleSectionClick(e, 'opportunity')}
                 className="px-2.5 py-2 rounded-lg hover:text-pink-700 hover:bg-pink-100/60 transition flex items-center gap-1 text-purple-900 font-bold cursor-pointer"
               >
-                <span>إنضم إلينا</span>
-                <span className="text-[10px] bg-amber-200 text-amber-950 px-1.5 py-0.2 rounded-full font-bold">فرصة</span>
+                <span>{lang === 'fr' ? 'Rejoignez-nous' : 'إنضم إلينا'}</span>
+                <span className="text-[10px] bg-amber-200 text-amber-950 px-1.5 py-0.2 rounded-full font-bold">{lang === 'fr' ? 'Opportunité' : 'فرصة'}</span>
               </a>
             </li>
 
@@ -476,7 +493,7 @@ export default function Navbar({
                 className="px-2.5 py-2 rounded-lg bg-pink-600 hover:bg-pink-700 text-white font-bold transition flex items-center gap-1 shadow-xs cursor-pointer"
               >
                 <Phone className="w-3.5 h-3.5" />
-                <span>تواصل معنا</span>
+                <span>{lang === 'fr' ? 'Contactez-nous' : 'تواصل معنا'}</span>
               </a>
             </li>
 
@@ -522,17 +539,17 @@ export default function Navbar({
             <div className="mb-4 space-y-1">
               <button
                 onClick={() => handleHomeClick()}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-800 hover:bg-pink-50 hover:text-pink-700 font-medium text-xs sm:text-sm text-right"
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-800 hover:bg-pink-50 hover:text-pink-700 font-medium text-xs sm:text-sm text-start"
               >
                 <Home size={16} className="text-pink-600" />
-                <span>الصفحة الرئيسية</span>
+                <span>{lang === 'fr' ? "Page d'accueil" : 'الصفحة الرئيسية'}</span>
               </button>
               <button
                 onClick={() => handleAllProductsClick()}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-800 hover:bg-pink-50 hover:text-pink-700 font-medium text-xs sm:text-sm text-right"
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-800 hover:bg-pink-50 hover:text-pink-700 font-medium text-xs sm:text-sm text-start"
               >
                 <Layers size={16} className="text-pink-600" />
-                <span>كل المنتجات (عرض الكتالوج)</span>
+                <span>{lang === 'fr' ? 'Tous les produits (Catalogue)' : 'كل المنتجات (عرض الكتالوج)'}</span>
               </button>
             </div>
 
@@ -541,7 +558,7 @@ export default function Navbar({
               <div className="flex items-center justify-between text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
                 <span className="flex items-center gap-1.5">
                   <Sparkles size={14} className="text-pink-600" />
-                  <span>أقسام وفئات المنتجات</span>
+                  <span>{lang === 'fr' ? 'Catégories & Rayons' : 'أقسام وفئات المنتجات'}</span>
                 </span>
               </div>
 
@@ -549,7 +566,11 @@ export default function Navbar({
                 {menuCategories.map((category) => {
                   const hasSubCategories = category.subCategories && category.subCategories.length > 0;
                   const isExpanded = expandedMobileCategory === category.id;
-                  const isCategoryActive = selectedCategory === category.categoryId || selectedCategory === category.id;
+                  const isCategoryActive = 
+                    selectedCategory === category.categoryId || 
+                    selectedCategory === category.id ||
+                    (category.id === 'menage' && (selectedCategory === 'منظفات المنزل' || selectedCategory === 'العناية المنزلية' || selectedCategory === 'Maison & Entretien')) ||
+                    (category.id === 'enfants' && (selectedCategory === 'أطفال' || selectedCategory === 'الأطفال والرضع' || selectedCategory === 'Enfants & Bébé'));
                   const displayLabel = (lang === 'fr' && category.labelFr) ? category.labelFr : category.label;
 
                   if (category.isDirectLink || !hasSubCategories) {
@@ -558,14 +579,14 @@ export default function Navbar({
                         key={category.id}
                         type="button"
                         onClick={() => handleMainCategoryClick(category.categoryId)}
-                        className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition cursor-pointer text-right border ${
+                        className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition cursor-pointer text-start border ${
                           isCategoryActive
                             ? 'bg-pink-50 border-pink-200 text-pink-900 font-bold'
                             : 'border-gray-100 text-gray-800 hover:bg-gray-50'
                         }`}
                       >
                         <span>{displayLabel}</span>
-                        <ChevronLeft size={14} className="text-gray-400" />
+                        <ChevronLeft size={14} className={`text-gray-400 ${lang === 'fr' ? 'rotate-180' : ''}`} />
                       </button>
                     );
                   }
@@ -576,7 +597,7 @@ export default function Navbar({
                       <button
                         type="button"
                         onClick={() => setExpandedMobileCategory(isExpanded ? null : category.id)}
-                        className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-sm font-medium transition cursor-pointer text-right ${
+                        className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-sm font-medium transition cursor-pointer text-start ${
                           isCategoryActive
                             ? 'bg-pink-50 text-pink-900 font-bold'
                             : 'text-gray-800 hover:bg-gray-50'
@@ -597,17 +618,30 @@ export default function Navbar({
                       {/* قائمة العناصر الفرعية للهاتف */}
                       {isExpanded && (
                         <div className="bg-pink-50/40 p-2 space-y-1 border-t border-pink-100/50">
+                          <button
+                            type="button"
+                            onClick={() => handleMainCategoryClick(category.categoryId)}
+                            className="w-full text-start px-3 py-1.5 rounded-lg text-xs font-bold text-pink-700 hover:bg-white transition flex items-center justify-between cursor-pointer border-b border-pink-100/70 mb-1 pb-2"
+                          >
+                            <span>{lang === 'fr' ? `Tous les produits (${displayLabel})` : `عرض الكل في (${displayLabel})`}</span>
+                            <ChevronLeft size={13} className={`text-pink-600 ${lang === 'fr' ? 'rotate-180' : ''}`} />
+                          </button>
                           {category.subCategories.map((subItem, idx) => {
                             const subDisplayLabel = (lang === 'fr' && subItem.labelFr) ? subItem.labelFr : subItem.label;
+                            const isSubActive = selectedSubCategory === subItem.label || (subItem.labelFr !== undefined && selectedSubCategory === subItem.labelFr);
                             return (
                               <button
                                 key={idx}
                                 type="button"
                                 onClick={() => handleSubCategorySelect(subItem.categoryId, subItem.label)}
-                                className="w-full text-right px-3 py-1.5 rounded-lg text-xs text-gray-700 hover:text-pink-700 hover:bg-white transition flex items-center justify-between cursor-pointer"
+                                className={`w-full text-start px-3 py-1.5 rounded-lg text-xs transition flex items-center justify-between cursor-pointer ${
+                                  isSubActive
+                                    ? 'bg-pink-100/70 text-pink-900 font-bold'
+                                    : 'text-gray-700 hover:text-pink-700 hover:bg-white'
+                                }`}
                               >
                                 <span>{subDisplayLabel}</span>
-                                <ChevronLeft size={13} className="text-gray-300" />
+                                <ChevronLeft size={13} className={`text-gray-300 ${lang === 'fr' ? 'rotate-180' : ''}`} />
                               </button>
                             );
                           })}
@@ -628,9 +662,9 @@ export default function Navbar({
               >
                 <span className="flex items-center gap-2">
                   <Sparkles size={16} className="text-amber-600" />
-                  <span>إنضم إلينا (فرصة زيادة الدخل)</span>
+                  <span>{lang === 'fr' ? 'Rejoignez-nous (Opportunité)' : 'إنضم إلينا (فرصة زيادة الدخل)'}</span>
                 </span>
-                <span className="text-[10px] bg-amber-200 text-amber-950 px-2 py-0.5 rounded-full font-bold">فرصة</span>
+                <span className="text-[10px] bg-amber-200 text-amber-950 px-2 py-0.5 rounded-full font-bold">{lang === 'fr' ? 'Opportunité' : 'فرصة'}</span>
               </a>
 
               <a
@@ -640,7 +674,7 @@ export default function Navbar({
               >
                 <span className="flex items-center gap-2">
                   <Phone size={16} />
-                  <span>تواصل معنا (السياسات وخدمة الزبناء)</span>
+                  <span>{lang === 'fr' ? 'Contactez-nous (Service client)' : 'تواصل معنا (السياسات وخدمة الزبناء)'}</span>
                 </span>
               </a>
             </div>

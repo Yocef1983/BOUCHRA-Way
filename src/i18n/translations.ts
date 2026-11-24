@@ -64,17 +64,47 @@ export const categoryHierarchy = {
     ]
   },
   menage: {
-    categoryId: 'منظفات المنزل',
-    label: 'منظفات المنزل',
-    labelFr: 'Entretien ménager',
-    subCategories: []
+    categoryId: 'العناية المنزلية',
+    label: 'العناية المنزلية',
+    labelFr: 'Maison & Entretien',
+    subCategories: [
+      { id: 'منظفات الملابس', label: 'منظفات الملابس', labelFr: 'Lessive et soin du linge' },
+      { id: 'الأرضيات والأسطح', label: 'الأرضيات والأسطح', labelFr: 'Sols et surfaces' },
+      { id: 'مزيلات البقع متعدد الاستخدامات', label: 'مزيلات البقع متعدد الاستخدامات', labelFr: 'Détachants / Solvants multi-usages' },
+    ]
   },
   enfants: {
+    categoryId: 'الأطفال والرضع',
+    label: 'الأطفال والرضع',
+    labelFr: 'Enfants & Bébé',
+    subCategories: []
+  },
+  legacyMenage: {
+    categoryId: 'منظفات المنزل',
+    label: 'منظفات المنزل',
+    labelFr: 'Maison & Entretien',
+    subCategories: []
+  },
+  legacyEnfants: {
     categoryId: 'أطفال',
     label: 'أطفال',
-    labelFr: 'Enfants',
+    labelFr: 'Enfants & Bébé',
     subCategories: []
   }
+};
+
+export const getSubCategoryTranslation = (subCategory: string, targetLang: Language): string => {
+  for (const catKey of Object.keys(categoryHierarchy) as Array<keyof typeof categoryHierarchy>) {
+    const item = categoryHierarchy[catKey];
+    if ('subCategories' in item && Array.isArray(item.subCategories)) {
+      for (const sub of item.subCategories) {
+        if (sub.id === subCategory || sub.label === subCategory || sub.labelFr === subCategory) {
+          return targetLang === 'fr' ? (sub.labelFr || sub.label) : sub.label;
+        }
+      }
+    }
+  }
+  return subCategory;
 };
 
 export const translations = {

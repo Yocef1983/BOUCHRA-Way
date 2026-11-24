@@ -2,6 +2,41 @@ import React, { useState } from 'react';
 import { PRODUCTS } from '../data/products';
 import type { Product } from '../data/products';
 import { Eye, Search, X, RotateCcw, Filter, ChevronLeft, Heart, Plus, Star } from 'lucide-react';
+import { getSubCategoryTranslation } from '../i18n/translations';
+
+// Affectation stricte des SKU pour la catégorie Maison & Entretien
+const MAISON_ENTRETIEN_SKUS = {
+  lessive: ['3284', '3285', '3506'],
+  sols: ['3319', '3510'],
+  detachants: ['3335', '3457', '3467', '4700', '4705'],
+  all: ['3284', '3285', '3506', '3319', '3510', '3335', '3457', '3467', '4700', '4705'],
+};
+
+// Affectation stricte des SKU pour la catégorie Enfants & Bébé
+const ENFANTS_BEBE_SKUS = ['1574', '4282'];
+
+const isLessiveSubCategory = (sub: string): boolean => {
+  const s = sub.trim().toLowerCase();
+  return s === 'منظفات الملابس' || s === 'lessive et soin du linge' || s.includes('lessive');
+};
+
+const isSolsSubCategory = (sub: string): boolean => {
+  const s = sub.trim().toLowerCase();
+  return s === 'الأرضيات والأسطح' || s === 'sols et surfaces' || s.includes('sols');
+};
+
+const isDetachantsSubCategory = (sub: string): boolean => {
+  const s = sub.trim().toLowerCase();
+  return (
+    s === 'مزيلات البقع متعدد الاستخدامات' ||
+    s === 'détachants / solvants multi-usages' ||
+    s === 'detachants / solvants multi-usages' ||
+    s.includes('détachants') ||
+    s.includes('detachants') ||
+    s.includes('solvants') ||
+    s.includes('مزيلات البقع')
+  );
+};
 
 interface ProductCatalogProps {
   onSelectProduct: (product: Product) => void;
@@ -95,17 +130,32 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       'soin-capillaire': 'العناية بالشعر',
       'soinCapillaire': 'العناية بالشعر',
       'العناية بالشعر': 'العناية بالشعر',
-      'menage': 'منظفات المنزل',
-      'منظفات المنزل': 'منظفات المنزل',
-      'enfants': 'أطفال',
-      'أطفال': 'أطفال'
+      // Maison & Entretien
+      'menage': 'العناية المنزلية',
+      'maison-entretien': 'العناية المنزلية',
+      'maison-et-entretien': 'العناية المنزلية',
+      'maison & entretien': 'العناية المنزلية',
+      'Maison & Entretien': 'العناية المنزلية',
+      'العناية المنزلية': 'العناية المنزلية',
+      'منظفات المنزل': 'العناية المنزلية',
+      'entretien ménager': 'العناية المنزلية',
+      'Entretien ménager': 'العناية المنزلية',
+      'Entretien ménagères': 'العناية المنزلية',
+      // Enfants & Bébé
+      'enfants': 'الأطفال والرضع',
+      'enfants-et-bebe': 'الأطفال والرضع',
+      'enfants & bébé': 'الأطفال والرضع',
+      'Enfants & Bébé': 'الأطفال والرضع',
+      'الأطفال والرضع': 'الأطفال والرضع',
+      'أطفال': 'الأطفال والرضع',
+      'Enfants': 'الأطفال والرضع'
     };
     return map[cat] || map[cat.toLowerCase()] || cat;
   };
 
   const normalizedCategory = normalizeCategory(selectedCategory);
 
-  // Catégories officielles issues du fichier Excel
+  // Catégories officielles
   const categories = [
     { id: 'all', label: 'الكل', labelFr: 'Tous les produits' },
     { id: 'ماكياج', label: 'ماكياج', labelFr: 'Maquillage' },
@@ -113,8 +163,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     { id: 'العناية بالجسم', label: 'العناية بالجسم', labelFr: 'Soin du corps' },
     { id: 'العناية بالشعر', label: 'العناية بالشعر', labelFr: 'Soin des cheveux' },
     { id: 'عطور', label: 'عطور', labelFr: 'Parfums' },
-    { id: 'منظفات المنزل', label: 'منظفات المنزل', labelFr: 'Entretien ménager' },
-    { id: 'أطفال', label: 'أطفال', labelFr: 'Enfants' },
+    { id: 'العناية المنزلية', label: 'العناية المنزلية', labelFr: 'Maison & Entretien' },
+    { id: 'الأطفال والرضع', label: 'الأطفال والرضع', labelFr: 'Enfants & Bébé' },
   ];
 
   const getCategoryLabel = (catId: string) => {
@@ -127,32 +177,67 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     return catId;
   };
 
-  // Filtrage combiné conforme aux exigences du fichier Excel
+  const getSubCategoryLabel = (subCat: string): string => {
+    if (isLessiveSubCategory(subCat)) {
+      return lang === 'fr' ? 'Lessive et soin du linge' : 'منظفات الملابس';
+    }
+    if (isSolsSubCategory(subCat)) {
+      return lang === 'fr' ? 'Sols et surfaces' : 'الأرضيات والأسطح';
+    }
+    if (isDetachantsSubCategory(subCat)) {
+      return lang === 'fr' ? 'Détachants / Solvants multi-usages' : 'مزيلات البقع متعدد الاستخدامات';
+    }
+    return getSubCategoryTranslation(subCat, lang);
+  };
+
+  // Filtrage combiné strict
   let filteredProducts = PRODUCTS;
 
-  // 1. Filtrage par catégorie principale (recherche dans le tableau categories[] ou category)
+  // 1. Filtrage par catégorie principale
   if (normalizedCategory !== 'all') {
-    filteredProducts = filteredProducts.filter((product) => {
-      const matchInArray = product.categories && Array.isArray(product.categories) && product.categories.includes(normalizedCategory);
-      const matchSingle = product.category === normalizedCategory;
-      return matchInArray || matchSingle;
-    });
+    if (normalizedCategory === 'العناية المنزلية') {
+      filteredProducts = filteredProducts.filter((product) =>
+        MAISON_ENTRETIEN_SKUS.all.includes(product.sku)
+      );
+    } else if (normalizedCategory === 'الأطفال والرضع') {
+      filteredProducts = filteredProducts.filter((product) =>
+        ENFANTS_BEBE_SKUS.includes(product.sku)
+      );
+    } else {
+      filteredProducts = filteredProducts.filter((product) => {
+        const matchInArray = product.categories && Array.isArray(product.categories) && product.categories.includes(normalizedCategory);
+        const matchSingle = product.category === normalizedCategory;
+        return matchInArray || matchSingle;
+      });
+    }
   }
 
-  // 2. Filtrage par sous-catégorie (vérifie obligatoirement le couple Catégorie parente + Sous-catégorie)
+  // 2. Filtrage par sous-catégorie
   if (selectedSubCategory) {
-    filteredProducts = filteredProducts.filter((product) => {
-      // Si une catégorie parente est sélectionnée, elle doit obligatoirement correspondre
-      if (normalizedCategory !== 'all') {
-        const matchCat = (product.categories && Array.isArray(product.categories) && product.categories.includes(normalizedCategory)) ||
-                         product.category === normalizedCategory;
-        if (!matchCat) return false;
-      }
-      // Vérification de la sous-catégorie dans subCategories[] ou subCategory
-      const matchInSubArray = product.subCategories && Array.isArray(product.subCategories) && product.subCategories.includes(selectedSubCategory);
-      const matchSingleSub = product.subCategory === selectedSubCategory;
-      return matchInSubArray || matchSingleSub;
-    });
+    if (isLessiveSubCategory(selectedSubCategory)) {
+      filteredProducts = filteredProducts.filter((product) =>
+        MAISON_ENTRETIEN_SKUS.lessive.includes(product.sku)
+      );
+    } else if (isSolsSubCategory(selectedSubCategory)) {
+      filteredProducts = filteredProducts.filter((product) =>
+        MAISON_ENTRETIEN_SKUS.sols.includes(product.sku)
+      );
+    } else if (isDetachantsSubCategory(selectedSubCategory)) {
+      filteredProducts = filteredProducts.filter((product) =>
+        MAISON_ENTRETIEN_SKUS.detachants.includes(product.sku)
+      );
+    } else {
+      filteredProducts = filteredProducts.filter((product) => {
+        if (normalizedCategory !== 'all') {
+          const matchCat = (product.categories && Array.isArray(product.categories) && product.categories.includes(normalizedCategory)) ||
+                           product.category === normalizedCategory;
+          if (!matchCat) return false;
+        }
+        const matchInSubArray = product.subCategories && Array.isArray(product.subCategories) && product.subCategories.includes(selectedSubCategory);
+        const matchSingleSub = product.subCategory === selectedSubCategory;
+        return matchInSubArray || matchSingleSub;
+      });
+    }
   }
 
   // 3. Filtrage en temps réel par mot-clé de recherche
@@ -257,7 +342,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 <>
                   <ChevronLeft size={13} className={`text-gray-400 ${lang === 'fr' ? 'rotate-180' : ''}`} />
                   <span className="font-bold text-pink-900 bg-white px-2.5 py-0.5 rounded-full border border-pink-200">
-                    {selectedSubCategory}
+                    {getSubCategoryLabel(selectedSubCategory)}
                   </span>
                 </>
               )}
@@ -472,7 +557,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             </h4>
             <p className="text-xs text-gray-500 mb-6 leading-relaxed">
               {selectedSubCategory
-                ? (lang === 'fr' ? `Aucun produit disponible actuellement dans « ${selectedSubCategory} ». Disponibilité prochaine !` : `لا توجد منتجات مسجلة حالياً في قسم «${selectedSubCategory}». سيتم توفيرها قريباً!`)
+                ? (lang === 'fr' ? `Aucun produit disponible actuellement dans « ${getSubCategoryLabel(selectedSubCategory)} ». Disponibilité prochaine !` : `لا توجد منتجات مسجلة حالياً في قسم «${getSubCategoryLabel(selectedSubCategory)}». سيتم توفيرها قريباً!`)
                 : trimmedSearch !== '' 
                   ? (lang === 'fr' ? `Aucun résultat correspondant à votre recherche « ${searchQuery} » dans cette catégorie.` : `لا توجد نتائج مطابقة لبحثك «${searchQuery}» في هذا القسم.`)
                   : (lang === 'fr' ? 'Aucun produit disponible dans cette catégorie.' : 'لا توجد منتجات متوفرة حالياً في هذا القسم.')}
