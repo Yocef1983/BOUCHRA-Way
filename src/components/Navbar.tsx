@@ -282,16 +282,6 @@ export default function Navbar({
             <LanguageSwitcher currentLang={lang} onLanguageChange={onLanguageChange} />
           )}
 
-          <a
-            href="https://wa.me/212634486494?text=مرحباً%20بوشرى%20واي،%20أود%20التواصل%20والاستفسار%20عن%20المنتجات"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 sm:px-3.5 py-2 rounded-full font-semibold transition shadow-xs"
-          >
-            <Phone className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">واتساب</span>
-          </a>
-
           <button 
             type="button"
             onClick={() => {
@@ -307,11 +297,11 @@ export default function Navbar({
                 : (cartCount > 0 ? `سلة التسوق (${cartCount} ${cartCount === 1 ? 'منتج' : 'منتجات'})` : 'سلة التسوق (فارغة)')
             }
             title={lang === 'fr' ? 'Panier' : 'السلة والتسوق'}
-            className="relative cursor-pointer p-2 bg-pink-50 rounded-full text-pink-700 hover:bg-pink-100 transition active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#E6007E]"
+            className="relative cursor-pointer px-3.5 py-2.5 bg-pink-50 rounded-full text-pink-700 hover:bg-pink-100 transition active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#E6007E] shadow-sm border border-pink-100"
           >
             <ShoppingBag className="w-5 h-5 text-[#E6007E]" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#E6007E] text-white text-[11px] rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-xs">
+              <span className="absolute -top-1 -right-1 bg-emerald-800 text-white text-[11px] rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-sm">
                 {cartCount}
               </span>
             )}

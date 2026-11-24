@@ -285,7 +285,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               </span>
             </div>
             <button
+              type="button"
               onClick={handleResetSearch}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleResetSearch(); } }}
+              aria-label={lang === 'fr' ? 'Effacer la recherche' : 'مسح البحث'}
               className="inline-flex items-center gap-1 text-xs text-[#E6007E] hover:text-pink-950 bg-white hover:bg-pink-100/50 px-2.5 py-1 rounded-full border border-pink-200 transition cursor-pointer shrink-0"
             >
               <X size={12} />
@@ -387,9 +390,15 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       BOUCHRA WAY • MY WAY
                     </span>
 
-                    <span className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem] mb-1.5 group-hover:text-[#E6007E] transition-colors leading-snug block">
+                    <span className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-2 min-h-[2.5rem] mb-1 group-hover:text-[#E6007E] transition-colors leading-snug block">
                       {productName}
                     </span>
+
+                    {product.sku && (
+                      <span className="text-[10px] sm:text-[11px] font-bold text-gray-700 block mb-1">
+                        {lang === 'fr' ? 'Réf' : 'المرجع'}: {product.sku}
+                      </span>
+                    )}
                   </div>
                 </button>
 

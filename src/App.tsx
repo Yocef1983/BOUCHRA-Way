@@ -509,8 +509,11 @@ export default function App() {
           <div id="catalogue" className="scroll-mt-24">
             <ProductCatalog
               selectedCategory={selectedCategory}
+              setSelectedCategory={handleCategoryChange}
               selectedSubCategory={selectedSubCategory}
+              setSelectedSubCategory={setSelectedSubCategory}
               searchQuery={searchQuery}
+              setSearchQuery={handleSearchChange}
               onSelectProduct={handleSelectProduct}
               onAddToCart={handleAddToCart}
               lang={lang}
