@@ -354,6 +354,16 @@ export default function Navbar({
             </li>
 
             {/* 3 -> 11. الأقسام المستخرجة من جدول الإكسيل بالترتيب المحدد */}
+            {/* Added main "Tous les produits" navigation item */}
+            <li>
+              <button
+                onClick={handleAllProductsClick}
+                className={`px-2.5 py-2 rounded-lg hover:text-pink-700 hover:bg-pink-100/60 transition flex items-center gap-1 cursor-pointer ${selectedCategory === 'all' && !searchQuery && !selectedSubCategory ? 'text-pink-700 font-bold bg-pink-100/40' : ''}`}
+              >
+                <Layers size={16} className="text-pink-600" />
+                <span>{lang === 'fr' ? 'Tous les produits' : 'جميع المنتجات'}</span>
+              </button>
+            </li>
             {menuCategories.map((category) => {
               const hasSubCategories = category.subCategories && category.subCategories.length > 0;
               const isHovered = hoveredCategory === category.id;
@@ -425,14 +435,7 @@ export default function Navbar({
                   >
                     <div className="bg-white rounded-2xl shadow-xl shadow-pink-950/10 border border-pink-100 p-2 text-start overflow-hidden">
                       {/* رأس القائمة */}
-                      <button
-                        type="button"
-                        onClick={() => handleMainCategoryClick(category.categoryId)}
-                        className="w-full px-3 py-1.5 mb-1 border-b border-gray-100 flex items-center justify-between text-[11px] text-pink-700 font-bold bg-pink-50/60 hover:bg-pink-100/60 rounded-lg transition cursor-pointer text-start"
-                      >
-                        <span>{lang === 'fr' ? `Tous les produits (${displayLabel})` : `عرض الكل (${displayLabel})`}</span>
-                        <Sparkles size={12} className="text-pink-500 shrink-0" />
-                      </button>
+
 
                       {/* عناصر القائمة المنسدلة (الفرعية) */}
                       <div className="space-y-0.5">
@@ -552,7 +555,17 @@ export default function Navbar({
               </div>
 
               <div className="space-y-1.5">
-                {menuCategories.map((category) => {
+                {/* Added main "Tous les produits" navigation item */}
+            <li>
+              <button
+                onClick={handleAllProductsClick}
+                className={`px-2.5 py-2 rounded-lg hover:text-pink-700 hover:bg-pink-100/60 transition flex items-center gap-1 cursor-pointer ${selectedCategory === 'all' && !searchQuery && !selectedSubCategory ? 'text-pink-700 font-bold bg-pink-100/40' : ''}`}
+              >
+                <Layers size={16} className="text-pink-600" />
+                <span>{lang === 'fr' ? 'Tous les produits' : 'جميع المنتجات'}</span>
+              </button>
+            </li>
+            {menuCategories.map((category) => {
                   const hasSubCategories = category.subCategories && category.subCategories.length > 0;
                   const isExpanded = expandedMobileCategory === category.id;
                   const isCategoryActive = 
@@ -607,14 +620,7 @@ export default function Navbar({
                       {/* قائمة العناصر الفرعية للهاتف */}
                       {isExpanded && (
                         <div className="bg-pink-50/40 p-2 space-y-1 border-t border-pink-100/50">
-                          <button
-                            type="button"
-                            onClick={() => handleMainCategoryClick(category.categoryId)}
-                            className="w-full text-start px-3 py-1.5 rounded-lg text-xs font-bold text-pink-700 hover:bg-white transition flex items-center justify-between cursor-pointer border-b border-pink-100/70 mb-1 pb-2"
-                          >
-                            <span>{lang === 'fr' ? `Tous les produits (${displayLabel})` : `عرض الكل في (${displayLabel})`}</span>
-                            <ChevronLeft size={13} className={`text-pink-600 ${lang === 'fr' ? 'rotate-180' : ''}`} />
-                          </button>
+
                           {category.subCategories.map((subItem, idx) => {
                             const subDisplayLabel = (lang === 'fr' && subItem.labelFr) ? subItem.labelFr : subItem.label;
                             const isSubActive = selectedSubCategory === subItem.label || (subItem.labelFr !== undefined && selectedSubCategory === subItem.labelFr);
