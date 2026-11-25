@@ -141,16 +141,24 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       'entretien ménager': 'العناية المنزلية',
       'Entretien ménager': 'العناية المنزلية',
       'Entretien ménagères': 'العناية المنزلية',
-      // Enfants & Bébé
+      // Enfants & Bébé — toutes variantes (insensible casse/accents via lookup + fallback)
       'enfants': 'الأطفال والرضع',
+      'enfant': 'الأطفال والرضع',
       'enfants-et-bebe': 'الأطفال والرضع',
       'enfants & bébé': 'الأطفال والرضع',
+      'enfants & bebe': 'الأطفال والرضع',
+      'enfants et bébé': 'الأطفال والرضع',
+      'enfants et bebe': 'الأطفال والرضع',
+      'enfants et bébés': 'الأطفال والرضع',
+      'enfants et bebes': 'الأطفال والرضع',
       'Enfants & Bébé': 'الأطفال والرضع',
+      'Enfants & Bebe': 'الأطفال والرضع',
       'الأطفال والرضع': 'الأطفال والرضع',
       'أطفال': 'الأطفال والرضع',
       'Enfants': 'الأطفال والرضع'
     };
-    return map[cat] || map[cat.toLowerCase()] || cat;
+    const trimmed = cat.trim();
+    return map[trimmed] || map[trimmed.toLowerCase()] || cat;
   };
 
   const normalizedCategory = normalizeCategory(selectedCategory);
@@ -200,8 +208,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         MAISON_ENTRETIEN_SKUS.all.includes(product.sku)
       );
     } else if (normalizedCategory === 'الأطفال والرضع') {
+      // Verrouillage strict : seuls les SKU 1574 et 4282
       filteredProducts = filteredProducts.filter((product) =>
-        ENFANTS_BEBE_SKUS.includes(product.sku)
+        ENFANTS_BEBE_SKUS.includes(String(product.sku ?? '').trim())
       );
     } else {
       filteredProducts = filteredProducts.filter((product) => {
