@@ -212,33 +212,35 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     }
   }
 
-  // 2. Filtrage par sous-catégorie
-  if (selectedSubCategory) {
-    if (isLessiveSubCategory(selectedSubCategory)) {
-      filteredProducts = filteredProducts.filter((product) =>
-        MAISON_ENTRETIEN_SKUS.lessive.includes(product.sku)
-      );
-    } else if (isSolsSubCategory(selectedSubCategory)) {
-      filteredProducts = filteredProducts.filter((product) =>
-        MAISON_ENTRETIEN_SKUS.sols.includes(product.sku)
-      );
-    } else if (isDetachantsSubCategory(selectedSubCategory)) {
-      filteredProducts = filteredProducts.filter((product) =>
-        MAISON_ENTRETIEN_SKUS.detachants.includes(product.sku)
-      );
-    } else {
-      filteredProducts = filteredProducts.filter((product) => {
-        if (normalizedCategory !== 'all') {
-          const matchCat = (product.categories && Array.isArray(product.categories) && product.categories.includes(normalizedCategory)) ||
-                           product.category === normalizedCategory;
-          if (!matchCat) return false;
-        }
-        const matchInSubArray = product.subCategories && Array.isArray(product.subCategories) && product.subCategories.includes(selectedSubCategory);
-        const matchSingleSub = product.subCategory === selectedSubCategory;
-        return matchInSubArray || matchSingleSub;
-      });
-    }
+// 2. Filtrage par sous‑catégorie – Ignoré pour la catégorie Enfants & Bébé (verrouillage strict)
+if (selectedSubCategory && normalizedCategory !== 'الأطفال والرضع') {
+  if (isLessiveSubCategory(selectedSubCategory)) {
+    filteredProducts = filteredProducts.filter((product) =>
+      MAISON_ENTRETIEN_SKUS.lessive.includes(product.sku)
+    );
+  } else if (isSolsSubCategory(selectedSubCategory)) {
+    filteredProducts = filteredProducts.filter((product) =>
+      MAISON_ENTRETIEN_SKUS.sols.includes(product.sku)
+    );
+  } else if (isDetachantsSubCategory(selectedSubCategory)) {
+    filteredProducts = filteredProducts.filter((product) =>
+      MAISON_ENTRETIEN_SKUS.detachants.includes(product.sku)
+    );
+  } else {
+    filteredProducts = filteredProducts.filter((product) => {
+      if (normalizedCategory !== 'all') {
+        const matchCat =
+          (product.categories && Array.isArray(product.categories) && product.categories.includes(normalizedCategory)) ||
+          product.category === normalizedCategory;
+        if (!matchCat) return false;
+      }
+      const matchInSubArray =
+        product.subCategories && Array.isArray(product.subCategories) && product.subCategories.includes(selectedSubCategory);
+      const matchSingleSub = product.subCategory === selectedSubCategory;
+      return matchInSubArray || matchSingleSub;
+    });
   }
+}
 
   // 3. Filtrage en temps réel par mot-clé de recherche
   const trimmedSearch = searchQuery.trim().toLowerCase();
