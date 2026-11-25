@@ -353,17 +353,6 @@ export default function Navbar({
               </button>
             </li>
 
-            {/* 2. كل المنتجات */}
-            <li>
-              <button 
-                onClick={handleAllProductsClick} 
-                className="px-2.5 py-2 rounded-lg hover:text-pink-700 hover:bg-pink-100/60 transition flex items-center gap-1 cursor-pointer"
-              >
-                <Layers className="w-3.5 h-3.5" />
-                <span>{lang === 'fr' ? 'Tous les produits' : 'كل المنتجات'}</span>
-              </button>
-            </li>
-
             {/* 3 -> 11. الأقسام المستخرجة من جدول الإكسيل بالترتيب المحدد */}
             {menuCategories.map((category) => {
               const hasSubCategories = category.subCategories && category.subCategories.length > 0;
