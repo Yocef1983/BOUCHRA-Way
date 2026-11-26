@@ -265,6 +265,7 @@ export default function App() {
     const normalizedCategory = (category === 'كل المنتجات' || category === 'all') ? 'all' : category;
     setSelectedCategory(normalizedCategory);
     setSelectedSubCategory(null);
+    setSearchQuery('');
     if (selectedProduct) {
       setSelectedProduct(null);
       try {
@@ -278,6 +279,10 @@ export default function App() {
         // Ignorer
       }
     }
+    setTimeout(() => {
+      const el = document.getElementById('catalogue');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
   };
 
   const handleSubCategorySelect = (category: string, subCategory: string) => {

@@ -195,12 +195,10 @@ export default function Navbar({
     setSelectedCategory(categoryId);
     if (setSelectedSubCategory) setSelectedSubCategory(null);
     closeMenu();
-    if (onNavigateToCatalog) {
-      onNavigateToCatalog();
-    } else {
+    setTimeout(() => {
       const el = document.getElementById('catalogue');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
+    }, 50);
   };
 
   const handleSubCategorySelect = (categoryId: string, subCategoryLabel: string) => {
@@ -209,12 +207,10 @@ export default function Navbar({
     } else {
       setSelectedCategory(categoryId);
       if (setSelectedSubCategory) setSelectedSubCategory(subCategoryLabel);
-      if (onNavigateToCatalog) {
-        onNavigateToCatalog();
-      } else {
+      setTimeout(() => {
         const el = document.getElementById('catalogue');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }
+      }, 50);
     }
     closeMenu();
   };
@@ -556,15 +552,21 @@ export default function Navbar({
 
               <div className="space-y-1.5">
                 {/* Added main "Tous les produits" navigation item */}
-            <li>
-              <button
-                onClick={handleAllProductsClick}
-                className={`px-2.5 py-2 rounded-lg hover:text-pink-700 hover:bg-pink-100/60 transition flex items-center gap-1 cursor-pointer ${selectedCategory === 'all' && !searchQuery && !selectedSubCategory ? 'text-pink-700 font-bold bg-pink-100/40' : ''}`}
-              >
-                <Layers size={16} className="text-pink-600" />
-                <span>{lang === 'fr' ? 'Tous les produits' : 'جميع المنتجات'}</span>
-              </button>
-            </li>
+                <button
+                  type="button"
+                  onClick={handleAllProductsClick}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition cursor-pointer text-start border ${
+                    selectedCategory === 'all' && !searchQuery && !selectedSubCategory
+                      ? 'bg-pink-50 border-pink-200 text-pink-900 font-bold'
+                      : 'border-gray-100 text-gray-800 hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <Layers size={15} className="text-pink-600" />
+                    <span>{lang === 'fr' ? 'Tous les produits' : 'جميع المنتجات'}</span>
+                  </span>
+                  <ChevronLeft size={14} className={`text-gray-400 ${lang === 'fr' ? 'rotate-180' : ''}`} />
+                </button>
             {menuCategories.map((category) => {
                   const hasSubCategories = category.subCategories && category.subCategories.length > 0;
                   const isExpanded = expandedMobileCategory === category.id;

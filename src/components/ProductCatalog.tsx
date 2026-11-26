@@ -115,6 +115,35 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   // Normalisation de la catégorie (support direct arabe et slugs bilingues)
   const normalizeCategory = (cat: string): string => {
     if (!cat || cat === 'all' || cat === 'كل المنتجات' || cat === 'الكل' || cat === 'Tous les produits') return 'all';
+    const trimmed = cat.trim();
+    const lower = trimmed.toLowerCase();
+
+    // Enfants & Bébé — toutes variantes (insensible casse/accents via lookup + fallback)
+    if (
+      trimmed === 'الأطفال والرضع' ||
+      trimmed === 'أطفال' ||
+      trimmed === 'اطفال' ||
+      trimmed === 'الاطفال' ||
+      trimmed === 'الرضع' ||
+      trimmed === 'الأطفال و الرضع' ||
+      lower === 'enfants' ||
+      lower === 'enfant' ||
+      lower === 'enfants & bébé' ||
+      lower === 'enfants & bebe' ||
+      lower === 'enfants et bébé' ||
+      lower === 'enfants et bebe' ||
+      lower === 'enfants-et-bebe' ||
+      lower === 'enfants-bebe' ||
+      lower === 'enfants_bebe' ||
+      lower.includes('enfant') ||
+      lower.includes('bébé') ||
+      lower.includes('bebe') ||
+      lower.includes('أطفال') ||
+      lower.includes('اطفال')
+    ) {
+      return 'الأطفال والرضع';
+    }
+
     const map: Record<string, string> = {
       'parfum': 'عطور',
       'parfums': 'عطور',
@@ -140,25 +169,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       'منظفات المنزل': 'العناية المنزلية',
       'entretien ménager': 'العناية المنزلية',
       'Entretien ménager': 'العناية المنزلية',
-      'Entretien ménagères': 'العناية المنزلية',
-      // Enfants & Bébé — toutes variantes (insensible casse/accents via lookup + fallback)
-      'enfants': 'الأطفال والرضع',
-      'enfant': 'الأطفال والرضع',
-      'enfants-et-bebe': 'الأطفال والرضع',
-      'enfants & bébé': 'الأطفال والرضع',
-      'enfants & bebe': 'الأطفال والرضع',
-      'enfants et bébé': 'الأطفال والرضع',
-      'enfants et bebe': 'الأطفال والرضع',
-      'enfants et bébés': 'الأطفال والرضع',
-      'enfants et bebes': 'الأطفال والرضع',
-      'Enfants & Bébé': 'الأطفال والرضع',
-      'Enfants & Bebe': 'الأطفال والرضع',
-      'الأطفال والرضع': 'الأطفال والرضع',
-      'أطفال': 'الأطفال والرضع',
-      'Enfants': 'الأطفال والرضع'
+      'Entretien ménagères': 'العناية المنزلية'
     };
-    const trimmed = cat.trim();
-    return map[trimmed] || map[trimmed.toLowerCase()] || cat;
+    return map[trimmed] || map[lower] || cat;
   };
 
   const normalizedCategory = normalizeCategory(selectedCategory);
