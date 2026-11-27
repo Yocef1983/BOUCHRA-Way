@@ -175,7 +175,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         type="button"
                         onClick={() => onRemoveItem(item.product.id)}
                         aria-label={isAr ? 'حذف المنتج' : 'Supprimer le produit'}
-                        className="text-gray-400 hover:text-rose-600 transition p-1 cursor-pointer"
+                        className="text-gray-400 hover:text-rose-600 transition p-2 cursor-pointer"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -187,9 +187,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         <button
                           type="button"
                           onClick={() => onUpdateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
-                          className="w-6 h-6 flex items-center justify-center text-gray-600 hover:bg-white rounded transition text-xs font-bold cursor-pointer"
+                          className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-white rounded transition text-xs font-bold cursor-pointer"
                         >
-                          <Minus size={12} />
+                          <Minus size={14} />
                         </button>
                         <span className="w-7 text-center text-xs font-bold text-gray-800">
                           {item.quantity}
@@ -197,7 +197,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         <button
                           type="button"
                           onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
-                          className="w-6 h-6 flex items-center justify-center text-gray-600 hover:bg-white rounded transition text-xs font-bold cursor-pointer"
+                          className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-white rounded transition text-xs font-bold cursor-pointer"
                         >
                           <Plus size={12} />
                         </button>

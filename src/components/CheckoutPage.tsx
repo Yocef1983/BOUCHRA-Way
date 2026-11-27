@@ -307,7 +307,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] text-gray-800 font-sans dir-rtl text-right" dir="rtl">
+    <div className={`min-h-screen bg-[#FDFCFB] text-gray-800 font-sans ${lang === 'fr' ? 'text-left' : 'text-right'}`} dir={lang === 'fr' ? 'ltr' : 'rtl'}>
       
       {/* En-tête épuré et sécurisé */}
       <header className="border-b border-gray-200 bg-white sticky top-0 z-30">
@@ -324,14 +324,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
           <div className="flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1.5 text-gray-600">
               <Lock size={14} className="text-emerald-600" />
-              <span className="font-semibold text-emerald-800">إتمام الطلب بأمان</span>
+              <span className="font-semibold text-emerald-800">{lang === 'fr' ? 'Paiement sécurisé' : 'إتمام الطلب بأمان'}</span>
             </div>
             <button
               type="button"
               onClick={onBackToCart}
               className="text-[#E6007E] hover:underline font-semibold cursor-pointer"
             >
-              تعديل السلة / Modifier
+              {lang === 'fr' ? 'Modifier le panier' : 'تعديل السلة'}
             </button>
           </div>
         </div>
@@ -757,7 +757,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 >
                   <ShieldCheck size={20} />
                   <span>
-                    {isSubmitting ? 'جاري تجهيز الطلب...' : `تأكيد الطلب والدفع عند الاستلام - ${finalTotal} MAD`}
+                    {isSubmitting
+                      ? (lang === 'fr' ? 'Traitement en cours…' : 'جاري تجهيز الطلب...')
+                      : (lang === 'fr' ? `Confirmer la commande — ${finalTotal} MAD` : `تأكيد الطلب والدفع عند الاستلام - ${finalTotal} MAD`)}
                   </span>
                 </button>
 

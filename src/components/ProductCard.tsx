@@ -83,7 +83,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             ? (isFavorite ? `Retirer ${productName} des favoris` : `Ajouter ${productName} aux favoris`)
             : (isFavorite ? `إزالة ${productName} من المفضلة` : `إضافة ${productName} إلى المفضلة`)
         }
-        className="absolute top-3 end-3 z-10 p-1.5 rounded-full bg-white/80 backdrop-blur-xs hover:bg-white text-gray-400 hover:text-[#E6007E] transition-colors shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E6007E]"
+        className="absolute top-3 end-3 z-10 p-2.5 rounded-full bg-white/80 backdrop-blur-xs hover:bg-white text-gray-400 hover:text-[#E6007E] transition-colors shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#E6007E]"
       >
         <Heart 
           size={17} 
@@ -155,7 +155,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               />
             ))}
           </div>
-          <span className="text-[11px] font-bold text-gray-600 mr-1">{product.rating}</span>
+          <span className="text-[11px] font-bold text-gray-600 me-1">{product.rating}</span>
           {product.reviewCount !== undefined && (
             <span className="text-[10px] text-gray-400">({product.reviewCount})</span>
           )}
@@ -186,7 +186,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               ? `Ajouter ${productName} au panier`
               : `إضافة ${productName} إلى السلة`
           }
-          className="bg-[#E6007E] hover:bg-[#c9006e] active:scale-95 text-white font-bold text-xs uppercase px-3 py-2 rounded-lg flex items-center gap-1 shadow-xs transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#E6007E]"
+          className="bg-[#E6007E] hover:bg-[#c9006e] active:scale-95 text-white font-bold text-xs uppercase px-3 py-2.5 min-h-[44px] rounded-lg flex items-center gap-1 shadow-xs transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-[#E6007E]"
         >
           <Plus size={13} className="stroke-[3]" />
           <span>PANIER</span>
