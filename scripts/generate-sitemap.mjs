@@ -36,7 +36,7 @@ if (!products || products.length === 0) {
 console.log(`Génération du sitemap pour ${products.length} produits (date: ${today})...`);
 
 const xmlEntries = [
-  `  <url>\n    <loc>${BASE_URL}/</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>`,
+  `  <url>\n    <loc>${BASE_URL}/</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>`,
 ];
 
 for (const p of products) {

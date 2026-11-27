@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Product } from '../data/products';
 import { SITE } from '../config/site';
 import { Language, translations, categoryHierarchy } from '../i18n/translations';
@@ -54,34 +54,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   // Titre et description localisés selon la langue active
   const displayName = lang === 'fr' ? (product.nameFr || product.name) : (product.nameAr || product.name);
   const displayDescription = lang === 'fr' ? (product.descriptionFr || product.description) : (product.descriptionAr || product.description);
-
-  // Mise à jour dynamique du titre SEO, de la meta description et du lien canonique lors de la consultation produit
-  useEffect(() => {
-    const previousTitle = document.title;
-    document.title = `${displayName} | ${product.price} ${t.currency} - BOUCHRA WAY`;
-
-    const metaDesc = document.querySelector('meta[name="description"]');
-    const previousDesc = metaDesc ? metaDesc.getAttribute('content') : null;
-    if (metaDesc) {
-      metaDesc.setAttribute('content', `${displayName}: ${displayDescription}`);
-    }
-
-    const canonicalLink = document.querySelector('link[rel="canonical"]');
-    const previousCanonical = canonicalLink ? canonicalLink.getAttribute('href') : null;
-    if (canonicalLink) {
-      canonicalLink.setAttribute('href', `https://bouchra-way.vercel.app/?sku=${encodeURIComponent(product.sku)}`);
-    }
-
-    return () => {
-      document.title = previousTitle;
-      if (metaDesc && previousDesc) {
-        metaDesc.setAttribute('content', previousDesc);
-      }
-      if (canonicalLink && previousCanonical) {
-        canonicalLink.setAttribute('href', previousCanonical);
-      }
-    };
-  }, [product, displayName, displayDescription, t, lang]);
 
   // Promotion officielle du catalogue
   const hasDiscount = Boolean(product.compareAtPrice && product.compareAtPrice > product.price);

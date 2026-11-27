@@ -15,6 +15,8 @@ import { CartItem, CompletedOrder } from './types/cart';
 import { CheckCircle2, Gift, Users, BookOpen, Sparkles } from 'lucide-react';
 // Importations pour le bilinguisme
 import { Language, translations } from './i18n/translations';
+import { useSeo } from './hooks/useSeo';
+import type { SeoView } from './utils/seo';
 
 export default function App() {
   // État de la langue active ('ar' par défaut ou 'fr')
@@ -427,6 +429,28 @@ export default function App() {
   };
 
   const isHomeView = showHome && !selectedSubCategory && searchQuery === '';
+
+  // Détermination de la vue active pour le moteur SEO technique
+  const activeSeoView: SeoView = selectedProduct
+    ? 'product'
+    : currentView === 'checkout'
+    ? 'checkout'
+    : currentView === 'success'
+    ? 'success'
+    : isHomeView
+    ? 'home'
+    : 'catalog';
+
+  // Synchronisation dynamique du SEO (Head, Open Graph, Twitter, JSON-LD Schema.org)
+  useSeo({
+    view: activeSeoView,
+    lang,
+    product: selectedProduct,
+    category: selectedCategory,
+    subCategory: selectedSubCategory,
+    searchQuery,
+    products: PRODUCTS,
+  });
 
   // Vue spéciale : Tunnel de Commande (Checkout)
   if (currentView === 'checkout') {
