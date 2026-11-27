@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  ShieldCheck, 
-  Lock, 
-  Truck, 
-  Banknote, 
-  Gift, 
-  AlertCircle, 
-  CheckCircle2, 
+import {
+  ShieldCheck,
+  Lock,
+  Truck,
+  Banknote,
+  Gift,
+  AlertCircle,
+  CheckCircle2,
   ShoppingBag,
   ChevronDown,
   FileText,
@@ -96,7 +96,6 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const shipping = computeShipping(discountedSubtotal, formData.city);
   const finalTotal = discountedSubtotal + shipping;
 
-
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, productName: string) => {
     const target = e.currentTarget;
     if (target.src.startsWith('data:image')) return;
@@ -114,8 +113,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     const cleaned = sanitizeInput(memberCodeInput, 8);
     if (!cleaned) {
       setMemberStatus({
-        message: lang === 'fr' 
-          ? 'Veuillez saisir votre code membre (6 à 8 chiffres).' 
+        message: lang === 'fr'
+          ? 'Veuillez saisir votre code membre (6 à 8 chiffres).'
           : 'يرجى إدخال رمز العضوية الخاص بكم (6 إلى 8 أرقام).',
         type: 'error'
       });
@@ -209,7 +208,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       const sanitizedAddress = sanitizeInput(formData.address, 150);
       const sanitizedEmail = formData.email ? sanitizeInput(formData.email, 80) : '';
       const sanitizedPhone = normalizeMoroccanPhone(formData.phone);
-      
+
       const randomRef = Math.floor(10000 + Math.random() * 90000);
       const orderRef = `#BW-${randomRef}`;
 
@@ -223,7 +222,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         ? `🎁 *خصم عضوية بوشرى واي (-25%):* -${memberDiscount} MAD (رمز العضو: ${appliedMemberCode})\n`
         : '';
 
-      const waMessage = 
+      const waMessage =
         `*طلب شراء جديد عبر الموقع - ${orderRef}* 🛍️\n` +
         `*(خدمة الدفع عند الاستلام - توصيل سريع لجميع المدن)* 🇲🇦\n\n` +
         `👤 *معلومات الزبون / Client:*\n` +
@@ -308,7 +307,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
   return (
     <div className={`min-h-screen bg-[#FDFCFB] text-gray-800 font-sans ${lang === 'fr' ? 'text-left' : 'text-right'}`} dir={lang === 'fr' ? 'ltr' : 'rtl'}>
-      
+
       {/* En-tête épuré et sécurisé */}
       <header className="border-b border-gray-200 bg-white sticky top-0 z-30">
         <div className="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
@@ -351,10 +350,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       <main className="max-w-6xl mx-auto px-4 py-8">
         <form onSubmit={handleSubmit} noValidate>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
+
             {/* Colonne Droite en RTL : Formulaire Coordonnées et Livraison */}
             <div className="lg:col-span-7 space-y-6">
-              
+
               {/* Section 1 : معلومات الاتصال (Vos coordonnées) */}
               <div className="bg-white rounded-2xl p-6 sm:p-7 border border-gray-200 shadow-xs">
                 <div className="flex items-start gap-3 mb-5">
@@ -374,7 +373,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 <div className="space-y-4">
                   {/* Téléphone portable marocain */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    <label htmlFor="phone" className="block text-xs font-semibold text-gray-700 mb-1">
                       رقم الهاتف - واتساب <span className="text-[#E6007E]">*</span>
                     </label>
                     <div className="flex rounded-lg overflow-hidden border border-gray-300 focus-within:border-[#E6007E] focus-within:ring-2 focus-within:ring-pink-100 transition" dir="ltr">
@@ -384,10 +383,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                       <input
                         type="tel"
                         name="phone"
+                        id="phone"
                         required
                         value={formData.phone}
                         onChange={handleChange}
                         placeholder="06 12 34 56 78 أو 612345678"
+                        autoComplete="tel-national"
+                        inputMode="numeric"
                         className="w-full px-3 py-2.5 text-sm outline-none bg-white text-gray-900 text-left"
                       />
                     </div>
@@ -402,12 +404,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                   {/* الاسم الشخصي والعائلي */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1">
+                      <label htmlFor="firstName" className="block text-xs font-semibold text-gray-700 mb-1">
                         الاسم الشخصي (Prénom) <span className="text-[#E6007E]">*</span>
                       </label>
                       <input
                         type="text"
                         name="firstName"
+                        id="firstName"
                         required
                         maxLength={50}
                         value={formData.firstName}
@@ -423,12 +426,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1">
+                      <label htmlFor="lastName" className="block text-xs font-semibold text-gray-700 mb-1">
                         الاسم العائلي (Nom) <span className="text-[#E6007E]">*</span>
                       </label>
                       <input
                         type="text"
                         name="lastName"
+                        id="lastName"
                         required
                         maxLength={50}
                         value={formData.lastName}
@@ -446,12 +450,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
                   {/* البريد الإلكتروني (اختياري) */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    <label htmlFor="email" className="block text-xs font-semibold text-gray-700 mb-1">
                       البريد الإلكتروني - اختياري <span className="text-xs text-gray-400 font-normal">(E-mail)</span>
                     </label>
                     <input
                       type="email"
                       name="email"
+                      id="email"
                       maxLength={80}
                       value={formData.email}
                       onChange={handleChange}
@@ -489,12 +494,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                 <div className="space-y-4">
                   {/* المدينة */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    <label htmlFor="city" className="block text-xs font-semibold text-gray-700 mb-1">
                       مدينة الإقامة <span className="text-[#E6007E]">*</span>
                     </label>
                     <div className="relative">
                       <select
                         name="city"
+                        id="city"
                         value={formData.city}
                         onChange={handleChange}
                         className="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-900 outline-none focus:border-[#E6007E] focus:ring-2 focus:ring-pink-100 transition appearance-none bg-white cursor-pointer"
@@ -509,11 +515,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
                   {/* العنوان بالتفصيل */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    <label htmlFor="address" className="block text-xs font-semibold text-gray-700 mb-1">
                       العنوان الكامل بالتفصيل <span className="text-[#E6007E]">*</span>
                     </label>
                     <textarea
                       name="address"
+                      id="address"
                       rows={2}
                       required
                       maxLength={150}
@@ -529,60 +536,60 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     )}
                   </div>
                 </div>
-              </div>
 
-              {/* Bloc de Consentement Légal CNDP (Loi 09-08) */}
-              <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl">
-                <div className="flex items-start gap-3">
-                  <input
-                    id="checkout-cndp"
-                    name="cndpConsent"
-                    type="checkbox"
-                    checked={formData.cndpConsent}
-                    onChange={handleChange}
-                    className="mt-1 h-4 w-4 rounded border-stone-300 text-[#E6007E] focus:ring-pink-500 cursor-pointer shrink-0 accent-[#E6007E]"
-                  />
-                  <label htmlFor="checkout-cndp" className="text-xs leading-relaxed text-stone-700 cursor-pointer select-none">
-                    أوافق على معالجة بياناتي الشخصية لتسيير طلبي والتواصل معي عبر الواتساب وفقاً لـ <strong>القانون 09-08</strong> (CNDP).
-                    <span className="block text-[11px] text-stone-500 mt-1">
-                      J&apos;accepte le traitement de mes données pour la livraison et le suivi de ma commande conformément à la <strong>Loi 09-08</strong> (CNDP).
-                    </span>
-                    <div className="flex flex-wrap gap-2 mt-1.5 text-[11px]">
-                      <button
-                        type="button"
-                        onClick={() => { setActiveLegalTab('privacy'); setIsLegalModalOpen(true); }}
-                        className="text-[#E6007E] hover:underline font-medium flex items-center gap-1"
-                        aria-label="Voir la politique de confidentialité"
-                      >
-                        <Info className="w-3 h-3" />
-                        <span>سياسة الخصوصية / Politique de confidentialité</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => { setActiveLegalTab('terms'); setIsLegalModalOpen(true); }}
-                        className="text-blue-600 hover:underline font-medium flex items-center gap-1"
-                        aria-label="Voir les conditions générales de vente"
-                      >
-                        <FileText className="w-3 h-3" />
-                        <span>الشروط العامة للبيع (CGV)</span>
-                      </button>
-                    </div>
-                  </label>
-                </div>
-                {errors.cndpConsent && (
-                  <div className="flex items-center gap-1 text-rose-600 text-xs mt-2 font-medium">
-                    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                    <span>{errors.cndpConsent}</span>
+                {/* Bloc de Consentement Légal CNDP (Loi 09-08) */}
+                <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl">
+                  <div className="flex items-start gap-3">
+                    <input
+                      id="checkout-cndp"
+                      name="cndpConsent"
+                      type="checkbox"
+                      checked={formData.cndpConsent}
+                      onChange={handleChange}
+                      className="mt-1 h-4 w-4 rounded border-stone-300 text-[#E6007E] focus:ring-pink-500 cursor-pointer shrink-0 accent-[#E6007E]"
+                    />
+                    <label htmlFor="checkout-cndp" className="text-xs leading-relaxed text-stone-700 cursor-pointer select-none">
+                      أوافق على معالجة بياناتي الشخصية لتسيير طلبي والتواصل معي عبر الواتساب وفقاً لـ <strong>القانون 09-08</strong> (CNDP).
+                      <span className="block text-[11px] text-stone-500 mt-1">
+                        J&apos;accepte le traitement de mes données pour la livraison et le suivi de ma commande conformément à la <strong>Loi 09-08</strong> (CNDP).
+                      </span>
+                      <div className="flex flex-wrap gap-2 mt-1.5 text-[11px]">
+                        <button
+                          type="button"
+                          onClick={() => { setActiveLegalTab('privacy'); setIsLegalModalOpen(true); }}
+                          className="text-[#E6007E] hover:underline font-medium flex items-center gap-1"
+                          aria-label="Voir la politique de confidentialité"
+                        >
+                          <Info className="w-3 h-3" />
+                          <span>سياسة الخصوصية / Politique de confidentialité</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setActiveLegalTab('terms'); setIsLegalModalOpen(true); }}
+                          className="text-blue-600 hover:underline font-medium flex items-center gap-1"
+                          aria-label="Voir les conditions générales de vente"
+                        >
+                          <FileText className="w-3 h-3" />
+                          <span>الشروط العامة للبيع (CGV)</span>
+                        </button>
+                      </div>
+                    </label>
                   </div>
-                )}
-              </div>
+                  {errors.cndpConsent && (
+                    <div className="flex items-center gap-1 text-rose-600 text-xs mt-2 font-medium">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors.cndpConsent}</span>
+                    </div>
+                  )}
+                </div>
 
+              </div>
             </div>
 
             {/* Colonne Gauche en RTL : Résumé de votre commande */}
             <div className="lg:col-span-5">
               <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm sticky top-20 space-y-5">
-                
+
                 <h3 className="text-base font-bold text-gray-900 border-b border-gray-100 pb-3 flex items-center justify-between">
                   <span>ملخص طلبيتك / Votre commande</span>
                   <span className="text-xs font-normal text-gray-400">({items.reduce((s, i) => s + i.quantity, 0)} منتج)</span>
@@ -593,15 +600,15 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                   {items.map((item) => (
                     <div key={item.product.id} className="flex items-center gap-3">
                       <div className="relative w-14 h-14 bg-stone-50 rounded-lg p-1 border border-gray-100 shrink-0 flex items-center justify-center">
-<img
-                            src={item.product.image}
-                            alt={lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name)}
-                            width={56}
-                            height={56}
-                            decoding="async"
-                            onError={(e) => handleImageError(e, item.product.name)}
-                            className="max-h-full max-w-full object-contain"
-                          />
+                        <img
+                              src={item.product.image}
+                              alt={lang === 'fr' ? (item.product.nameFr || item.product.name) : (item.product.nameAr || item.product.name)}
+                              width={56}
+                              height={56}
+                              decoding="async"
+                              onError={(e) => handleImageError(e, item.product.name)}
+                              className="max-h-full max-w-full object-contain"
+                            />
                         <span className="absolute -top-1.5 -left-1.5 bg-black text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
                           {item.quantity}
                         </span>
@@ -636,7 +643,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                     >
                       <Gift size={14} className="text-[#E6007E]" />
                       <span>
-                        {lang === 'fr' 
+                        {lang === 'fr'
                           ? 'Vous êtes membre Bouchra Way ? Entrez votre code (-25%)'
                           : 'هل أنت عضو في شبكة بوشرى واي؟ أدخل رقم العضوية (-25%)'}
                       </span>
@@ -671,8 +678,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                       {/* Retour visuel élégant inline */}
                       {memberStatus && (
                         <div className={`p-2.5 rounded-lg text-xs flex items-center gap-1.5 ${
-                          memberStatus.type === 'success' 
-                            ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
+                          memberStatus.type === 'success'
+                            ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                             : 'bg-rose-50 text-rose-800 border border-rose-200'
                         }`}>
                           {memberStatus.type === 'success' ? (
