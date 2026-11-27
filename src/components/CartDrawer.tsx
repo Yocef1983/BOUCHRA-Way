@@ -183,11 +183,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                     <div className="flex items-center justify-between gap-2 mt-2">
                       {/* Sélecteur de quantité */}
-                      <div className="inline-flex items-center border border-gray-200 rounded-lg bg-gray-50/50 p-0.5">
+                      <div className="inline-flex items-center border border-gray-200 rounded-lg bg-gray-50/50 p-0.5 min-w-0">
                         <button
                           type="button"
                           onClick={() => onUpdateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
-                          className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-white rounded transition text-xs font-bold cursor-pointer"
+                          className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-white rounded transition text-xs font-bold cursor-pointer"
                         >
                           <Minus size={14} />
                         </button>
@@ -197,7 +197,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         <button
                           type="button"
                           onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
-                          className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-white rounded transition text-xs font-bold cursor-pointer"
+                          className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-white rounded transition text-xs font-bold cursor-pointer"
                         >
                           <Plus size={12} />
                         </button>

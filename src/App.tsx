@@ -475,7 +475,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] text-gray-800 font-sans relative flex flex-col" dir={t.dir}>
+    <div className="min-h-screen bg-[#FDFCFB] text-gray-800 font-sans relative flex flex-col overflow-x-clip" dir={t.dir}>
       
       {/* Barre de navigation globale incluant le sélecteur de langue */}
       <div className="relative">
